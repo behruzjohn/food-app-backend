@@ -3,10 +3,39 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:prod": "node dist/bundle.js",
+    "start:dev": "npx ts-node-dev --respawn --transpile-only -r tsconfig-paths/register --clear src/index.ts",
+    "dev:debug": "npx ts-node-dev -r tsconfig-paths/register --inspect=0.0.0.0:9229 src/index.ts",
+    "build": "webpack",
+    "lint": "npx eslint src"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "apollo-server": "^3.13.0",
+    "apollo-server-core": "^3.13.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "graphql": "^16.9.0",
+    "mongoose": "^8.7.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "@types/cors": "^2.8.17",
+    "eslint": "^9.12.0",
+    "globals": "^15.11.0",
+    "ts-loader": "^9.5.1",
+    "tsc-alias": "^1.8.10",
+    "tsconfig-paths": "^4.2.0",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript-eslint": "^8.9.0",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
+  }
 }
