@@ -1,7 +1,7 @@
 {
   "name": "food-app-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "start:prod": "node dist/bundle.js",
     "start:dev": "npx ts-node-dev --respawn --transpile-only -r tsconfig-paths/register --clear src/index.ts",
@@ -9,10 +9,7 @@
     "build": "webpack",
     "lint": "npx eslint src"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@apollo/server": "^4.11.0",
     "apollo-server": "^3.13.0",
