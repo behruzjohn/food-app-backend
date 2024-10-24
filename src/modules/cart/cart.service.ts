@@ -1,8 +1,8 @@
-import { ApolloError } from "apollo-server-core";
 import { Context } from "../../types/context";
 import { Food } from "../food/food.model";
 import { Cart } from "./cart.model";
 import { MutateFoodIntoCartProps } from "./props/mutateFoodInCart.props";
+import { BadUserInputError } from "src/common";
 
 export const addFoodIntoCart = async (
   { food }: MutateFoodIntoCartProps,
@@ -13,7 +13,7 @@ export const addFoodIntoCart = async (
   const foundFood = await Food.findById(food);
 
   if (!foundFood) {
-    throw new ApolloError("Food is not found");
+    throw new BadUserInputError("Food is not found");
   }
 
   foundCart.foods.push();
@@ -32,7 +32,7 @@ export const removeFoodFromCart = async (
   const foundFood = await Food.findById(food);
 
   if (!foundFood) {
-    throw new ApolloError("Food is not found");
+    throw new BadUserInputError("Food is not found");
   }
 
   foundCart.foods.filter(({ _id }) => _id !== food);
