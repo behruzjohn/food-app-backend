@@ -2,10 +2,11 @@ import { model, Schema } from "mongoose";
 import { MODELS } from "../../constants/models";
 
 const foodSchema = new Schema({
-  food: { type: String },
+  title: { type: String, required: true },
+  name: { type: String, required: true },
   description: { type: String },
-  price: { type: Number },
+  price: { type: Number, required: true },
   discount: { type: Number },
 });
 
-export const Order = model(MODELS.FOOD, foodSchema);
+export const Food = model(MODELS.FOOD, foodSchema);
