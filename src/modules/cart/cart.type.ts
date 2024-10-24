@@ -7,7 +7,7 @@ export const cartTypes = gql`
   }
 
   type Cart {
-    price: Number
+    price: Int
     createdAt: Date
     status: OrderStatusEnum
   }

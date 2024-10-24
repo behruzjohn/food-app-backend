@@ -3,9 +3,9 @@ import { gql } from "apollo-server-core";
 export const orderTypes = gql`
   type Order {
     _id: ID
-    price: Number
+    price: Int
     createdAt: Date
-    discount: Number
+    discount: Int
   }
 
   type OrderOutput {

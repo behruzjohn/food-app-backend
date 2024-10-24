@@ -4,7 +4,7 @@ import { RoleEnum } from "../../enums/role.enum";
 import { TELEGRAM_ID_LENGTH } from "../../constants/validations";
 
 const userSchema = new Schema({
-  name: String,
+  name: { type: String },
   orders: [{ type: Schema.Types.ObjectId }],
   telegramId: {
     type: Number,

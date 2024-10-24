@@ -1,7 +1,7 @@
 import { gql } from "apollo-server-core";
 
 export const orderTypes = gql`
-  type Order {
+  type Food {
     _id: ID
     name: String
     description: String
@@ -10,6 +10,6 @@ export const orderTypes = gql`
   }
 
   type OrderOutput {
-    payload: [Order]
+    payload: [Food]
   }
 `;
