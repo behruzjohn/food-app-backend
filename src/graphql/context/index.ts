@@ -5,5 +5,7 @@ import { authMiddleware } from "./middlewares/auth.middleware";
 export const context: ContextFunction<ExpressContext> = async (
   requestParams
 ) => {
-  await authMiddleware(requestParams);
+  const authContext = await authMiddleware(requestParams);
+
+  return { ...authContext };
 };
