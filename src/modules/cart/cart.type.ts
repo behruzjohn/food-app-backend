@@ -5,6 +5,7 @@ export const cartTypes = gql`
     received
     cooking
   }
+
   type Cart {
     price: Number
     createdAt: Date
