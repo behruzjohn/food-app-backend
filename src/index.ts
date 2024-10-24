@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 dotenv.config();
 
-const PORT = <string>process.env.PORT || 8000;
+const PORT = +process.env.PORT || 8000;
 
 const app = express();
 

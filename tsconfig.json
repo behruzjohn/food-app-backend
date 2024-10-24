@@ -5,8 +5,10 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "rootDir": "."
   },
-  "include": ["src"],
+  "include": ["src/*"],
   "exclude": ["node_modules"]
 }

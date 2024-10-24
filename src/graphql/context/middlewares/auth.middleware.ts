@@ -2,17 +2,18 @@ import { ApolloError, ContextFunction } from "apollo-server-core";
 import { ExpressContext } from "apollo-server-express";
 import { AUTH_TYPE } from "../../../constants/auth";
 import { decodeToken, isTokenExpired } from "../../../utils/jwt";
-import { Context, ContextUser } from "../../../constants/context";
+import { Context, ContextUser } from "../../../types/context";
 import { User } from "../../../modules/user/user.model";
 import { PUBLIC_RESOLVERS } from "../../../constants/publicResolvers";
+import { BadUserInputError } from "src/common";
 
 export const authMiddleware: ContextFunction<ExpressContext> = async ({
   req,
 }): Promise<Context | {}> => {
-  const [tokenType, token] = req.headers.authorization.split(" ");
+  const [tokenType, token] = req.headers.authorization?.split(" ") || [];
 
   if (tokenType !== AUTH_TYPE || !token) {
-    throw new ApolloError("Token is not provided");
+    throw new BadUserInputError("Token is not provided");
   }
 
   const isPublicRequest = PUBLIC_RESOLVERS.includes(req.body.operationName);
