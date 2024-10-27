@@ -1,11 +1,9 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
+import { RoleEnum } from 'src/enums/role.enum';
+import { createGraphQLEnum } from 'src/utils/schema';
 
 export const userTypes = gql`
-  enum UserRoleEnum {
-    super_admin
-    admin
-    user
-  }
+  ${createGraphQLEnum('UserRoleEnum', RoleEnum)}
 
   type User {
     _id: ID
@@ -18,5 +16,13 @@ export const userTypes = gql`
 
   type UserOutput {
     payload: [User]
+  }
+  input UserInput {
+    name: String
+    orders: [ID]
+    telegramId: Int
+    role: RoleEnum
+    phone: String
+    cart: ID
   }
 `;

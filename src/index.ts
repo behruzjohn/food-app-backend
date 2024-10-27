@@ -1,12 +1,12 @@
-import { server } from "./graphql";
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
+import { server } from './graphql';
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
-const PORT = <string>process.env.PORT || 8000;
+const PORT = +process.env.PORT || 8000;
 
 const app = express();
 

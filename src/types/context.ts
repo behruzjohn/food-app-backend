@@ -1,8 +1,7 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export type ContextUser = {
   id: Types.ObjectId;
-
   telegramId: number;
 };
 

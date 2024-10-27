@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const orderTypes = gql`
   type Order {
@@ -10,5 +10,12 @@ export const orderTypes = gql`
 
   type OrderOutput {
     payload: [Order]
+  }
+  input OrderInput {
+    title: String!
+    name: String!
+    description: String
+    price: Number!
+    discount: Number
   }
 `;

@@ -1,14 +1,13 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const cartTypes = gql`
-  enum OrderStatusEnum {
-    received
-    cooking
+  type Cart {
+    _id: ID
+    foods: [Food]
+    user: ID
   }
 
-  type Cart {
-    price: Int
-    createdAt: Date
-    status: OrderStatusEnum
+  type CartOutput {
+    payload: Cart
   }
 `;
