@@ -8,7 +8,8 @@
     "dev:debug": "npx ts-node-dev -r tsconfig-paths/register --inspect=0.0.0.0:9229 src/index.ts",
     "build": "webpack",
     "lint": "npx eslint src",
-    "format": "prettier --write \"src//**/*.ts\""
+    "format": "prettier --write \"src//**/*.ts\"",
+    "dev": "nodemon src/index.ts"
   },
   "license": "ISC",
   "dependencies": {
@@ -19,6 +20,7 @@
     "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "graphql-date-scalars": "^0.2.0",
+    "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
     "tsconfig-paths": "^4.2.0",

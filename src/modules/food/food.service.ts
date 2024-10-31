@@ -5,15 +5,19 @@ import {
   InternalServerError,
 } from 'src/common';
 import { Food } from './food.model';
-import { CreateOrderOutput } from './outputs/food.output';
+import { FoodOutput } from './outputs/food.output';
 import { CreateFoodProps } from './props/createFoodProps';
 import { GetFoodProps } from './props/getFoodProps';
 import { UpdateFoodProps } from './props/updateFoodProps';
 
-export const createFood = async ({ food }:CreateFoodProps): Promise<CreateOrderOutput> => {
+export const createFood = async ({
+  food,
+}: CreateFoodProps): Promise<FoodOutput> => {
   try {
     const createdFood = await Food.create(food);
-
+    if (!createdFood) {
+      throw new BadRequestError('Something went wrong!');
+    }
     return { payload: createdFood };
   } catch (error) {
     throw new GraphQLError('Error during creating food', 'BAD_USER_INPUT');
@@ -23,7 +27,7 @@ export const createFood = async ({ food }:CreateFoodProps): Promise<CreateOrderO
 export const updateFoodById = async ({
   id,
   food,
-}: UpdateFoodProps): Promise<CreateOrderOutput> => {
+}: UpdateFoodProps): Promise<FoodOutput> => {
   try {
     const updatedFood = await Food.findByIdAndUpdate(id, food, {
       new: true,
@@ -42,7 +46,7 @@ export const updateFoodById = async ({
 
 export const getFoodById = async ({
   id,
-}: GetFoodProps): Promise<CreateOrderOutput> => {
+}: GetFoodProps): Promise<FoodOutput> => {
   try {
     const foundFood = await Food.findById(id);
 
@@ -58,7 +62,7 @@ export const getFoodById = async ({
 
 export const deleteFoodById = async ({
   id,
-}: GetFoodProps): Promise<CreateOrderOutput> => {
+}: GetFoodProps): Promise<FoodOutput> => {
   try {
     const deletedFood = await Food.findByIdAndDelete(id);
 

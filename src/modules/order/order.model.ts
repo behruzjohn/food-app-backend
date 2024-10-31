@@ -3,11 +3,12 @@ import { MODELS } from '../../constants/models';
 import { StatusEnum } from '../../enums/status.enum';
 
 const orderSchema = new Schema({
-  food: { type: Schema.Types.ObjectId, ref: 'Food' },
   price: Number,
+  createdAt: Date,
   discount: Number,
   status: { type: String, enum: Object.keys(StatusEnum) },
-  createdAt: new Date(),
+  food: { type: Schema.Types.ObjectId, ref: MODELS.FOOD },
+  user: { type: Schema.Types.ObjectId, ref: MODELS.USER },
 });
 
 export const Order = model(MODELS.ORDER, orderSchema);

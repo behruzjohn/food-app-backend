@@ -1,5 +1,6 @@
 export enum StatusEnum {
-  received = 'received',
-  delivering = 'delivering',
   cooking = 'cooking',
+  delivering = 'delivering',
+  received = 'received',
+  canceled = 'canceled',
 }

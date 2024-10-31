@@ -17,18 +17,23 @@ export const foodTypes = gql`
   type FoodsOutput {
     payload: [Food]
   }
+
+  type FoodDeleteOutput {
+    payload: String
+  }
+
   input FoodInput {
-    title: String!
-    name: String!
-    description: String!
     price: Int!
+    name: String!
     discount: Int
+    shortName: String
+    description: String!
   }
   input FoodUpdateInput {
-    title: String
-    name: String
-    description: String
     price: Int
+    name: String
+    title: String
     discount: Int
+    description: String
   }
 `;
