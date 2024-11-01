@@ -9,7 +9,7 @@ export const userTypes = gql`
 
   type User {
     _id: ID
-    telegramId: Number
+    telegramId: Int
     name: String
     role: UserRoleEnum
     phone: String
