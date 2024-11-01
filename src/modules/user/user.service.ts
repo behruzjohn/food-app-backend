@@ -1,9 +1,9 @@
 import { ApolloError } from 'apollo-server-core';
-import { User } from './user.model';
 import { UserOutput } from './outputs/user.output';
 import { CreateUserProps } from './props/createUser.props';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { UpdateUserByIdProps } from './props/updateUser.props';
+import { User } from './user.model';
 
 export const createUser = async ({
   user,

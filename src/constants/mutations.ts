@@ -7,4 +7,5 @@ export const MUTATIONS = {
   CANCEL_ORDER_BY_ID: 'cancelOrderById',
   CREATE_USER: 'createUser',
   UPDATE_USER_BY_ID: 'updateUserById',
+  GET_ORDER_BY_ID: 'getOrderById',
 };

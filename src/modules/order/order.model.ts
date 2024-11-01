@@ -9,6 +9,8 @@ const orderSchema = new Schema({
   status: { type: String, enum: Object.keys(StatusEnum) },
   food: { type: Schema.Types.ObjectId, ref: MODELS.FOOD },
   user: { type: Schema.Types.ObjectId, ref: MODELS.USER },
+  from: { type: [Number, Number] },
+  to: { type: [Number, Number] },
 });
 
 export const Order = model(MODELS.ORDER, orderSchema);

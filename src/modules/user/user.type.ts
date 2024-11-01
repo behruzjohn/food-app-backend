@@ -29,7 +29,7 @@ export const userTypes = gql`
 
   input UserUpdateInput {
     name: String
-    telegramId: Number
+    telegramId: Int
     role: UserRoleEnum
     phone: String
   }

@@ -6,6 +6,8 @@ export const orderTypes = gql`
     price: Int
     createdAt: Date
     discount: Int
+    from: [Int]
+    to: [Int]
   }
 
   type OrderOutput {

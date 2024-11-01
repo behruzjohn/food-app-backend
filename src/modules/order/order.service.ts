@@ -52,7 +52,6 @@ export const getOrderById = async ({
   }
 };
 
-// handlers for changing status of order
 export const cancelOrderById = async ({ orderId }: GetOrderByIdProps) => {
   try {
     const foundOrder = await Order.findByIdAndUpdate(
