@@ -1,14 +1,15 @@
 {
   "name": "food-app-backend",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "start:prod": "node dist/bundle.js",
     "start:dev": "npx ts-node-dev --respawn --transpile-only -r tsconfig-paths/register --clear src/index.ts",
     "dev:debug": "npx ts-node-dev -r tsconfig-paths/register --inspect=0.0.0.0:9229 src/index.ts",
     "build": "webpack",
     "lint": "npx eslint src",
-    "dev": "nodemon index.ts"
+    "format": "prettier --write \"src//**/*.ts\"",
+    "dev": "nodemon src/index.ts"
   },
   "license": "ISC",
   "dependencies": {
@@ -19,6 +20,7 @@
     "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "graphql-date-scalars": "^0.2.0",
+    "graphql-subscriptions": "^2.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
     "tsconfig-paths": "^4.2.0",
@@ -30,6 +32,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "eslint": "^9.12.0",
     "globals": "^15.11.0",
+    "prettier": "^3.3.3",
     "ts-loader": "^9.5.1",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",

@@ -1,5 +1,5 @@
-import { ApolloError } from "apollo-server-core";
-import { GraphQLErrorCode } from "../../enums/graphQLErrorCode.enum";
+import { ApolloError } from 'apollo-server-core';
+import { GraphQLErrorCode } from '../../enums/graphQLErrorCode.enum';
 
 export class GraphQLError extends ApolloError {
   constructor(cause: string, code: keyof typeof GraphQLErrorCode) {
@@ -50,7 +50,7 @@ export class BadRequestError extends GraphQLError {
 }
 
 export class InternalServerError extends GraphQLError {
-  constructor(cause: string) {
+  constructor(cause: string = 'Internal server error') {
     super(cause, GraphQLErrorCode.INTERNAL_SERVER_ERROR);
   }
 }

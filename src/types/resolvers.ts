@@ -1,8 +1,8 @@
-import { Context } from "./context";
+import { Context } from './context';
 
 export type Resolvers<
   TArgs = Record<string, unknown>,
-  TResult = unknown
+  TResult = unknown,
 > = Record<
   string,
   (operation: string, args: TArgs, context: Context) => TResult

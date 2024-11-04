@@ -1,8 +1,8 @@
-import { server } from "./graphql";
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
+import { server } from './graphql';
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
