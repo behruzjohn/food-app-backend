@@ -15,6 +15,16 @@ export const orderTypes = gql`
   }
 
   type OrderOutput {
+    payload: Order
+  }
+
+  type OrdersOutput {
     payload: [Order]
+  }
+
+  input OrderInput {
+    food: ID
+    price: Int
+    discount: Int
   }
 `;

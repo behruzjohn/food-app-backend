@@ -1,10 +1,21 @@
 import { Resolvers } from "../../types/resolvers";
-import * as cartService from "../../modules/cart/cart.service";
+import * as cartItemService from "../../modules/cartItem/cartItem.service";
 import { MUTATIONS } from "../../constants/mutations";
-import { AddFoodIntoCartProps } from "../../modules/cart/props/mutateFoodInCart.props";
+import { MutateCartItemFoodProps } from "src/modules/cartItem/props/mutateCartItemFood.props";
+import { UpdateCartFoodQuantityProps } from "src/modules/cartItem/props/updateCartFoodQuantity.props";
 
 export const mutation: Resolvers = {
-  [MUTATIONS.ADD_FOOD_INTO_CART]: (_, args: AddFoodIntoCartProps, context) => {
-    return cartService.addFoodIntoCart(args, context);
+  [MUTATIONS.CREATE_CART_ITEM]: (_, args: MutateCartItemFoodProps, context) => {
+    return cartItemService.createCartItem(args, context);
+  },
+  [MUTATIONS.UPDATE_CART_FOOD_QUANTITY]: (
+    _,
+    args: UpdateCartFoodQuantityProps,
+    context
+  ) => {
+    return cartItemService.updateCartFoodQuantity(args, context);
+  },
+  [MUTATIONS.DELETE_CART_ITEM]: (_, args: MutateCartItemFoodProps, context) => {
+    return cartItemService.deleteCartItem(args, context);
   },
 };

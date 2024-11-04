@@ -1,1 +1,1 @@
-export const INTROSPECTION_QUERY = "IntrospectionQuery";
+export const INTROSPECTION_QUERY = "query IntrospectionQuery";

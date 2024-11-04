@@ -3,6 +3,8 @@ import { MUTATIONS } from "../../constants/mutations";
 
 export const mutationType = gql`
   type Mutation {
-    ${MUTATIONS.ADD_FOOD_INTO_CART}(food: ID): CartOutput
+    ${MUTATIONS.CREATE_CART_ITEM}(food: ID): CartItemOutput
+    ${MUTATIONS.UPDATE_CART_FOOD_QUANTITY}(food: ID, quantity: Int): CartItemOutput
+    ${MUTATIONS.DELETE_CART_ITEM}(food: ID): CartItemOutput
   }
 `;
