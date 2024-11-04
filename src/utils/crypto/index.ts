@@ -1,0 +1,27 @@
+import * as crypto from "crypto";
+import { BINARY_ENCODINGS, HASH_ALGORITHMS } from "./crypto.constants";
+
+function matchSha256Hash<T extends Record<string, any> & { hash: string }>(
+  data: T,
+  secretKey: string | crypto.BinaryLike
+) {
+  const content = Object.keys(data)
+    .filter((key) => key !== "hash")
+    .sort()
+    .map((key) => `${key}=${data[key]}`)
+    .join("\n");
+
+  const secret = crypto
+    .createHash(HASH_ALGORITHMS.SHA256)
+    .update(secretKey)
+    .digest();
+
+  const hash = crypto
+    .createHmac(HASH_ALGORITHMS.SHA256, secret)
+    .update(content)
+    .digest(BINARY_ENCODINGS.HEX);
+
+  const isMatch = hash === data.hash;
+
+  return isMatch;
+}
