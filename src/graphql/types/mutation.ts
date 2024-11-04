@@ -13,5 +13,4 @@ export const mutationType = gql`
     ${MUTATIONS.GET_ORDER_BY_ID}(orderId: ID!): OrderOutput 
     ${MUTATIONS.UPDATE_USER_BY_ID}(user: UserInput): UserOutput
   }
-  
 `;

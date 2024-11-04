@@ -14,6 +14,10 @@ export const userTypes = gql`
   }
 
   type UserOutput {
+    payload: User
+  }
+
+  type UsersOutput {
     payload: [User]
   }
 

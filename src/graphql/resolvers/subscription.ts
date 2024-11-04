@@ -17,8 +17,4 @@ export const subscription: Resolvers = {
   [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: (_, args: OrderChangeStatus) => {
     return orderService.receiveOrderById(args);
   },
-
-  [SUBSCRIPTIONS.CANCEL_ORDER_BY_ID]: (_, args: GetOrderByIdProps) => {
-    return orderService.cancelOrderById(args);
-  },
 };
