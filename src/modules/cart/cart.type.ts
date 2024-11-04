@@ -9,7 +9,7 @@ export const cartTypes = gql`
   
   type Cart {
     _id: ID
-    price: Number
+    price: Int
     createdAt: Date
     status: OrderStatusEnum
 
