@@ -21,7 +21,7 @@ export const extractExecuteResolvers = (req: Request): string[] => {
 };
 
 export const context: ContextFunction<ExpressContext> = async (
-  requestParams
+  requestParams,
 ) => {
   const isPollingRequest = requestParams.req.body.query
     .trim()

@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const foodTypes = gql`
   type Food {
@@ -16,5 +16,24 @@ export const foodTypes = gql`
 
   type FoodsOutput {
     payload: [Food]
+  }
+
+  type FoodDeleteOutput {
+    payload: String
+  }
+
+  input FoodInput {
+    price: Int!
+    name: String!
+    discount: Int
+    shortName: String
+    description: String!
+  }
+  input FoodUpdateInput {
+    price: Int
+    name: String
+    title: String
+    discount: Int
+    description: String
   }
 `;

@@ -1,12 +1,12 @@
-import { gql } from "apollo-server-core";
-import { userTypes } from "../../modules/user/user.type";
-import { queryType } from "./query";
-import { cartItemTypes } from "src/modules/cartItem/cartItem.type";
-import { foodTypes } from "../../modules/food/food.types";
-import { orderTypes } from "../../modules/order/order.types";
+import { userTypes } from "src/modules/user/user.type";
 import { scalarTypes } from "./scalars";
+import { foodTypes } from "src/modules/food/food.types";
+import { orderTypes } from "src/modules/order/order.types";
+import { cartItemTypes } from "src/modules/cartItem/cartItem.type";
+import { subscriptionType } from "./subscription";
+import { queryType } from "./query";
 import { mutationType } from "./mutation";
-import { PERMISSIONS } from "src/constants/permissions";
+import { gql } from "apollo-server-core";
 
 export const typeDefs = gql`
   ${scalarTypes}
@@ -16,7 +16,7 @@ export const typeDefs = gql`
   ${orderTypes}
   ${cartItemTypes}
 
+  ${subscriptionType}
   ${queryType}
   ${mutationType}
 `;
-PERMISSIONS;

@@ -4,4 +4,9 @@ export const MUTATIONS = {
   CREATE_CART_ITEM: "createCartItem",
   UPDATE_CART_FOOD_QUANTITY: "updateCartFoodQuantity",
   DELETE_CART_ITEM: "deleteCartItem",
+  CREATE_FOOD: 'createFood',
+  UPDATE_FOOD_BY_ID: 'updateFoodById',
+  DELETE_FOOD_BY_ID: 'deleteFoodById',
+  UPDATE_USER_BY_ID: 'updateUserById',
+  GET_ORDER_BY_ID: 'getOrderById',
 };

@@ -1,3 +1,7 @@
-import { QUERIES } from "./queries";
+import { MUTATIONS } from './mutations';
 
-export const ADMIN_RESOLVERS = [QUERIES.GET_DASHBOARD];
+export const adminResolvers = [
+  MUTATIONS.CREATE_FOOD,
+  MUTATIONS.DELETE_FOOD_BY_ID,
+  MUTATIONS.UPDATE_FOOD_BY_ID,
+];

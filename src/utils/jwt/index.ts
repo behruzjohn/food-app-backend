@@ -1,4 +1,4 @@
-import * as jwt from "jsonwebtoken";
+import * as jwt from 'jsonwebtoken';
 
 export function decodeToken<T extends Record<string, any>>(token: string) {
   return jwt.decode(token) as Partial<T> & jwt.JwtPayload;
