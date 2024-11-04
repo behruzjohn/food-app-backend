@@ -1,6 +1,5 @@
 import { ApolloError } from 'apollo-server-core';
 import { PubSub } from 'graphql-subscriptions';
-import { InternalServerError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { MUTATIONS } from 'src/constants/mutations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
@@ -49,22 +48,6 @@ export const getOrderById = async ({
     return { payload: foundOrder };
   } catch (error) {
     throw new ApolloError('Error during getting the order');
-  }
-};
-
-export const cancelOrderById = async ({ orderId }: GetOrderByIdProps) => {
-  try {
-    const foundOrder = await Order.findByIdAndUpdate(
-      orderId,
-      { status: StatusEnum.canceled },
-      { new: true },
-    );
-    if (!foundOrder) {
-      throw new InternalServerError('Order not found!');
-    }
-    return { payload: foundOrder };
-  } catch (error) {
-    throw new InternalServerError('Error during canceling!');
   }
 };
 

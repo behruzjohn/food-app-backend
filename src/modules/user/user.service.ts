@@ -1,28 +1,8 @@
 import { ApolloError } from 'apollo-server-core';
 import { UserOutput } from './outputs/user.output';
-import { CreateUserProps } from './props/createUser.props';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { UpdateUserByIdProps } from './props/updateUser.props';
 import { User } from './user.model';
-
-export const createUser = async ({
-  user,
-}: CreateUserProps): Promise<UserOutput> => {
-  try {
-    const createdUser = await User.create(user);
-    if (!createdUser) {
-      throw new ApolloError('Error during creating user!');
-    }
-    return { payload: createdUser };
-  } catch (error) {
-    throw new ApolloError('User not created!');
-  }
-};
-
-export const getAllUsers = async () => {
-  const foundUsers = await User.find();
-  return { payload: foundUsers };
-};
 
 export const getUserById = async ({
   userId,

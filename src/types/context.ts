@@ -1,8 +1,11 @@
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
+import { RoleEnum } from "src/enums/role.enum";
 
 export type ContextUser = {
   id: Types.ObjectId;
   telegramId: number;
+
+  role: RoleEnum;
 };
 
 export type Context = {

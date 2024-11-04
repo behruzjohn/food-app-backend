@@ -1,10 +1,9 @@
 import * as crypto from 'crypto';
 import { BINARY_ENCODINGS, HASH_ALGORITHMS } from './crypto.constants';
 
-function matchSha256Hash<T extends Record<string, any> & { hash: string }>(
-  data: T,
-  secretKey: string | crypto.BinaryLike,
-) {
+export function matchSha256Hash<
+  T extends Record<string, any> & { hash: string }
+>(data: T, secretKey: string | crypto.BinaryLike) {
   const content = Object.keys(data)
     .filter((key) => key !== 'hash')
     .sort()

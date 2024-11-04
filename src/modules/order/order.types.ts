@@ -11,8 +11,13 @@ export const orderTypes = gql`
   }
 
   type OrderOutput {
+    payload: Order
+  }
+
+  type OrdersOutput {
     payload: [Order]
   }
+
   input OrderInput {
     title: String!
     name: String!
@@ -20,14 +25,12 @@ export const orderTypes = gql`
     price: Int!
     discount: Int
   }
+
   input OrderUpdateInput {
     food: ID
     price: Int
     discount: Int
     status: String
     createdAt: Date
-  }
-  type OrderCanceledOutput {
-    payload: String!
   }
 `;
