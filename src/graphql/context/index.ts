@@ -1,9 +1,9 @@
-import { ContextFunction } from "apollo-server-core";
-import { ExpressContext } from "apollo-server-express";
-import { authMiddleware } from "./middlewares/auth.middleware";
+import { ContextFunction } from 'apollo-server-core';
+import { ExpressContext } from 'apollo-server-express';
+import { authMiddleware } from './middlewares/auth.middleware';
 
 export const context: ContextFunction<ExpressContext> = async (
-  requestParams
+  requestParams,
 ) => {
   const authContext = await authMiddleware(requestParams);
 
