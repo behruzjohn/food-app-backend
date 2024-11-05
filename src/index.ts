@@ -1,9 +1,10 @@
+import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import { schema } from './graphql';
 import dotenv from 'dotenv';
 import express from 'express';
-import cors from 'cors';
 import mongoose from 'mongoose';
+import { server } from './graphql';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { createServer } from 'http';
