@@ -27,7 +27,7 @@ async function bootstrap() {
   });
 
   await apolloServer.start();
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, path: '/', cors: true });
 
   const wsServer = new WebSocketServer({
     server: httpServer,
