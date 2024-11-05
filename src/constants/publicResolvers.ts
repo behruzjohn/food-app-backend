@@ -1,1 +1,1 @@
-export const PUBLIC_RESOLVERS = new Set();
+export const PUBLIC_RESOLVERS = new Set(['']);
