@@ -18,5 +18,5 @@ export const PERMISSIONS: Permissions = {
     'UPDATE_FOOD_BY_ID',
     'GET_CART_ITEMS_BY_USER_ID',
   ),
-  courier: resolvers('DELIVER_ORDER_BY_ID),
+  courier: resolvers('DELIVER_ORDER_BY_ID'),
 };

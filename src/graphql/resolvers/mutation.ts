@@ -41,5 +41,4 @@ export const mutation = mutations({
   UPDATE_USER_BY_ID: (_, args: UpdateUserByIdProps) => {
     return userService.updateUserById(args);
   },
-  GET_ORDER_BY_ID: () => 1,
 });
