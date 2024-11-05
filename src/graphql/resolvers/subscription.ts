@@ -1,19 +1,32 @@
-import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
+import { subscriptions } from 'src/common';
+import { EVENTS } from 'src/constants/events';
 import * as orderService from 'src/modules/order/order.service';
 import { OrderChangeStatus } from 'src/modules/order/props/orderChangeStatus.props';
 import { UpdateOrderProps } from 'src/modules/order/props/updateOrderProps';
-import { Resolvers } from 'src/types/resolvers';
+import { pubsub } from '..';
 
-export const subscription: Resolvers = {
-  [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: (_, args: UpdateOrderProps) => {
-    return orderService.updateOrderStatusById(args);
+export const subscription = subscriptions({
+  UPDATE_ORDER_STATUS_BY_ID: {
+    subscribe: (_, args: UpdateOrderProps) => {
+      return orderService.updateOrderStatusById(args);
+    },
   },
 
-  [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: (_, args: OrderChangeStatus) => {
-    return orderService.deliverOrderById(args);
+  DELIVER_ORDER_BY_ID: {
+    subscribe: (_, args: OrderChangeStatus) => {
+      return orderService.deliverOrderById(args);
+    },
   },
 
-  [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: (_, args: OrderChangeStatus) => {
-    return orderService.receiveOrderById(args);
+  RECEIVE_ORDER_BY_ID: {
+    subscribe: (_, args: OrderChangeStatus) => {
+      return orderService.receiveOrderById(args);
+    },
   },
-};
+
+  START_COOKING_FOOD: {
+    subscribe: () => {
+      return pubsub.asyncIterator([EVENTS.CREATE_ORDER]);
+    },
+  },
+});

@@ -1,17 +1,17 @@
-import { ContextFunction } from "apollo-server-core";
-import { ExpressContext } from "apollo-server-express";
-import { authMiddleware } from "./middlewares/auth.middleware";
-import { INTROSPECTION_QUERY } from "../../constants/commonResolvers";
-import { FieldNode, OperationDefinitionNode, parse } from "graphql";
-import { OPERATION_DEFINITION } from "src/constants/definitions";
-import { Request } from "express";
+import { authMiddleware } from './middlewares/auth.middleware';
+import { INTROSPECTION_QUERY } from '../../constants/commonResolvers';
+import { FieldNode, OperationDefinitionNode, parse } from 'graphql';
+import { OPERATION_DEFINITION } from 'src/constants/definitions';
+import { Request } from 'express';
 
-export const extractExecuteResolvers = (req: Request): string[] => {
-  const ast = parse(req.body["query"] || "");
+export const extractExecuteResolvers = (query: string): string[] => {
+  const ast = parse(query || '');
 
   const operationDefinition = <OperationDefinitionNode>(
     ast?.definitions.find(({ kind }) => kind === OPERATION_DEFINITION)
   );
+
+  if (!operationDefinition) return [];
 
   const executeResolvers = (<FieldNode[]>(
     operationDefinition.selectionSet.selections
@@ -20,18 +20,32 @@ export const extractExecuteResolvers = (req: Request): string[] => {
   return executeResolvers;
 };
 
-export const context: ContextFunction<ExpressContext> = async (
-  requestParams,
-) => {
-  const isPollingRequest = requestParams.req.body.query
-    .trim()
+export const context = async ({ req, connection }) => {
+  if (connection) {
+    const authToken = connection.params?.authorization;
+
+    const mockRequest = {
+      headers: { authorization: authToken || '' },
+    } as Request;
+
+    const authContext = await authMiddleware(mockRequest, []);
+
+    return { ...authContext };
+  }
+
+  if (!req || !req.body) {
+    return {};
+  }
+
+  const isPollingRequest = req?.body?.query
+    ?.trim()
     .startsWith(INTROSPECTION_QUERY);
 
-  if (isPollingRequest) return;
+  if (isPollingRequest) return {};
 
-  const executeResolvers = extractExecuteResolvers(requestParams.req);
+  const executeResolvers = extractExecuteResolvers(req?.body?.query);
 
-  const authContext = await authMiddleware(requestParams, executeResolvers);
+  const authContext = await authMiddleware(req, executeResolvers);
 
   return { ...authContext };
 };

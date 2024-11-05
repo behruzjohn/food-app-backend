@@ -1,20 +1,23 @@
-import { MUTATIONS } from "src/constants/mutations";
-import { QUERIES } from "src/constants/queries";
+import { MUTATIONS } from 'src/constants/mutations';
+import { QUERIES } from 'src/constants/queries';
+import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 
 type MutationKeys = keyof typeof MUTATIONS;
 
 type QueryKeys = keyof typeof QUERIES;
 
-type PermissionsKey = MutationKeys | QueryKeys;
+type SubscriptionKeys = keyof typeof SUBSCRIPTIONS;
 
-export function permissions(...permissionsKeys: PermissionsKey[]): Set<string> {
-  const validatedPermissions = [...permissionsKeys].map(
-    (key) => MUTATIONS[key] || QUERIES[key]
+type ResolversKeys = MutationKeys | QueryKeys | SubscriptionKeys;
+
+export function resolvers(...keys: ResolversKeys[]): Set<string> {
+  const validatedResolvers = [...keys].map(
+    (key) => MUTATIONS[key] || QUERIES[key] || SUBSCRIPTIONS[key],
   );
 
-  const permissions: Set<PermissionsKey> = new Set<PermissionsKey>(
-    validatedPermissions
+  const resolvers: Set<ResolversKeys> = new Set<ResolversKeys>(
+    validatedResolvers,
   );
 
-  return permissions;
+  return resolvers;
 }

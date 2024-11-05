@@ -1,9 +1,9 @@
 import { ApolloError } from 'apollo-server-core';
-import { PubSub } from 'graphql-subscriptions';
 import { EVENTS } from 'src/constants/events';
 import { MUTATIONS } from 'src/constants/mutations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
+import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
 import { User } from '../user/user.model';
 import { Order } from './order.model';
@@ -13,105 +13,86 @@ import { CreateOrderProps } from './props/createOrderProps';
 import { GetOrderByIdProps } from './props/getOrderProps';
 import { OrderChangeStatus } from './props/orderChangeStatus.props';
 import { UpdateOrderProps } from './props/updateOrderProps';
-export const pubsub = new PubSub();
 
 export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderMessageOutput> => {
-  try {
-    const createdOrder = await Order.create(order);
-    const foundUser = await User.findById(user.id);
+  const createdOrder = await Order.create(order);
+  const foundUser = await User.findById(user.id);
 
-    if (!createdOrder) {
-      throw new ApolloError('Order not created!');
-    }
-    const message = { user: foundUser, order: createdOrder };
-
-    pubsub.publish(EVENTS.CREATE_ORDER, { [MUTATIONS.CREATE_ORDER]: message });
-
-    return { payload: message };
-  } catch (error) {
-    throw new ApolloError('Error during creating order!');
+  if (!createdOrder) {
+    throw new ApolloError('Order not created!');
   }
+  const message = { user: foundUser, order: createdOrder };
+
+  pubsub.publish(EVENTS.CREATE_ORDER, { [MUTATIONS.CREATE_ORDER]: message });
+
+  return { payload: message };
 };
 
 export const getOrderById = async ({
   orderId,
 }: GetOrderByIdProps): Promise<OrderOutput> => {
-  try {
-    const foundOrder = await Order.findById(orderId);
-    if (!foundOrder) {
-      throw new ApolloError('Order not found');
-    }
+  const foundOrder = await Order.findById(orderId);
 
-    return { payload: foundOrder };
-  } catch (error) {
-    throw new ApolloError('Error during getting the order');
+  if (!foundOrder) {
+    throw new ApolloError('Order not found');
   }
+
+  return { payload: foundOrder };
 };
 
 export const updateOrderStatusById = async ({
   id,
-  food,
 }: UpdateOrderProps): Promise<OrderOutput> => {
-  try {
-    const updatedOrder = await Order.findByIdAndUpdate(
-      id,
-      { status: StatusEnum.cooking },
-      { new: true },
-    );
-    if (!updatedOrder) {
-      throw new ApolloError('Order not found!');
-    }
-    return { payload: updatedOrder };
-  } catch (error) {
-    throw new ApolloError('Error during updating order');
+  const updatedOrder = await Order.findByIdAndUpdate(
+    id,
+    { status: StatusEnum.cooking },
+    { new: true },
+  );
+
+  if (!updatedOrder) {
+    throw new ApolloError('Order not found!');
   }
+
+  return { payload: updatedOrder };
 };
 
 export const deliverOrderById = async ({
   orderId,
   user,
 }: OrderChangeStatus): Promise<OrderMessageOutput> => {
-  try {
-    const foundOrderById = await Order.findByIdAndUpdate(orderId, {
-      status: StatusEnum.delivering,
-    });
+  const foundOrderById = await Order.findByIdAndUpdate(orderId, {
+    status: StatusEnum.delivering,
+  });
 
-    const foundUser = await User.findById(user);
+  const foundUser = await User.findById(user);
 
-    const message = { user: foundUser, order: foundOrderById };
+  const message = { user: foundUser, order: foundOrderById };
 
-    pubsub.publish(EVENTS.DELIVER_ORDER_BY_ID, {
-      [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: message,
-    });
+  pubsub.publish(EVENTS.DELIVER_ORDER_BY_ID, {
+    [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: message,
+  });
 
-    return { payload: message };
-  } catch (error) {
-    throw new ApolloError('Error during finding!');
-  }
+  return { payload: message };
 };
 
 export const receiveOrderById = async ({
   orderId,
   user,
 }: OrderChangeStatus): Promise<OrderMessageOutput> => {
-  try {
-    const foundOrderById = await Order.findByIdAndUpdate(orderId, {
-      status: StatusEnum.received,
-    });
+  const foundOrderById = await Order.findByIdAndUpdate(orderId, {
+    status: StatusEnum.received,
+  });
 
-    const foundUser = await User.findById(user);
+  const foundUser = await User.findById(user);
 
-    const message = { user: foundUser, order: foundOrderById };
+  const message = { user: foundUser, order: foundOrderById };
 
-    pubsub.publish(EVENTS.DELIVER_ORDER_BY_ID, {
-      [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: message,
-    });
+  pubsub.publish(EVENTS.DELIVER_ORDER_BY_ID, {
+    [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: message,
+  });
 
-    return { payload: message };
-  } catch (error) {
-    throw new ApolloError('Error during finding!');
-  }
+  return { payload: message };
 };
