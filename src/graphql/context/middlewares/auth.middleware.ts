@@ -49,9 +49,9 @@ export const authMiddleware = async (
 
   return {
     user: {
-      id: foundUser._id,
-      telegramId: foundUser.telegramId,
-      role: RoleEnum[foundUser.role],
+      id: foundUser?._id,
+      telegramId: foundUser?.telegramId,
+      role: <RoleEnum>foundUser?.role,
     },
   };
 };
