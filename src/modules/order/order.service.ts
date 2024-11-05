@@ -1,5 +1,4 @@
 import { ApolloError } from 'apollo-server-core';
-import { PubSub } from 'graphql-subscriptions';
 import { EVENTS } from 'src/constants/events';
 import { MUTATIONS } from 'src/constants/mutations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
@@ -13,7 +12,7 @@ import { CreateOrderProps } from './props/createOrderProps';
 import { GetOrderByIdProps } from './props/getOrderProps';
 import { OrderChangeStatus } from './props/orderChangeStatus.props';
 import { UpdateOrderProps } from './props/updateOrderProps';
-export const pubsub = new PubSub();
+import { pubsub } from 'src/graphql';
 
 export const createOrder = async (
   { order }: CreateOrderProps,
@@ -31,7 +30,7 @@ export const createOrder = async (
     pubsub.publish(EVENTS.CREATE_ORDER, { [MUTATIONS.CREATE_ORDER]: message });
 
     return { payload: message };
-  } catch (error) {
+  } catch {
     throw new ApolloError('Error during creating order!');
   }
 };
@@ -46,14 +45,13 @@ export const getOrderById = async ({
     }
 
     return { payload: foundOrder };
-  } catch (error) {
+  } catch {
     throw new ApolloError('Error during getting the order');
   }
 };
 
 export const updateOrderStatusById = async ({
   id,
-  food,
 }: UpdateOrderProps): Promise<OrderOutput> => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -65,7 +63,7 @@ export const updateOrderStatusById = async ({
       throw new ApolloError('Order not found!');
     }
     return { payload: updatedOrder };
-  } catch (error) {
+  } catch {
     throw new ApolloError('Error during updating order');
   }
 };
@@ -88,7 +86,7 @@ export const deliverOrderById = async ({
     });
 
     return { payload: message };
-  } catch (error) {
+  } catch {
     throw new ApolloError('Error during finding!');
   }
 };
@@ -111,7 +109,7 @@ export const receiveOrderById = async ({
     });
 
     return { payload: message };
-  } catch (error) {
+  } catch {
     throw new ApolloError('Error during finding!');
   }
 };

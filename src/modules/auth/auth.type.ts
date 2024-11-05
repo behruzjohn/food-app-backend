@@ -1,13 +1,18 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const authTypes = gql`
   input AuthInput {
-    id: string;
-    first_name: string;
-    last_name: string;
-    username: string;
-    photo_url: string;
-    auth_date: string;
-    hash: string;
+    id: Int
+    first_name: String
+    last_name: String
+    username: String
+    photo_url: String
+    auth_date: Int
+    hash: String
+  }
+
+  type AuthOutput {
+    user: User
+    token: String
   }
 `;

@@ -1,5 +1,5 @@
-import { AuthInput } from "../inputs/auth.input";
+import { AuthInput } from '../inputs/auth.input';
 
-export interface LogInProps {
+export interface LoginProps {
   auth: AuthInput;
 }

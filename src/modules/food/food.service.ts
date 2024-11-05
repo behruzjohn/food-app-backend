@@ -19,7 +19,7 @@ export const createFood = async ({
       throw new BadRequestError('Something went wrong!');
     }
     return { payload: createdFood };
-  } catch (error) {
+  } catch {
     throw new GraphQLError('Error during creating food', 'BAD_USER_INPUT');
   }
 };
@@ -39,7 +39,7 @@ export const updateFoodById = async ({
     }
 
     return { payload: updatedFood };
-  } catch (error) {
+  } catch {
     throw new InternalServerError('Error during updating the food');
   }
 };
@@ -55,7 +55,7 @@ export const getFoodById = async ({
     }
 
     return { payload: foundFood };
-  } catch (error) {
+  } catch {
     throw new InternalServerError('Error during getting food!');
   }
 };
@@ -71,7 +71,7 @@ export const deleteFoodById = async ({
     }
 
     return { payload: deletedFood };
-  } catch (error) {
+  } catch {
     throw new InternalServerError('Error during deleting error');
   }
 };

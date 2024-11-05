@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { BINARY_ENCODINGS, HASH_ALGORITHMS } from './crypto.constants';
 
 export function matchSha256Hash<
-  T extends Record<string, any> & { hash: string }
+  T extends Record<string, unknown> & { hash: string },
 >(data: T, secretKey: string | crypto.BinaryLike) {
   const content = Object.keys(data)
     .filter((key) => key !== 'hash')
