@@ -15,17 +15,9 @@ export const authMiddleware = async (
 ): Promise<Context> => {
   const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
-  if (tokenType !== AUTH_TYPE || !token) {
-    throw new BadUserInputError('Token is not provided');
-  }
-
   const decodedToken = decodeToken<ContextUser>(token);
 
   let isTokenValid = true;
-
-  if (isTokenExpired(decodedToken)) {
-    throw new AuthenticationError('Token expired');
-  }
 
   if (!decodedToken?.id || !decodedToken?.telegramId) {
     isTokenValid = false;
@@ -38,6 +30,14 @@ export const authMiddleware = async (
       return true;
     } else if (!foundUser) {
       throw new AuthenticationError('User is not found');
+    }
+
+    if (tokenType !== AUTH_TYPE || !token) {
+      throw new BadUserInputError('Token is not provided');
+    }
+
+    if (isTokenExpired(decodedToken)) {
+      throw new AuthenticationError('Token expired');
     }
 
     return PERMISSIONS[<RoleEnum>foundUser.role].has(resolver);
