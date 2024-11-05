@@ -1,38 +1,33 @@
-import { UserInputError } from 'apollo-server-core';
-import { matchSha256Hash } from '../../utils/crypto';
-import { LoginProps } from './props/logIn.props';
-import { User } from '../user/user.model';
-import { AuthOutput } from './outputs/auth.output';
-import { createToken } from 'src/utils/jwt';
-import { JWTAuthPayload } from 'src/types/auth';
-import { RoleEnum } from 'src/enums/role.enum';
+import * as crypto from 'crypto';
+import {
+  BINARY_ENCODINGS,
+  HASH_ALGORITHMS,
+} from 'src/utils/crypto/crypto.constants';
 
-export const login = async ({ auth }: LoginProps): Promise<AuthOutput> => {
-  const isHashMatch = matchSha256Hash(
-    auth,
-    <string>process.env.TELEGRAM_BOT_TOKEN,
-  );
-
-  if (!isHashMatch) {
-    throw new UserInputError('Hash is not matching');
+export function matchSha256Hash<
+  T extends Record<string, unknown> & { hash: string },
+>(data: T, secretKey: string) {
+  if (!data || typeof data !== 'object' || !data.hash) {
+    throw new Error('Invalid data format or missing hash.');
   }
 
-  let user = await User.findOne({ telegramId: auth.id });
+  const content = Object.keys(data)
+    .filter((key) => key !== 'hash')
+    .sort()
+    .map((key) => `${key}=${data[key]}`)
+    .join('\n');
 
-  if (!user) {
-    user = await User.create({
-      telegramId: auth.id,
-      name: auth.first_name,
-    });
-  }
+  const secret = crypto
+    .createHash(HASH_ALGORITHMS.SHA256)
+    .update(secretKey)
+    .digest();
 
-  const jwtPayload: JWTAuthPayload = {
-    _id: user._id,
-    telegramId: user.telegramId,
-    role: <RoleEnum>user.role,
-  };
+  const hash = crypto
+    .createHmac(HASH_ALGORITHMS.SHA256, secret)
+    .update(content)
+    .digest(BINARY_ENCODINGS.HEX);
 
-  const token = createToken(jwtPayload, { expiresIn: '7d' });
+  const isMatch = hash === data.hash;
 
-  return { user, token };
-};
+  return isMatch;
+}
