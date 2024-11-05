@@ -21,6 +21,7 @@
     "graphql": "^16.9.0",
     "graphql-date-scalars": "^0.2.0",
     "graphql-subscriptions": "^2.0.0",
+    "graphql-ws": "^5.16.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
     "tsconfig-paths": "^4.2.0",
