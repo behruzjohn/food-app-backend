@@ -1,9 +1,16 @@
 import * as crypto from 'crypto';
-import { BINARY_ENCODINGS, HASH_ALGORITHMS } from './crypto.constants';
+import {
+  BINARY_ENCODINGS,
+  HASH_ALGORITHMS,
+} from 'src/utils/crypto/crypto.constants';
 
 export function matchSha256Hash<
   T extends Record<string, unknown> & { hash: string },
->(data: T, secretKey: string | crypto.BinaryLike) {
+>(data: T, secretKey: string) {
+  if (!data || typeof data !== 'object' || !data.hash) {
+    throw new Error('Invalid data format or missing hash.');
+  }
+
   const content = Object.keys(data)
     .filter((key) => key !== 'hash')
     .sort()
