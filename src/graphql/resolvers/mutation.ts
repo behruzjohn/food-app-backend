@@ -5,9 +5,7 @@ import { CreateOrderProps } from 'src/modules/order/props/createOrderProps';
 import { Context } from 'src/types/context';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as foodService from '../../modules/food/food.service';
-import * as userService from 'src/modules/user/user.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFoodProps';
-import { UpdateUserByIdProps } from 'src/modules/user/props/updateUser.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { mutations } from 'src/common';
@@ -37,8 +35,5 @@ export const mutation = mutations({
   },
   CREATE_ORDER: (_, args: CreateOrderProps, context: Context) => {
     return orderService.createOrder(args, context);
-  },
-  UPDATE_USER_BY_ID: (_, args: UpdateUserByIdProps) => {
-    return userService.updateUserById(args);
   },
 });
