@@ -3,11 +3,13 @@ import { gql } from 'apollo-server-core';
 export const orderTypes = gql`
   type Order {
     _id: ID
-    price: Int
+    totalPrice: Int
     createdAt: Date
-    discount: Int
+    status: StatusEnum
     from: [Int]
     to: [Int]
+    foods: [CartItem]
+    createdBy: ID
   }
 
   type OrderOutput {
@@ -19,17 +21,10 @@ export const orderTypes = gql`
   }
 
   input OrderInput {
-    title: String!
-    name: String!
-    description: String
-    price: Int!
-    discount: Int
+    foods: [ID]
   }
 
-  input OrderUpdateInput {
-    food: ID
-    price: Int
-    discount: Int
-    status: String
+  input OrderStatusUpdateInput {
+    status: StatusEnum
   }
 `;

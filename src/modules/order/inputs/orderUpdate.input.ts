@@ -1,6 +1,5 @@
-export interface OrderUpdateInput {
-  food: string;
-  price: number;
-  discount: number;
-  status: string;
+import { StatusEnum } from 'src/enums/status.enum';
+
+export interface OrderStatusUpdateInput {
+  status: StatusEnum;
 }

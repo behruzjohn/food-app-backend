@@ -20,20 +20,4 @@ export const userTypes = gql`
   type UsersOutput {
     payload: [User]
   }
-
-  input UserInput {
-    name: String
-    orders: [ID]
-    telegramId: Int
-    role: UserRoleEnum
-    phone: String
-    cart: ID
-  }
-
-  input UserUpdateInput {
-    name: String
-    telegramId: Int
-    role: UserRoleEnum
-    phone: String
-  }
 `;
