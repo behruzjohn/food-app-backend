@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
 
-export type GetFoodProps = {
-  id: Types.ObjectId;
+export type GetFoodByIdProps = {
+  foodId: Types.ObjectId;
 };

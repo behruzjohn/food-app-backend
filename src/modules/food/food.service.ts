@@ -2,7 +2,7 @@ import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
 import { CreateFoodProps } from './props/createFoodProps';
-import { GetFoodProps } from './props/getFoodProps';
+import { GetFoodByIdProps } from './props/getFoodProps';
 import { UpdateFoodProps } from './props/updateFoodProps';
 
 export const createFood = async ({
@@ -34,9 +34,9 @@ export const updateFoodById = async ({
 };
 
 export const getFoodById = async ({
-  id,
-}: GetFoodProps): Promise<FoodOutput> => {
-  const foundFood = await Food.findById(id);
+  foodId,
+}: GetFoodByIdProps): Promise<FoodOutput> => {
+  const foundFood = await Food.findById(foodId);
 
   if (!foundFood) {
     throw new BadRequestError('Food not found');
@@ -46,9 +46,9 @@ export const getFoodById = async ({
 };
 
 export const deleteFoodById = async ({
-  id,
-}: GetFoodProps): Promise<FoodOutput> => {
-  const deletedFood = await Food.findByIdAndDelete(id);
+  foodId,
+}: GetFoodByIdProps): Promise<FoodOutput> => {
+  const deletedFood = await Food.findByIdAndDelete(foodId);
 
   if (!deletedFood) {
     throw new BadUserInputError('Food not found!');

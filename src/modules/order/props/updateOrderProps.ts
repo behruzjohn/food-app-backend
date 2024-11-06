@@ -1,5 +1,7 @@
 import { Types } from 'mongoose';
+import { StatusEnum } from 'src/enums/status.enum';
 
-export type UpdateOrderProps = {
-  id: Types.ObjectId;
+export type UpdateOrderStatusProps = {
+  orderId: Types.ObjectId;
+  status: StatusEnum;
 };

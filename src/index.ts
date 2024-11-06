@@ -4,11 +4,11 @@ import { schema } from './graphql';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
-import { server } from './graphql';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { createServer } from 'http';
-import { context } from './graphql/context';
+import { httpContext } from './graphql/context/http.context';
+import { subscriptionContext } from './graphql/context/ws.context';
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ async function bootstrap() {
 
   const apolloServer = new ApolloServer({
     schema,
-    context,
+    context: ({ req }) => httpContext({ req }),
   });
 
   await apolloServer.start();
@@ -38,10 +38,11 @@ async function bootstrap() {
   useServer(
     {
       schema,
-      onConnect: async (ctx) => {
-        ctx.extra = { headers: ctx.connectionParams.headers } as any;
+      context: (ctx, msg) => {
+        const connectionParams = ctx.connectionParams;
+        const payload = msg.payload;
+        return subscriptionContext({ connectionParams, payload });
       },
-      context,
     },
     wsServer,
   );

@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-core';
 export const foodTypes = gql`
   type Food {
     _id: ID
-    title: String
+    shortName: String
     name: String
     description: String
     price: Int
@@ -29,6 +29,7 @@ export const foodTypes = gql`
     shortName: String
     description: String!
   }
+
   input FoodUpdateInput {
     price: Int
     name: String

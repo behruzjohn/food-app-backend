@@ -1,6 +1,10 @@
 import { gql } from 'apollo-server-core';
+import { StatusEnum } from 'src/enums/status.enum';
+import { createGraphQLEnum } from 'src/utils/schema';
 
 export const orderTypes = gql`
+  ${createGraphQLEnum('StatusEnum', StatusEnum)}
+
   type Order {
     _id: ID
     totalPrice: Int
