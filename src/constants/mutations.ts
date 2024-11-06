@@ -1,5 +1,4 @@
 export const MUTATIONS = {
-  UPDATE_USER_BY_ID: 'updateUserById',
   CREATE_ORDER: 'createOrder',
   CREATE_CART_ITEM: 'createCartItem',
   UPDATE_CART_FOOD_QUANTITY: 'updateCartFoodQuantity',

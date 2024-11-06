@@ -9,6 +9,7 @@ export const queryType = gql`
     ${QUERIES.GET_FOOD_BY_ID}(foodId: ID!): FoodOutput
     ${QUERIES.GET_ORDER_BY_ID}(orderId: ID!): OrderOutput
     ${QUERIES.GET_USER_BY_ID}: UserOutput
+    ${QUERIES.GET_USERS_BY_PHONE}(phone: String!): UserOutput
     ${QUERIES.GET_DASHBOARD}: Int
   }
 `;
