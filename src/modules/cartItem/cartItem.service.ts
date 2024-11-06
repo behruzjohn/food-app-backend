@@ -12,8 +12,6 @@ export const getCartItemsByUserId = async ({
 }: Context): Promise<CartItemsOutput> => {
   const foundCartItems = await CartItem.find({ user: user._id });
 
-  console.log(foundCartItems);
-
   return { payload: foundCartItems };
 };
 

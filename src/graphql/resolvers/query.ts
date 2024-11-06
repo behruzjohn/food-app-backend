@@ -1,4 +1,4 @@
-import { GetFoodProps } from 'src/modules/food/props/getFoodProps';
+import { GetFoodByIdProps } from 'src/modules/food/props/getFoodProps';
 import { queries } from 'src/common';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
@@ -19,7 +19,7 @@ export const query = queries({
   GET_USER_BY_ID: (_, args: GetUserByIdProps) => {
     return userService.getUserById(args);
   },
-  GET_FOOD_BY_ID: (_, args: GetFoodProps) => {
+  GET_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
     return foodService.getFoodById(args);
   },
   GET_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {

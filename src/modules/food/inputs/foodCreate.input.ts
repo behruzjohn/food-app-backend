@@ -1,5 +1,5 @@
 export interface FoodInput {
-  title: string;
+  shortName: string;
   name: string;
   description?: string;
   price: number;

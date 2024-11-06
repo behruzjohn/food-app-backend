@@ -1,34 +1,40 @@
-import { ApolloError } from 'apollo-server-core';
+import { ApolloError, UserInputError } from 'apollo-server-core';
 import { EVENTS } from 'src/constants/events';
 import { MUTATIONS } from 'src/constants/mutations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
 import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
-import { User } from '../user/user.model';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { OrderMessageOutput } from './outputs/orderMessage.output';
 import { CreateOrderProps } from './props/createOrderProps';
 import { GetOrderByIdProps } from './props/getOrderProps';
-import { OrderChangeStatusProps } from './props/orderChangeStatus.props';
-import { UpdateOrderProps } from './props/updateOrderProps';
+import { UpdateOrderStatusProps } from './props/updateOrderProps';
+
+export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, {
+    status: StatusEnum.cooking,
+  });
+
+  if (!updatedOrder) {
+    throw new UserInputError('Order is not found');
+  }
+
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, { payload: updatedOrder });
+};
 
 export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderMessageOutput> => {
   const createdOrder = await Order.create(order);
-  const foundUser = await User.findById(user._id);
 
-  if (!createdOrder) {
-    throw new ApolloError('Order not created!');
-  }
-  const message = { user: foundUser, order: createdOrder };
+  const message = { order: createdOrder, user: user._id };
 
   pubsub.publish(EVENTS.CREATE_ORDER, { [MUTATIONS.CREATE_ORDER]: message });
 
-  return { payload: message };
+  return { payload: 'message' as any };
 };
 
 export const getOrderById = async ({
@@ -44,11 +50,12 @@ export const getOrderById = async ({
 };
 
 export const updateOrderStatusById = async ({
-  id,
-}: UpdateOrderProps): Promise<OrderOutput> => {
+  orderId,
+  status,
+}: UpdateOrderStatusProps): Promise<OrderMessageOutput> => {
   const updatedOrder = await Order.findByIdAndUpdate(
-    id,
-    { status: StatusEnum.cooking },
+    orderId,
+    { status },
     { new: true },
   );
 
@@ -56,23 +63,34 @@ export const updateOrderStatusById = async ({
     throw new ApolloError('Order not found!');
   }
 
-  return { payload: updatedOrder };
+  const message = { order: updatedOrder };
+
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+    [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
+  });
+
+  return { payload: message };
 };
 
 export const deliverOrderById = async ({
   orderId,
-  user,
-}: OrderChangeStatusProps): Promise<OrderMessageOutput> => {
-  const foundOrderById = await Order.findByIdAndUpdate(orderId, {
-    status: StatusEnum.delivering,
-  });
+}: GetOrderByIdProps): Promise<OrderMessageOutput> => {
+  const updatedOrder = await Order.findByIdAndUpdate(
+    orderId,
+    {
+      status: StatusEnum.delivering,
+    },
+    { new: true },
+  );
 
-  const foundUser = await User.findById(user);
+  if (!updatedOrder) {
+    throw new UserInputError(`Order with id "${orderId}" is not found`);
+  }
 
-  const message = { user: foundUser, order: foundOrderById };
+  const message = { order: updatedOrder };
 
-  pubsub.publish(EVENTS.DELIVER_ORDER_BY_ID, {
-    [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: message,
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+    [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
 
   return { payload: message };
@@ -80,18 +98,15 @@ export const deliverOrderById = async ({
 
 export const receiveOrderById = async ({
   orderId,
-  user,
-}: OrderChangeStatusProps): Promise<OrderMessageOutput> => {
-  const foundOrderById = await Order.findByIdAndUpdate(orderId, {
+}: GetOrderByIdProps): Promise<OrderMessageOutput> => {
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
   });
 
-  const foundUser = await User.findById(user);
+  const message = { order: updatedOrder };
 
-  const message = { user: foundUser, order: foundOrderById };
-
-  pubsub.publish(EVENTS.DELIVER_ORDER_BY_ID, {
-    [SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID]: message,
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+    [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: message,
   });
 
   return { payload: message };
