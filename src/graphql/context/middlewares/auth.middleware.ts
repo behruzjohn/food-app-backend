@@ -19,11 +19,13 @@ export const authMiddleware = async (
 
   let isTokenValid = true;
 
-  if (!decodedToken?.id || !decodedToken?.telegramId) {
+  if (!decodedToken?._id || !decodedToken?.telegramId) {
     isTokenValid = false;
   }
 
-  const foundUser = isTokenValid ? await User.findById(decodedToken.id) : null;
+  console.log(decodedToken);
+
+  const foundUser = isTokenValid ? await User.findById(decodedToken._id) : null;
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {
     if (PUBLIC_RESOLVERS.has(resolver)) {
@@ -49,7 +51,7 @@ export const authMiddleware = async (
 
   return {
     user: {
-      id: foundUser?._id,
+      _id: foundUser?._id,
       telegramId: foundUser?.telegramId,
       role: <RoleEnum>foundUser?.role,
     },
