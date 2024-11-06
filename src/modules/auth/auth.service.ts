@@ -23,6 +23,7 @@ export const login = async ({ auth }: LoginProps): Promise<AuthOutput> => {
     user = await User.create({
       telegramId: auth.id,
       name: auth.first_name,
+      role: RoleEnum.user,
     });
   }
 
