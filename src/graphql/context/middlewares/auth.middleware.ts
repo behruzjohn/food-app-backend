@@ -23,8 +23,6 @@ export const authMiddleware = async (
     isTokenValid = false;
   }
 
-  console.log(decodedToken);
-
   const foundUser = isTokenValid ? await User.findById(decodedToken._id) : null;
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {

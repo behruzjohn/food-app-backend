@@ -5,7 +5,7 @@ export function decodeToken<T extends Record<string, unknown>>(token: string) {
 }
 
 export function isTokenExpired({ exp = 0 }: jwt.JwtPayload) {
-  return exp - new Date().getTime() < 0;
+  return exp * 1000 - new Date().getTime() < 0;
 }
 
 export function createToken(

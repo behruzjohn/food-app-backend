@@ -1,7 +1,6 @@
-export interface OrderCreateInput {
-  food: string,
-  price: number,
-  discount: number,
-  status: string,
-  createdAt: Date
+export interface OrderInput {
+  food: string;
+  price: number;
+  discount: number;
+  status: string;
 }

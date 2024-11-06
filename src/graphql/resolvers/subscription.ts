@@ -1,7 +1,7 @@
 import { subscriptions } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import * as orderService from 'src/modules/order/order.service';
-import { OrderChangeStatus } from 'src/modules/order/props/orderChangeStatus.props';
+import { OrderChangeStatusProps } from 'src/modules/order/props/orderChangeStatus.props';
 import { UpdateOrderProps } from 'src/modules/order/props/updateOrderProps';
 import { pubsub } from '..';
 
@@ -13,13 +13,13 @@ export const subscription = subscriptions({
   },
 
   DELIVER_ORDER_BY_ID: {
-    subscribe: (_, args: OrderChangeStatus) => {
+    subscribe: (_, args: OrderChangeStatusProps) => {
       return orderService.deliverOrderById(args);
     },
   },
 
   RECEIVE_ORDER_BY_ID: {
-    subscribe: (_, args: OrderChangeStatus) => {
+    subscribe: (_, args: OrderChangeStatusProps) => {
       return orderService.receiveOrderById(args);
     },
   },

@@ -1,5 +1,5 @@
-import { OrderCreateInput } from '../inputs/orderCreate.input';
+import { OrderInput } from '../inputs/orderCreate.input';
 
 export type CreateOrderProps = {
-  order: OrderCreateInput,
-}
+  order: OrderInput;
+};

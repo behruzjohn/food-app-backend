@@ -10,7 +10,9 @@ import { UpdateCartFoodQuantityProps } from './props/updateCartFoodQuantity.prop
 export const getCartItemsByUserId = async ({
   user,
 }: Context): Promise<CartItemsOutput> => {
-  const foundCartItems = await CartItem.find({ user: user.id });
+  const foundCartItems = await CartItem.find({ user: user._id });
+
+  console.log(foundCartItems);
 
   return { payload: foundCartItems };
 };
@@ -29,7 +31,7 @@ export const createCartItem = async (
     food,
     price: foundFood.price,
     quantity: 1,
-    user: user.id,
+    user: user._id,
   });
 
   return { payload: createdCartItem };
@@ -42,7 +44,7 @@ export const updateCartFoodQuantity = async (
   const updatedCartItem = await CartItem.findOneAndUpdate(
     {
       food,
-      user: user.id,
+      user: user._id,
     },
     { quantity },
     { new: true },
@@ -67,7 +69,7 @@ export const deleteCartItem = async (
 
   const removedFood = await CartItem.findOneAndDelete({
     food,
-    user: user.id,
+    user: user._id,
   });
 
   return { payload: removedFood };

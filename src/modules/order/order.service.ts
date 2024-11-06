@@ -11,7 +11,7 @@ import { OrderOutput } from './outputs/order.output';
 import { OrderMessageOutput } from './outputs/orderMessage.output';
 import { CreateOrderProps } from './props/createOrderProps';
 import { GetOrderByIdProps } from './props/getOrderProps';
-import { OrderChangeStatus } from './props/orderChangeStatus.props';
+import { OrderChangeStatusProps } from './props/orderChangeStatus.props';
 import { UpdateOrderProps } from './props/updateOrderProps';
 
 export const createOrder = async (
@@ -19,7 +19,7 @@ export const createOrder = async (
   { user }: Context,
 ): Promise<OrderMessageOutput> => {
   const createdOrder = await Order.create(order);
-  const foundUser = await User.findById(user.id);
+  const foundUser = await User.findById(user._id);
 
   if (!createdOrder) {
     throw new ApolloError('Order not created!');
@@ -62,7 +62,7 @@ export const updateOrderStatusById = async ({
 export const deliverOrderById = async ({
   orderId,
   user,
-}: OrderChangeStatus): Promise<OrderMessageOutput> => {
+}: OrderChangeStatusProps): Promise<OrderMessageOutput> => {
   const foundOrderById = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.delivering,
   });
@@ -81,7 +81,7 @@ export const deliverOrderById = async ({
 export const receiveOrderById = async ({
   orderId,
   user,
-}: OrderChangeStatus): Promise<OrderMessageOutput> => {
+}: OrderChangeStatusProps): Promise<OrderMessageOutput> => {
   const foundOrderById = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
   });

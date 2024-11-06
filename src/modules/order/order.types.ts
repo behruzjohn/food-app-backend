@@ -31,6 +31,5 @@ export const orderTypes = gql`
     price: Int
     discount: Int
     status: String
-    createdAt: Date
   }
 `;
