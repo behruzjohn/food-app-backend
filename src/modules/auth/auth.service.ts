@@ -5,7 +5,7 @@ import { User } from '../user/user.model';
 import { AuthOutput } from './outputs/auth.output';
 import { createToken } from 'src/utils/jwt';
 import { JWTAuthPayload } from 'src/types/auth';
-import { RoleEnum } from 'src/enums/role.enum';
+import { UserRoleEnum } from 'src/enums/role.enum';
 
 export const login = async ({ auth }: LoginProps): Promise<AuthOutput> => {
   const isHashMatch = matchSha256Hash(
@@ -23,14 +23,14 @@ export const login = async ({ auth }: LoginProps): Promise<AuthOutput> => {
     user = await User.create({
       telegramId: auth.id,
       name: auth.first_name,
-      role: RoleEnum.user,
+      role: UserRoleEnum.user,
     });
   }
 
   const jwtPayload: JWTAuthPayload = {
     _id: user._id,
     telegramId: user.telegramId,
-    role: <RoleEnum>user.role,
+    role: <UserRoleEnum>user.role,
   };
 
   const token = createToken(jwtPayload, { expiresIn: '7d' });
