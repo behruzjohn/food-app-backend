@@ -19,6 +19,7 @@ export const PERMISSIONS: Permissions = {
     'GET_USER_BY_ID',
     'GET_ORDER_BY_ID',
     'UPDATE_FOOD_BY_ID',
+    'GET_USERS_BY_PHONE',
     'GET_CART_ITEMS_BY_USER_ID',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
