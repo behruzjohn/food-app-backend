@@ -10,6 +10,7 @@ import { GetOrderByIdProps } from 'src/modules/order/props/getOrderProps';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
 import { Context } from 'src/types/context';
+import { getUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 
 export const query = queries({
   LOGIN: (_, args: LoginProps) => {
@@ -33,5 +34,8 @@ export const query = queries({
   GET_DASHBOARD: () => 1,
   GET_USERS_BY_ROLE: (_, args: GetUsersByRoleProps) => {
     return userService.getUsersByRole(args);
+  },
+  GET_USERS_BY_PHONE: (_, args: getUsersByPhoneProps) => {
+    return userService.getUsersByPhone(args);
   },
 });

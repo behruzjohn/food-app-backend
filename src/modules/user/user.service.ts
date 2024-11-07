@@ -1,7 +1,9 @@
 import { ApolloError } from 'apollo-server-core';
+import { BadRequestError } from 'src/common';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { GetUserByIdProps } from './props/getUserById.props';
+import { getUsersByPhoneProps } from './props/getUsersByPhone.props';
 import { User } from './user.model';
 import { UserRoleEnum } from 'src/enums/role.enum';
 import { Context } from 'src/types/context';
@@ -32,4 +34,16 @@ export const getUsersByRole = async ({
   const foundUsers = await User.find({ role });
 
   return { payload: foundUsers };
+};
+
+export const getUsersByPhone = async ({ phone }: getUsersByPhoneProps) => {
+  const phoneRegex = new RegExp(`^${phone}`, 'i');
+
+  const foundUsers = await User.find({ phone: { $regex: phoneRegex } });
+
+  if (!foundUsers || foundUsers.length === 0) {
+    throw new BadRequestError('User not found!');
+  }
+
+  return foundUsers;
 };
