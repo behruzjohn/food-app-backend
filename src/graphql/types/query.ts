@@ -11,5 +11,6 @@ export const queryType = gql`
     ${QUERIES.GET_USER_BY_ID}: UserOutput
     ${QUERIES.GET_USERS_BY_PHONE}(phone: String!): UserOutput
     ${QUERIES.GET_DASHBOARD}: Int
+    ${QUERIES.GET_ALL_FOODS}: FoodsOutput
   }
 `;
