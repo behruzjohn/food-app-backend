@@ -5,7 +5,7 @@ import { Context, ContextUser } from '../../../types/context';
 import { User } from '../../../modules/user/user.model';
 import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
 import { BadUserInputError } from 'src/common';
-import { RoleEnum } from 'src/enums/role.enum';
+import { UserRoleEnum } from 'src/enums/role.enum';
 import { PERMISSIONS } from 'src/constants/permissions';
 import e from 'express';
 
@@ -40,7 +40,7 @@ export const authMiddleware = async (
       throw new AuthenticationError('Token expired');
     }
 
-    return PERMISSIONS[<RoleEnum>foundUser.role].has(resolver);
+    return PERMISSIONS[<UserRoleEnum>foundUser.role].has(resolver);
   });
 
   if (!isAccessibleRequest) {
@@ -51,7 +51,7 @@ export const authMiddleware = async (
     user: {
       _id: foundUser?._id,
       telegramId: foundUser?.telegramId,
-      role: <RoleEnum>foundUser?.role,
+      role: <UserRoleEnum>foundUser?.role,
     },
   };
 };

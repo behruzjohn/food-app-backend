@@ -8,7 +8,8 @@ export const queryType = gql`
     ${QUERIES.GET_CART_ITEMS_BY_USER_ID}: CartItemsOutput
     ${QUERIES.GET_FOOD_BY_ID}(foodId: ID!): FoodOutput
     ${QUERIES.GET_ORDER_BY_ID}(orderId: ID!): OrderOutput
-    ${QUERIES.GET_USER_BY_ID}: UserOutput
+    ${QUERIES.GET_USER_BY_ID}(userId: ID): UserOutput
     ${QUERIES.GET_DASHBOARD}: Int
+    ${QUERIES.GET_USERS_BY_ROLE}(role: UserRoleEnum): UsersOutput
   }
 `;

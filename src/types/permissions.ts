@@ -1,5 +1,5 @@
-import { RoleEnum } from "src/enums/role.enum";
+import { UserRoleEnum } from 'src/enums/role.enum';
 
 export type Permissions = {
-  [K in RoleEnum]: Set<string>;
+  [K in UserRoleEnum]: Set<string>;
 };

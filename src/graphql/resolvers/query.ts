@@ -8,6 +8,8 @@ import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrderProps';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
+import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
+import { Context } from 'src/types/context';
 
 export const query = queries({
   LOGIN: (_, args: LoginProps) => {
@@ -16,8 +18,8 @@ export const query = queries({
   GET_ALL_USERS: () => {
     return userService.getAllUsers();
   },
-  GET_USER_BY_ID: (_, args: GetUserByIdProps) => {
-    return userService.getUserById(args);
+  GET_USER_BY_ID: (_, args: GetUserByIdProps, context: Context) => {
+    return userService.getUserById(args, context);
   },
   GET_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
     return foodService.getFoodById(args);
@@ -29,4 +31,7 @@ export const query = queries({
     return cartItemService.getCartItemsByUserId(context);
   },
   GET_DASHBOARD: () => 1,
+  GET_USERS_BY_ROLE: (_, args: GetUsersByRoleProps) => {
+    return userService.getUsersByRole(args);
+  },
 });
