@@ -8,6 +8,7 @@ import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrderProps';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
+import { getUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 
 export const query = queries({
   LOGIN: (_, args: LoginProps) => {
@@ -29,4 +30,7 @@ export const query = queries({
     return cartItemService.getCartItemsByUserId(context);
   },
   GET_DASHBOARD: () => 1,
+  GET_USERS_BY_PHONE: (_, args: getUsersByPhoneProps) => {
+    return userService.getUsersByPhone(args);
+  },
 });

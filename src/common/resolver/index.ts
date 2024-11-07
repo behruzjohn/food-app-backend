@@ -1,9 +1,9 @@
-import { Resolver, Subscription } from './resolver.type';
-import { QUERIES } from 'src/constants/queries';
-import { MUTATIONS } from 'src/constants/mutations';
-import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { FieldNode, OperationDefinitionNode, parse } from 'graphql';
 import { OPERATION_DEFINITION } from 'src/constants/definitions';
+import { MUTATIONS } from 'src/constants/mutations';
+import { QUERIES } from 'src/constants/queries';
+import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
+import { Resolver, Subscription } from './resolver.type';
 
 export function queries(
   resolvers: Record<keyof typeof QUERIES, Resolver<unknown, unknown>>,
