@@ -1,6 +1,7 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
+import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFoodProps';
 import { GetFoodByIdProps } from './props/getFoodProps';
 import { UpdateFoodProps } from './props/updateFoodProps';
@@ -55,4 +56,10 @@ export const deleteFoodById = async ({
   }
 
   return { payload: deletedFood };
+};
+
+export const getAllFoods = async (): Promise<FoodsOutput> => {
+  const foundAllFoods = await Food.find();
+
+  return { payload: foundAllFoods };
 };
