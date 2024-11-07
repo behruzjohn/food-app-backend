@@ -1,0 +1,10 @@
+import { model, Schema } from 'mongoose';
+import { MODELS } from 'src/constants/models';
+
+const categorySchema = new Schema({
+  name: { type: String, required: true },
+  image: { type: String, required: true },
+});
+
+const Categories = model(MODELS.CATEGORIES, categorySchema);
+export default Categories;
