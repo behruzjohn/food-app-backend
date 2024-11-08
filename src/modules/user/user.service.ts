@@ -1,13 +1,14 @@
 import { ApolloError } from 'apollo-server-core';
-import { BadRequestError } from 'src/common';
+import { BadRequestError, BadUserInputError } from 'src/common';
+import { UserRoleEnum } from 'src/enums/role.enum';
+import { Context } from 'src/types/context';
+import { CourierOutput } from './outputs/courier.output';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { getUsersByPhoneProps } from './props/getUsersByPhone.props';
-import { User } from './user.model';
-import { UserRoleEnum } from 'src/enums/role.enum';
-import { Context } from 'src/types/context';
 import { GetUsersByRoleProps } from './props/getUsersByRole.props';
+import { User } from './user.model';
 
 export const getAllUsers = async (): Promise<UsersOutput> => {
   const foundUsers = await User.find({ role: UserRoleEnum.user });
@@ -36,7 +37,9 @@ export const getUsersByRole = async ({
   return { payload: foundUsers };
 };
 
-export const getUsersByPhone = async ({ phone }: getUsersByPhoneProps) => {
+export const getUsersByPhone = async ({
+  phone,
+}: getUsersByPhoneProps): Promise<UsersOutput> => {
   const phoneRegex = new RegExp(`^${phone}`, 'i');
 
   const foundUsers = await User.find({ phone: { $regex: phoneRegex } });
@@ -45,5 +48,35 @@ export const getUsersByPhone = async ({ phone }: getUsersByPhoneProps) => {
     throw new BadRequestError('User not found!');
   }
 
-  return foundUsers;
+  return { payload: foundUsers };
+};
+
+export const createCourier = async ({
+  phone,
+}: getUsersByPhoneProps): Promise<CourierOutput> => {
+  const foundUser = await User.findOneAndUpdate(
+    {
+      phone: phone,
+    },
+    { $set: { role: UserRoleEnum.courier } },
+    { new: true },
+  );
+  if (!foundUser) {
+    throw new BadRequestError('User not found!');
+  }
+  return { payload: foundUser };
+};
+
+export const deleteCourierById = async ({
+  userId,
+}: GetUserByIdProps): Promise<CourierOutput> => {
+  const foundCourier = await User.findOneAndUpdate(
+    { _id: userId },
+    { $set: { role: UserRoleEnum.user } },
+    { new: true },
+  );
+  if (!foundCourier) {
+    throw new BadUserInputError('User not found!');
+  }
+  return { payload: foundCourier };
 };

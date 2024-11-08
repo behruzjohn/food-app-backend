@@ -6,4 +6,6 @@ export const MUTATIONS = {
   CREATE_FOOD: 'createFood',
   UPDATE_FOOD_BY_ID: 'updateFoodById',
   DELETE_FOOD_BY_ID: 'deleteFoodById',
+  CREATE_COURIER: 'createCourier',
+  DELETE_COURIER_BY_ID: 'deleteCourierById',
 };
