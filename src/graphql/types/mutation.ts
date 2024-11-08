@@ -7,8 +7,10 @@ export const mutationType = gql`
     ${MUTATIONS.UPDATE_CART_FOOD_QUANTITY}(food: ID, quantity: Int): CartItemOutput
     ${MUTATIONS.DELETE_CART_ITEM}(food: ID): CartItemOutput
     ${MUTATIONS.CREATE_FOOD}(food: FoodInput!): FoodOutput 
-    ${MUTATIONS.UPDATE_FOOD_BY_ID}(food: FoodUpdateInput!): FoodOutput 
-    ${MUTATIONS.DELETE_FOOD_BY_ID}(food: ID!): FoodDeleteOutput 
+    ${MUTATIONS.UPDATE_FOOD_BY_ID}(foodId: ID!, food: FoodUpdateInput!): FoodOutput 
+    ${MUTATIONS.DELETE_FOOD_BY_ID}(foodId: ID!): FoodDeleteOutput 
     ${MUTATIONS.CREATE_ORDER}(order: OrderInput!): OrderOutput 
+    ${MUTATIONS.CREATE_COURIER}(phone: String!): UserOutput
+    ${MUTATIONS.DELETE_COURIER_BY_ID}(userId: ID!): UserOutput
   }
 `;

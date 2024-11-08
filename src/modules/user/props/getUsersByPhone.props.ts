@@ -1,3 +1,3 @@
-export type getUsersByPhoneProps = {
+export type GetUsersByPhoneProps = {
   phone: String;
 };
