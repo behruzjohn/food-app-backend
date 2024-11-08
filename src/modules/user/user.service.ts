@@ -6,7 +6,7 @@ import { CourierOutput } from './outputs/courier.output';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { GetUserByIdProps } from './props/getUserById.props';
-import { getUsersByPhoneProps } from './props/getUsersByPhone.props';
+import { GetUsersByPhoneProps } from './props/getUsersByPhone.props';
 import { GetUsersByRoleProps } from './props/getUsersByRole.props';
 import { User } from './user.model';
 
@@ -39,7 +39,7 @@ export const getUsersByRole = async ({
 
 export const getUsersByPhone = async ({
   phone,
-}: getUsersByPhoneProps): Promise<UsersOutput> => {
+}: GetUsersByPhoneProps): Promise<UsersOutput> => {
   const phoneRegex = new RegExp(`^${phone}`, 'i');
 
   const foundUsers = await User.find({ phone: { $regex: phoneRegex } });
@@ -53,7 +53,7 @@ export const getUsersByPhone = async ({
 
 export const createCourier = async ({
   phone,
-}: getUsersByPhoneProps): Promise<CourierOutput> => {
+}: GetUsersByPhoneProps): Promise<CourierOutput> => {
   const foundUser = await User.findOneAndUpdate(
     {
       phone: phone,

@@ -19,13 +19,14 @@ export const createFood = async ({
 };
 
 export const updateFoodById = async ({
-  id,
+  foodId,
   food,
 }: UpdateFoodProps): Promise<FoodOutput> => {
-  const updatedFood = await Food.findByIdAndUpdate(id, food, {
+  const updatedFood = await Food.findOneAndUpdate({ _id: foodId }, food, {
     new: true,
-    runValidators: true,
   });
+  console.log(foodId);
+  console.log(food);
 
   if (!updatedFood) {
     throw new GraphQLError('Food not found', 'BAD_REQUEST');
