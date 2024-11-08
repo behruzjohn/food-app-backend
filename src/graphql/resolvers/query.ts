@@ -1,13 +1,15 @@
 import { queries } from 'src/common';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
+import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFoodProps';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrderProps';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
+import { getUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
 import { Context } from 'src/types/context';
-import { getUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
+import * as categoryServise from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
@@ -40,5 +42,11 @@ export const query = queries({
   },
   GET_ALL_FOODS: () => {
     return foodService.getAllFoods();
+  },
+  GET_CATEGORY_BY_ID: (_, args: GetCategoryByIdProps) => {
+    return categoryServise.getCategoryById(args);
+  },
+  GET_ALL_CATEGORIES: () => {
+    return categoryServise.getAllCategories();
   },
 });

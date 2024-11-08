@@ -21,6 +21,12 @@ export const PERMISSIONS: Permissions = {
     'UPDATE_FOOD_BY_ID',
     'GET_USERS_BY_PHONE',
     'GET_CART_ITEMS_BY_USER_ID',
+
+    'CREATE_CATEGORY',
+    'DELETE_CATEGORY_BY_ID',
+    'GET_ALL_CATEGORIES',
+    'GET_CATEGORY_BY_ID',
+    'UPDATE_CATEGORY_BY_ID',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
 };
