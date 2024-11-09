@@ -9,6 +9,6 @@ export const QUERIES = {
   GET_USERS_BY_ROLE: 'getUsersByRole',
   GET_USERS_BY_PHONE: 'getUsersByPhone',
   GET_ALL_FOODS: 'getAllFoods',
-  GET_ALL_CATEGORIES: 'getAllCategories',
+  GET_ALL_CATEGORIES: 'getAllCategory',
   GET_CATEGORY_BY_ID: 'getCategoryById',
 };

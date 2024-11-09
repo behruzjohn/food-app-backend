@@ -2,10 +2,13 @@ import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
 import { FoodsOutput } from './outputs/foods.output';
-import { CreateFoodProps } from './props/createFoodProps';
-import { GetFoodByIdProps } from './props/getFoodProps';
-import { UpdateFoodProps } from './props/updateFoodProps';
+import { CreateFoodProps } from './props/createFood.props';
+import { GetFoodByIdProps } from './props/getFood.props';
+import { UpdateFoodProps } from './props/updateFood.props';
 import { saveFile } from 'src/helpers/file';
+import { GetAllFoodsProps } from './props/getAllFoods.props';
+import Category from '../category/category.model';
+import { POPULATIONS } from 'src/constants/populations';
 
 export const createFood = async ({
   image,
@@ -68,8 +71,35 @@ export const deleteFoodById = async ({
   return { payload: deletedFood };
 };
 
-export const getAllFoods = async (): Promise<FoodsOutput> => {
-  const foundAllFoods = await Food.find();
+export const getAllFoods = async ({
+  name,
+  category,
+}: GetAllFoodsProps): Promise<FoodsOutput> => {
+  let categoryIds = [];
+  const nameRegex = name ? new RegExp(name, 'i') : null;
 
-  return { payload: foundAllFoods };
+  if (category) {
+    const matchedCategory = await Category.find({
+      name: { $regex: new RegExp(category, 'i') },
+    });
+    categoryIds = matchedCategory.map((category) => category._id);
+  }
+
+  const searchConditions = [];
+
+  if (nameRegex) {
+    searchConditions.push(
+      { shortName: { $regex: nameRegex } },
+      { name: { $regex: nameRegex } },
+    );
+  }
+  if (categoryIds.length) {
+    searchConditions.push({ category: { $in: categoryIds } });
+  }
+
+  const foundFoods = await Food.find(
+    searchConditions.length ? { $or: searchConditions } : {},
+  ).populate(POPULATIONS.food);
+
+  return { payload: foundFoods };
 };

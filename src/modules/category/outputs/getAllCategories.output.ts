@@ -1,5 +1,5 @@
-import Categories from '../category.model';
+import Category from '../category.model';
 
-export type CreateCategoriesOutput = {
-  payload: (typeof Categories.schema.obj)[];
+export type CreateCategoryOutput = {
+  payload: (typeof Category.schema.obj)[];
 };

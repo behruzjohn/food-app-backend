@@ -1,5 +1,5 @@
-import Categories from '../category.model';
+import Category from '../category.model';
 
 export type CreateCategoryProps = {
-  category: typeof Categories.schema.obj;
+  category: typeof Category.schema.obj;
 };

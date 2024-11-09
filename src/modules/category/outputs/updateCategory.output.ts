@@ -1,5 +1,5 @@
-import Categories from '../category.model';
+import Category from '../category.model';
 
 export type UpdateCategoryOutput = {
-  payload: typeof Categories.schema.obj;
+  payload: typeof Category.schema.obj;
 };
