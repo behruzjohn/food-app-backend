@@ -14,6 +14,6 @@ export const queryType = gql`
     ${QUERIES.GET_ALL_FOODS}(name: String, category: String): FoodsOutput
     ${QUERIES.GET_USERS_BY_ROLE}(role: UserRoleEnum): UsersOutput
     ${QUERIES.GET_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
-    ${QUERIES.GET_ALL_CATEGORIES}: Category
+    ${QUERIES.GET_ALL_CATEGORIES}: CategoriesOutput
   }
 `;

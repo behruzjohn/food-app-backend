@@ -1,5 +1,5 @@
 import Category from '../category.model';
 
-export type CreateCategoryOutput = {
+export type CategoriesOutput = {
   payload: (typeof Category.schema.obj)[];
 };

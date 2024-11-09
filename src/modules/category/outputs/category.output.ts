@@ -1,5 +1,5 @@
 import Category from '../category.model';
 
-export type DeleteCategoryOutput = {
+export type CategoryOutput = {
   payload: typeof Category.schema.obj;
 };

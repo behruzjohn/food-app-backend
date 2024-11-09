@@ -48,6 +48,6 @@ export const query = queries({
     return categoryService.getCategoryById(args);
   },
   GET_ALL_CATEGORIES: () => {
-    return categoryService.getAllCategory();
+    return categoryService.getAllCategories();
   },
 });
