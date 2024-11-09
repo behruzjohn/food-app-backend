@@ -1,6 +1,7 @@
 export const MODELS = {
-  USER: "User",
-  ORDER: "Order",
-  FOOD: "Food",
-  CART_ITEM: "CartItem",
+  USER: 'User',
+  ORDER: 'Order',
+  FOOD: 'Food',
+  CART_ITEM: 'CartItem',
+  CATEGORIES: 'Categories',
 };

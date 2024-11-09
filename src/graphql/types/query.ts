@@ -11,6 +11,9 @@ export const queryType = gql`
     ${QUERIES.GET_USER_BY_ID}(userId: ID): UserOutput
     ${QUERIES.GET_USERS_BY_PHONE}(phone: String!): UsersOutput
     ${QUERIES.GET_DASHBOARD}: Int
+    ${QUERIES.GET_ALL_FOODS}: FoodsOutput
     ${QUERIES.GET_USERS_BY_ROLE}(role: UserRoleEnum): UsersOutput
+    ${QUERIES.GET_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
+    ${QUERIES.GET_ALL_CATEGORIES}: Categories
   }
 `;

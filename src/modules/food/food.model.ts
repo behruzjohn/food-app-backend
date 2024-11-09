@@ -8,6 +8,7 @@ const foodSchema = new Schema({
   description: { type: String },
   price: { type: Number, required: true },
   discount: { type: Number },
+  category: { type: String, ref: MODELS.CATEGORIES, required: true },
 });
 
 export const Food = model(MODELS.FOOD, foodSchema);
