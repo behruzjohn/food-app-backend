@@ -7,9 +7,9 @@ import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
-import { CreateOrderProps } from './props/createOrderProps';
-import { GetOrderByIdProps } from './props/getOrderProps';
-import { UpdateOrderStatusProps } from './props/updateOrderProps';
+import { CreateOrderProps } from './props/createOrder.props';
+import { GetOrderByIdProps } from './props/getOrder.props';
+import { UpdateOrderStatusProps } from './props/updateOrder.props';
 import { getCartItemsByUserId } from '../cartItem/cartItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {

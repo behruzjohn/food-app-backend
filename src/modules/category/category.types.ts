@@ -6,7 +6,7 @@ export const categoryTypes = gql`
     image: String
   }
 
-  type Categories {
+  type CategoriesOutput {
     payload: [Category]
   }
 

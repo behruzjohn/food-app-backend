@@ -1,18 +1,19 @@
 import { queries } from 'src/common';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
-import { GetFoodByIdProps } from 'src/modules/food/props/getFoodProps';
-import { GetOrderByIdProps } from 'src/modules/order/props/getOrderProps';
+import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
+import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
 import { Context } from 'src/types/context';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
-import * as categoryServise from '../../modules/category/category.service';
+import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
+import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 
 export const query = queries({
   LOGIN: (_, args: LoginProps) => {
@@ -40,13 +41,13 @@ export const query = queries({
   GET_USERS_BY_PHONE: (_, args: GetUsersByPhoneProps) => {
     return userService.getUsersByPhone(args);
   },
-  GET_ALL_FOODS: () => {
-    return foodService.getAllFoods();
+  GET_ALL_FOODS: (_, args: GetAllFoodsProps) => {
+    return foodService.getAllFoods(args);
   },
   GET_CATEGORY_BY_ID: (_, args: GetCategoryByIdProps) => {
-    return categoryServise.getCategoryById(args);
+    return categoryService.getCategoryById(args);
   },
   GET_ALL_CATEGORIES: () => {
-    return categoryServise.getAllCategories();
+    return categoryService.getAllCategories();
   },
 });

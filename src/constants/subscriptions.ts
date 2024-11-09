@@ -3,4 +3,5 @@ export const SUBSCRIPTIONS = {
   DELIVER_ORDER_BY_ID: 'deliverOrderById',
   RECEIVE_ORDER_BY_ID: 'receiveOrderById',
   START_COOKING_FOOD: 'startCookingFood',
+  CREATE_ORDER: 'createOrder',
 };

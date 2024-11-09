@@ -1,33 +1,31 @@
 import { BadRequestError } from 'src/common';
-import Categories from './category.model';
-import { CartItemOutput } from './outputs/createCategory.output';
-import { DeleteCategoryOutput } from './outputs/deleteCategory.output';
-import { CreateCategoriesOutput } from './outputs/getAllCategories.output';
-import { UpdateCategoryOutput } from './outputs/updateCategory.output';
+import Category from './category.model';
 import { CreateCategoryProps } from './props/createCategoryProps';
 import { GetCategoryByIdProps } from './props/getCategoryProps';
 import { UpdateCategoryProps } from './props/updateCategoryProps';
+import { CategoryOutput } from './outputs/category.output';
+import { CategoriesOutput } from './outputs/categories.output';
 
 export const createCategory = async ({
   category,
-}: CreateCategoryProps): Promise<CartItemOutput> => {
-  const createdCategory = await Categories.create(category);
+}: CreateCategoryProps): Promise<CategoryOutput> => {
+  const createdCategory = await Category.create(category);
   if (!createdCategory) {
     throw new BadRequestError('Error during creating category!');
   }
   return { payload: createdCategory };
 };
 
-export const getAllCategories = async (): Promise<CreateCategoriesOutput> => {
-  const foundCategories = await Categories.find();
+export const getAllCategories = async (): Promise<CategoriesOutput> => {
+  const foundCategory = await Category.find();
 
-  return { payload: foundCategories };
+  return { payload: foundCategory };
 };
 
 export const getCategoryById = async ({
   categoryId,
-}: GetCategoryByIdProps): Promise<CartItemOutput> => {
-  const foundCategory = await Categories.findById(categoryId);
+}: GetCategoryByIdProps): Promise<CategoryOutput> => {
+  const foundCategory = await Category.findById(categoryId);
 
   if (!foundCategory) {
     throw new BadRequestError('Category not found!');
@@ -39,24 +37,28 @@ export const getCategoryById = async ({
 export const updateCategoryById = async ({
   categoryId,
   category,
-}: UpdateCategoryProps): Promise<UpdateCategoryOutput> => {
-  const updatedCategory = await Categories.findByIdAndUpdate(
+}: UpdateCategoryProps): Promise<CategoryOutput> => {
+  const updatedCategory = await Category.findByIdAndUpdate(
     categoryId,
     category,
     { new: true },
   );
+
   if (!updatedCategory) {
     throw new BadRequestError('Category not found!');
   }
+
   return { payload: updatedCategory };
 };
 
 export const deleteCategoryById = async ({
   categoryId,
-}: GetCategoryByIdProps): Promise<DeleteCategoryOutput> => {
-  const foundCategory = await Categories.findByIdAndDelete(categoryId);
+}: GetCategoryByIdProps): Promise<CategoryOutput> => {
+  const foundCategory = await Category.findByIdAndDelete(categoryId);
+
   if (!foundCategory) {
     throw new BadRequestError('Category not found!');
   }
+
   return { payload: foundCategory };
 };

@@ -4,17 +4,14 @@ import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCa
 import { CreateCategoryProps } from 'src/modules/category/props/createCategoryProps';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryProps';
-import { CreateFoodProps } from 'src/modules/food/props/createFoodProps';
-import { UpdateFoodProps } from 'src/modules/food/props/updateFoodProps';
-import * as orderService from 'src/modules/order/order.service';
-import { CreateOrderProps } from 'src/modules/order/props/createOrderProps';
+import { CreateFoodProps } from 'src/modules/food/props/createFood.props';
+import { UpdateFoodProps } from 'src/modules/food/props/updateFood.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
-import { Context } from 'src/types/context';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
-import { GetFoodByIdProps } from '../../modules/food/props/getFoodProps';
+import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
 import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import * as userService from '../../modules/user/user.service';
 
@@ -40,9 +37,6 @@ export const mutation = mutations({
   },
   DELETE_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
     return foodService.deleteFoodById(args);
-  },
-  CREATE_ORDER: (_, args: CreateOrderProps, context: Context) => {
-    return orderService.createOrder(args, context);
   },
   CREATE_CATEGORY: (_, args: CreateCategoryProps) => {
     return categoryService.createCategory(args);

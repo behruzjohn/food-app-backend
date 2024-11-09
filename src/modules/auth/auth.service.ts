@@ -9,7 +9,7 @@ import { UserRoleEnum } from 'src/enums/role.enum';
 
 export const login = async ({ auth }: LoginProps): Promise<AuthOutput> => {
   const isHashMatch = matchSha256Hash(
-    auth as any,
+    auth as { hash: string },
     <string>process.env.TELEGRAM_BOT_TOKEN,
   );
 
