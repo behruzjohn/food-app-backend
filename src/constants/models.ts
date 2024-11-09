@@ -3,5 +3,5 @@ export const MODELS = {
   ORDER: 'Order',
   FOOD: 'Food',
   CART_ITEM: 'CartItem',
-  CATEGORIES: 'categories',
+  CATEGORIES: 'Categories',
 };
