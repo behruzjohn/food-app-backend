@@ -19,10 +19,10 @@ export const createFood = async ({
 };
 
 export const updateFoodById = async ({
-  id,
+  foodId,
   food,
 }: UpdateFoodProps): Promise<FoodOutput> => {
-  const updatedFood = await Food.findByIdAndUpdate(id, food, {
+  const updatedFood = await Food.findByIdAndUpdate(foodId, food, {
     new: true,
     runValidators: true,
   });
