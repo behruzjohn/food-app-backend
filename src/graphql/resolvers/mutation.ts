@@ -8,11 +8,14 @@ import { CreateFoodProps } from 'src/modules/food/props/createFoodProps';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFoodProps';
 import * as orderService from 'src/modules/order/order.service';
 import { CreateOrderProps } from 'src/modules/order/props/createOrderProps';
+import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
+import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import { Context } from 'src/types/context';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryServise from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFoodProps';
+import * as userService from '../../modules/user/user.service';
 
 export const mutation = mutations({
   CREATE_CART_ITEM: (_, args: MutateCartItemFoodProps, context) => {
@@ -48,5 +51,11 @@ export const mutation = mutations({
   },
   UPDATE_CATEGORY_BY_ID: (_, args: UpdateCategoryProps) => {
     return categoryServise.updateCategoryById(args);
+  },
+  CREATE_COURIER: (_, args: GetUsersByPhoneProps) => {
+    return userService.createCourier(args);
+  },
+  DELETE_COURIER_BY_ID: (_, args: GetUserByIdProps) => {
+    return userService.deleteCourierById(args);
   },
 });

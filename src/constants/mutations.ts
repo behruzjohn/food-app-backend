@@ -9,4 +9,6 @@ export const MUTATIONS = {
   CREATE_CATEGORY: 'createCategory',
   UPDATE_CATEGORY_BY_ID: 'updateCategoryById',
   DELETE_CATEGORY_BY_ID: 'deleteCategoryById',
+  CREATE_COURIER: 'createCourier',
+  DELETE_COURIER_BY_ID: 'deleteCourierById',
 };

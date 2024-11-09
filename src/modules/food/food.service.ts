@@ -22,9 +22,8 @@ export const updateFoodById = async ({
   foodId,
   food,
 }: UpdateFoodProps): Promise<FoodOutput> => {
-  const updatedFood = await Food.findByIdAndUpdate(foodId, food, {
+  const updatedFood = await Food.findOneAndUpdate({ _id: foodId }, food, {
     new: true,
-    runValidators: true,
   });
 
   if (!updatedFood) {

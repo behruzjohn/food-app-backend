@@ -4,7 +4,7 @@ import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProp
 import { GetFoodByIdProps } from 'src/modules/food/props/getFoodProps';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrderProps';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
-import { getUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
+import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
 import { Context } from 'src/types/context';
 import * as authService from '../../modules/auth/auth.service';
@@ -37,7 +37,7 @@ export const query = queries({
   GET_USERS_BY_ROLE: (_, args: GetUsersByRoleProps) => {
     return userService.getUsersByRole(args);
   },
-  GET_USERS_BY_PHONE: (_, args: getUsersByPhoneProps) => {
+  GET_USERS_BY_PHONE: (_, args: GetUsersByPhoneProps) => {
     return userService.getUsersByPhone(args);
   },
   GET_ALL_FOODS: () => {
