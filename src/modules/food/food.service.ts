@@ -25,8 +25,6 @@ export const updateFoodById = async ({
   const updatedFood = await Food.findOneAndUpdate({ _id: foodId }, food, {
     new: true,
   });
-  console.log(foodId);
-  console.log(food);
 
   if (!updatedFood) {
     throw new GraphQLError('Food not found', 'BAD_REQUEST');

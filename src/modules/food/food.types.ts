@@ -28,6 +28,7 @@ export const foodTypes = gql`
     discount: Int
     shortName: String
     description: String!
+    category: ID!
   }
 
   input FoodUpdateInput {
@@ -36,5 +37,6 @@ export const foodTypes = gql`
     title: String
     discount: Int
     description: String
+    shortName: String
   }
 `;

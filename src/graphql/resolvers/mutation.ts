@@ -1,6 +1,9 @@
 import { mutations } from 'src/common';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
+import { CreateCategoryProps } from 'src/modules/category/props/createCategoryProps';
+import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
+import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryProps';
 import { CreateFoodProps } from 'src/modules/food/props/createFoodProps';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFoodProps';
 import * as orderService from 'src/modules/order/order.service';
@@ -9,6 +12,7 @@ import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import { Context } from 'src/types/context';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
+import * as categoryServise from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFoodProps';
 import * as userService from '../../modules/user/user.service';
@@ -38,6 +42,15 @@ export const mutation = mutations({
   },
   CREATE_ORDER: (_, args: CreateOrderProps, context: Context) => {
     return orderService.createOrder(args, context);
+  },
+  CREATE_CATEGORY: (_, args: CreateCategoryProps) => {
+    return categoryServise.createCategory(args);
+  },
+  DELETE_CATEGORY_BY_ID: (_, args: GetCategoryByIdProps) => {
+    return categoryServise.deleteCategoryById(args);
+  },
+  UPDATE_CATEGORY_BY_ID: (_, args: UpdateCategoryProps) => {
+    return categoryServise.updateCategoryById(args);
   },
   CREATE_COURIER: (_, args: GetUsersByPhoneProps) => {
     return userService.createCourier(args);
