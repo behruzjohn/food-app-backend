@@ -1,10 +1,10 @@
 import { ApolloServer } from 'apollo-server-express';
 import { schema } from 'src/graphql';
 import { createServer } from 'http';
-import { expressServer } from './express';
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
 import express from 'express';
 import cors from 'cors';
+import { httpServer } from './httpServer';
 
 const app = express();
 
@@ -18,6 +18,8 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 });
 
-server.start().then(() => server.applyMiddleware({ app, path: '/api' }));
+server
+  .start()
+  .then(() => server.applyMiddleware({ app: httpServer, path: '/api' }));
 
-export const apolloServer = createServer(app);
+export const apolloServer = createServer(httpServer);
