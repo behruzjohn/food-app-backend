@@ -9,9 +9,10 @@ import { Context } from 'src/types/context';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as foodService from '../../modules/food/food.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFoodProps';
+import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 
 export const mutation = mutations({
-  CREATE_CART_ITEM: (_, args: MutateCartItemFoodProps, context) => {
+  CREATE_CART_ITEM: (_, args: CreateCartItemProps, context) => {
     return cartItemService.createCartItem(args, context);
   },
   UPDATE_CART_FOOD_QUANTITY: (

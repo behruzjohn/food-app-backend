@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-core";
+import { gql } from 'apollo-server-core';
 
 export const cartItemTypes = gql`
   type CartItem {
@@ -6,7 +6,22 @@ export const cartItemTypes = gql`
     food: Food
     quantity: Int
     price: Int
+    discount: Int
     user: ID
+  }
+
+  type Cart {
+    items: [CartItem]
+    totalPrice: Int
+  }
+
+  type CartOutput {
+    payload: Cart
+  }
+
+  input CartItemInput {
+    food: ID
+    quantity: Int
   }
 
   type CartItemOutput {

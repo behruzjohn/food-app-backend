@@ -1,9 +1,15 @@
-import { FieldNode, OperationDefinitionNode, parse } from 'graphql';
+import {
+  DocumentNode,
+  FieldNode,
+  OperationDefinitionNode,
+  parse,
+} from 'graphql';
 import { OPERATION_DEFINITION } from 'src/constants/definitions';
 import { MUTATIONS } from 'src/constants/mutations';
 import { QUERIES } from 'src/constants/queries';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { Resolver, Subscription } from './resolver.type';
+import { tokenToString } from 'typescript';
 
 export function queries(
   resolvers: Record<keyof typeof QUERIES, Resolver<unknown, unknown>>,
@@ -42,7 +48,9 @@ export function subscriptions(
 }
 
 export const extractExecuteResolvers = (query: string): string[] => {
-  const ast = parse(query || '');
+  let ast: DocumentNode;
+
+  ast = parse(query || '');
 
   const operationDefinition = <OperationDefinitionNode>(
     ast.definitions.find(({ kind }) => kind === OPERATION_DEFINITION)

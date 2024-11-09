@@ -10,8 +10,7 @@ export const orderTypes = gql`
     totalPrice: Int
     createdAt: Date
     status: StatusEnum
-    from: [Int]
-    to: [Int]
+    to: [Float]
     foods: [CartItem]
     createdBy: ID
   }
@@ -25,7 +24,7 @@ export const orderTypes = gql`
   }
 
   input OrderInput {
-    foods: [ID]
+    to: [Float!]!
   }
 
   input OrderStatusUpdateInput {

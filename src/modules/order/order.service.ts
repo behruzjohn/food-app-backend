@@ -7,10 +7,10 @@ import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
-import { OrderMessageOutput } from './outputs/orderMessage.output';
 import { CreateOrderProps } from './props/createOrderProps';
 import { GetOrderByIdProps } from './props/getOrderProps';
 import { UpdateOrderStatusProps } from './props/updateOrderProps';
+import { getCartItemsByUserId } from '../cartItem/cartItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
@@ -27,14 +27,19 @@ export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
 export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
-): Promise<OrderMessageOutput> => {
-  const createdOrder = await Order.create(order);
+) => {
+  const { payload } = await getCartItemsByUserId({ user });
 
-  const message = { order: createdOrder, user: user._id };
+  const createdOrder = await Order.create({
+    createdBy: user._id,
+    to: order.to,
+    foods: payload.items.map((item) => item['_id']),
+    totalPrice: payload.totalPrice,
+  });
+
+  const message = { payload: createdOrder };
 
   pubsub.publish(EVENTS.CREATE_ORDER, { [MUTATIONS.CREATE_ORDER]: message });
-
-  return { payload: 'message' as any };
 };
 
 export const getOrderById = async ({
@@ -52,7 +57,7 @@ export const getOrderById = async ({
 export const updateOrderStatusById = async ({
   orderId,
   status,
-}: UpdateOrderStatusProps): Promise<OrderMessageOutput> => {
+}: UpdateOrderStatusProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(
     orderId,
     { status },
@@ -63,18 +68,14 @@ export const updateOrderStatusById = async ({
     throw new ApolloError('Order not found!');
   }
 
-  const message = { order: updatedOrder };
+  const message = { payload: updatedOrder };
 
   pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
-
-  return { payload: message };
 };
 
-export const deliverOrderById = async ({
-  orderId,
-}: GetOrderByIdProps): Promise<OrderMessageOutput> => {
+export const deliverOrderById = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(
     orderId,
     {
@@ -87,27 +88,21 @@ export const deliverOrderById = async ({
     throw new UserInputError(`Order with id "${orderId}" is not found`);
   }
 
-  const message = { order: updatedOrder };
+  const message = { payload: updatedOrder };
 
   pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
-
-  return { payload: message };
 };
 
-export const receiveOrderById = async ({
-  orderId,
-}: GetOrderByIdProps): Promise<OrderMessageOutput> => {
+export const receiveOrderById = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
   });
 
-  const message = { order: updatedOrder };
+  const message = { payload: updatedOrder };
 
   pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
     [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: message,
   });
-
-  return { payload: message };
 };

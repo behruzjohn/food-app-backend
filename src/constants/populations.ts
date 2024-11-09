@@ -1,5 +1,5 @@
-import { MODELS } from "./models";
+import { MODELS } from './models';
 
 export const POPULATIONS = {
-  cartItem: [{ path: "foods", model: MODELS.FOOD }],
+  cartItem: [{ path: 'food', model: MODELS.FOOD }],
 };

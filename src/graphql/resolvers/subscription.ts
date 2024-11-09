@@ -12,21 +12,18 @@ export const subscription = subscriptions({
       return pubsub.asyncIterator([EVENTS.UPDATE_ORDER_STATUS_BY_ID]);
     },
   },
-
   DELIVER_ORDER_BY_ID: {
     subscribe: async (_, args: GetOrderByIdProps) => {
       await orderService.deliverOrderById(args);
       return pubsub.asyncIterator([EVENTS.UPDATE_ORDER_STATUS_BY_ID]);
     },
   },
-
   RECEIVE_ORDER_BY_ID: {
     subscribe: async (_, args: GetOrderByIdProps) => {
       await orderService.receiveOrderById(args);
       return pubsub.asyncIterator([EVENTS.UPDATE_ORDER_STATUS_BY_ID]);
     },
   },
-
   START_COOKING_FOOD: {
     subscribe: async (_, args: GetOrderByIdProps) => {
       await orderService.startCookingOrder(args);

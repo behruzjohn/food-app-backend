@@ -14,7 +14,13 @@ export async function httpContext({ req }: { req: e.Request }) {
 
   if (isPollingRequest) return {};
 
-  const executeResolvers = extractExecuteResolvers(req.body['query']);
+  const body = req.body.operations
+    ? JSON.parse(req.body['operations'])
+    : req.body;
+
+  const executeResolvers = extractExecuteResolvers(body.query);
+
+  req.body = { ...req.body, ...body };
 
   const authContext = await authMiddleware(req, executeResolvers);
 

@@ -1,7 +1,7 @@
 import { resolvers } from './resolvers';
-import { typeDefs } from './types';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { PubSub } from 'graphql-subscriptions';
+import { typeDefs } from './types';
 
 export const pubsub = new PubSub();
 

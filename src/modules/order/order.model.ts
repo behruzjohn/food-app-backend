@@ -4,15 +4,14 @@ import { StatusEnum } from '../../enums/status.enum';
 
 const orderSchema = new Schema({
   totalPrice: Number,
-  createdAt: Date,
+  createdAt: { type: Date, default: new Date() },
   status: {
     type: String,
     enum: Object.keys(StatusEnum),
-    default: StatusEnum.cooking,
+    default: StatusEnum.pending,
   },
   foods: [{ type: Types.ObjectId, ref: MODELS.CART_ITEM }],
   createdBy: { type: Types.ObjectId, ref: MODELS.USER },
-  from: { type: [Number, Number] },
   to: { type: [Number, Number] },
 });
 

@@ -6,6 +6,6 @@ export const subscriptionType = gql`
     ${SUBSCRIPTIONS.UPDATE_ORDER_STATUS_BY_ID}(order: OrderStatusUpdateInput!): OrderOutput
     ${SUBSCRIPTIONS.DELIVER_ORDER_BY_ID}(orderId: ID!): FoodOutput
     ${SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID}(orderId: ID!): FoodOutput
-    ${SUBSCRIPTIONS.START_COOKING_FOOD}: Int
+    ${SUBSCRIPTIONS.START_COOKING_FOOD}(orderId: ID!): OrderOutput
   }
 `;

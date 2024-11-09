@@ -3,20 +3,36 @@ import { Context } from '../../types/context';
 import { Food } from '../food/food.model';
 import { CartItem } from './cartItem.model';
 import { CartItemOutput } from './outputs/cartItem.output';
-import { CartItemsOutput } from './outputs/cartItems.output';
 import { MutateCartItemFoodProps } from './props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from './props/updateCartFoodQuantity.props';
+import { CreateCartItemProps } from './props/createCartItem.props';
+import { POPULATIONS } from 'src/constants/populations';
+import { CartOutput } from './outputs/cart.output';
+import { calculateTotalPrice } from 'src/helpers/price';
 
 export const getCartItemsByUserId = async ({
   user,
-}: Context): Promise<CartItemsOutput> => {
-  const foundCartItems = await CartItem.find({ user: user._id });
+}: Context): Promise<CartOutput> => {
+  const foundCartItems = await CartItem.find({ user: user._id }).populate(
+    POPULATIONS.cartItem,
+  );
 
-  return { payload: foundCartItems };
+  const totalPrice = calculateTotalPrice({
+    priceField: 'price',
+    discountField: 'discount',
+    quantityField: 'quantity',
+  })(foundCartItems);
+
+  return {
+    payload: {
+      items: foundCartItems,
+      totalPrice,
+    },
+  };
 };
 
 export const createCartItem = async (
-  { food }: MutateCartItemFoodProps,
+  { data: { food, quantity } }: CreateCartItemProps,
   { user }: Context,
 ): Promise<CartItemOutput> => {
   const foundFood = await Food.findById(food);
@@ -27,8 +43,9 @@ export const createCartItem = async (
 
   const createdCartItem = await CartItem.create({
     food,
+    quantity,
     price: foundFood.price,
-    quantity: 1,
+    discount: foundFood.discount,
     user: user._id,
   });
 

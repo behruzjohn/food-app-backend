@@ -9,8 +9,12 @@ export const PERMISSIONS: Permissions = {
     'UPDATE_CART_FOOD_QUANTITY',
     'GET_USER_BY_ID',
     'GET_CART_ITEMS_BY_USER_ID',
+    'CREATE_ORDER',
   ),
   admin: resolvers(
+    'GET_FOOD_BY_ID',
+    'CREATE_ORDER',
+    'CREATE_CART_ITEM',
     'CREATE_FOOD',
     'GET_DASHBOARD',
     'GET_ALL_USERS',

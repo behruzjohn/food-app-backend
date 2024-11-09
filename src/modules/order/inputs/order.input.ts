@@ -1,5 +1,5 @@
-import { Types } from 'mongoose';
+import { Coord } from '../types/coord.type';
 
 export interface OrderInput {
-  foods: Types.ObjectId[];
+  to: Coord;
 }

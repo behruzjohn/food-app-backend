@@ -4,11 +4,22 @@ import { FoodOutput } from './outputs/food.output';
 import { CreateFoodProps } from './props/createFoodProps';
 import { GetFoodByIdProps } from './props/getFoodProps';
 import { UpdateFoodProps } from './props/updateFoodProps';
+import { saveFile } from 'src/helpers/file';
 
 export const createFood = async ({
+  image,
   food,
 }: CreateFoodProps): Promise<FoodOutput> => {
-  const createdFood = await Food.create(food);
+  let imagePath: string;
+
+  if (image) {
+    imagePath = await saveFile(image);
+  }
+
+  const createdFood = await Food.create({
+    ...food,
+    image: imagePath,
+  });
 
   if (!createdFood) {
     throw new BadRequestError('Something went wrong!');

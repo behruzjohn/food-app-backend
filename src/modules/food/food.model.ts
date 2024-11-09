@@ -2,6 +2,7 @@ import { model, Schema } from 'mongoose';
 import { MODELS } from '../../constants/models';
 
 const foodSchema = new Schema({
+  image: { type: String },
   name: { type: String, required: true },
   shortName: { type: String, required: true },
   description: { type: String },
