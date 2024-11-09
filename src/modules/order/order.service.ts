@@ -1,6 +1,5 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
 import { EVENTS } from 'src/constants/events';
-import { MUTATIONS } from 'src/constants/mutations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
 import { pubsub } from 'src/graphql';
@@ -11,11 +10,12 @@ import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 import { getCartItemsByUserId } from '../cartItem/cartItem.service';
+import { POPULATIONS } from 'src/constants/populations';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.cooking,
-  });
+  }).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
     throw new UserInputError('Order is not found');
@@ -37,15 +37,19 @@ export const createOrder = async (
     totalPrice: payload.totalPrice,
   });
 
-  const message = { payload: createdOrder };
+  const populatedOrder = await createdOrder.populate(POPULATIONS.order);
 
-  pubsub.publish(EVENTS.CREATE_ORDER, { [MUTATIONS.CREATE_ORDER]: message });
+  const message = { payload: populatedOrder };
+
+  pubsub.publish(EVENTS.CREATE_ORDER, {
+    [SUBSCRIPTIONS.CREATE_ORDER]: message,
+  });
 };
 
 export const getOrderById = async ({
   orderId,
 }: GetOrderByIdProps): Promise<OrderOutput> => {
-  const foundOrder = await Order.findById(orderId);
+  const foundOrder = await Order.populate({ _id: orderId }, POPULATIONS.order);
 
   if (!foundOrder) {
     throw new ApolloError('Order not found');
@@ -62,7 +66,7 @@ export const updateOrderStatusById = async ({
     orderId,
     { status },
     { new: true },
-  );
+  ).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
     throw new ApolloError('Order not found!');
@@ -82,7 +86,7 @@ export const deliverOrderById = async ({ orderId }: GetOrderByIdProps) => {
       status: StatusEnum.delivering,
     },
     { new: true },
-  );
+  ).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
     throw new UserInputError(`Order with id "${orderId}" is not found`);
@@ -98,7 +102,7 @@ export const deliverOrderById = async ({ orderId }: GetOrderByIdProps) => {
 export const receiveOrderById = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
-  });
+  }).populate(POPULATIONS.order);
 
   const message = { payload: updatedOrder };
 
