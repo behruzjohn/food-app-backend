@@ -12,7 +12,7 @@ export const orderTypes = gql`
     status: StatusEnum
     to: [Float]
     foods: [CartItem]
-    createdBy: ID
+    createdBy: User
   }
 
   type OrderOutput {
