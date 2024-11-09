@@ -8,7 +8,6 @@ export const mutationType = gql`
     ${MUTATIONS.UPDATE_CART_FOOD_QUANTITY}(food: ID, quantity: Int): CartItemOutput
     ${MUTATIONS.DELETE_CART_ITEM}(food: ID): CartItemOutput
     ${MUTATIONS.CREATE_FOOD}(food: FoodInput!, image: Upload!): FoodOutput
-    ${MUTATIONS.CREATE_FOOD}(food: FoodInput!): FoodOutput 
     ${MUTATIONS.UPDATE_FOOD_BY_ID}(foodId: ID!, food: FoodUpdateInput!): FoodOutput 
     ${MUTATIONS.UPDATE_CATEGORY_BY_ID}(categoryId: ID!, category: CategoryInput): CategoryOutput
     ${MUTATIONS.DELETE_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput

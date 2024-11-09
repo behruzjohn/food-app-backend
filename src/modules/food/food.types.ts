@@ -38,7 +38,6 @@ export const foodTypes = gql`
     price: Int
     name: String
     discount: Int
-    shortName: String
     description: String
     shortName: String
   }
