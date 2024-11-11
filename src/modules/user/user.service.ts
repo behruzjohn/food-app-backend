@@ -61,9 +61,11 @@ export const createCourier = async ({
     { $set: { role: UserRoleEnum.courier } },
     { new: true },
   );
+
   if (!foundUser) {
     throw new BadRequestError('User not found!');
   }
+
   return { payload: foundUser };
 };
 
@@ -75,8 +77,10 @@ export const deleteCourierById = async ({
     { $set: { role: UserRoleEnum.user } },
     { new: true },
   );
+
   if (!foundCourier) {
     throw new BadUserInputError('User not found!');
   }
+
   return { payload: foundCourier };
 };

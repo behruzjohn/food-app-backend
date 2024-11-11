@@ -24,6 +24,7 @@ export const login = async ({ auth }: LoginProps): Promise<AuthOutput> => {
       telegramId: auth.id,
       name: auth.first_name,
       role: UserRoleEnum.user,
+      photo: auth.photo_url,
     });
   }
 

@@ -11,6 +11,7 @@ export const userTypes = gql`
     name: String
     role: UserRoleEnum
     phone: String
+    photo: String
   }
 
   type UserOutput {

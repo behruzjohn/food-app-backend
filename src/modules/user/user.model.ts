@@ -4,6 +4,7 @@ import { TELEGRAM_ID_LENGTH } from '../../constants/validations';
 import { UserRoleEnum } from '../../enums/role.enum';
 
 const userSchema = new Schema({
+  photo: { type: String, required: true },
   name: { type: String, required: true },
   role: {
     type: String,
