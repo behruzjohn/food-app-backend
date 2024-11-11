@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export const categoryTypes = gql`
   type Category {
+    _id: String
     name: String
     image: String
   }
