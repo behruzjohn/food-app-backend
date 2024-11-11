@@ -53,4 +53,7 @@ export const mutation = mutations({
   DELETE_COURIER_BY_ID: (_, args: GetUserByIdProps) => {
     return userService.deleteCourierById(args);
   },
+  CLEAR_USER_CART: (_, __, context) => {
+    return cartItemService.clearUserCart(context);
+  },
 });

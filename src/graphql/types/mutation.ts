@@ -14,5 +14,6 @@ export const mutationType = gql`
     ${MUTATIONS.DELETE_FOOD_BY_ID}(foodId: ID!): FoodDeleteOutput
     ${MUTATIONS.CREATE_COURIER}(phone: String!): UserOutput
     ${MUTATIONS.DELETE_COURIER_BY_ID}(userId: ID!): UserOutput
+    ${MUTATIONS.CLEAR_USER_CART}: CartItemsOutput
   }
 `;

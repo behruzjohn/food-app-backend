@@ -9,6 +9,7 @@ import { CreateCartItemProps } from './props/createCartItem.props';
 import { POPULATIONS } from 'src/constants/populations';
 import { CartOutput } from './outputs/cart.output';
 import { calculateTotalPrice } from 'src/helpers/price';
+import { DeleteOutput } from 'src/outputs/delete.output';
 
 export const getCartItemsByUserId = async ({
   user,
@@ -88,4 +89,12 @@ export const deleteCartItem = async (
   });
 
   return { payload: removedFood };
+};
+
+export const clearUserCart = async ({
+  user,
+}: Context): Promise<DeleteOutput> => {
+  const deletedCartItems = await CartItem.deleteMany({ user: user._id });
+
+  return { payload: deletedCartItems };
 };
