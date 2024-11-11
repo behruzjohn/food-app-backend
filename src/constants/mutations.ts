@@ -10,4 +10,5 @@ export const MUTATIONS = {
   DELETE_CATEGORY_BY_ID: 'deleteCategoryById',
   CREATE_COURIER: 'createCourier',
   DELETE_COURIER_BY_ID: 'deleteCourierById',
+  CLEAR_USER_CART: 'clearUserCart',
 };
