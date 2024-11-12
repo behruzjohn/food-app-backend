@@ -8,5 +8,6 @@ export const subscriptionType = gql`
     ${SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID}(orderId: ID!): FoodOutput
     ${SUBSCRIPTIONS.START_COOKING_FOOD}(orderId: ID!): OrderOutput
     ${SUBSCRIPTIONS.CREATE_ORDER}(order: OrderInput!): OrderOutput
+    ${SUBSCRIPTIONS.ATTACH_ORDER}(orderId: ID!): CourierOutput
   }
 `;

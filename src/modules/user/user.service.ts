@@ -1,8 +1,7 @@
 import { ApolloError } from 'apollo-server-core';
-import { BadRequestError, BadUserInputError } from 'src/common';
+import { BadRequestError } from 'src/common';
 import { UserRoleEnum } from 'src/enums/role.enum';
 import { Context } from 'src/types/context';
-import { CourierOutput } from './outputs/courier.output';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { GetUserByIdProps } from './props/getUserById.props';
@@ -49,38 +48,4 @@ export const getUsersByPhone = async ({
   }
 
   return { payload: foundUsers };
-};
-
-export const createCourier = async ({
-  phone,
-}: GetUsersByPhoneProps): Promise<CourierOutput> => {
-  const foundUser = await User.findOneAndUpdate(
-    {
-      phone: phone,
-    },
-    { $set: { role: UserRoleEnum.courier } },
-    { new: true },
-  );
-
-  if (!foundUser) {
-    throw new BadRequestError('User not found!');
-  }
-
-  return { payload: foundUser };
-};
-
-export const deleteCourierById = async ({
-  userId,
-}: GetUserByIdProps): Promise<CourierOutput> => {
-  const foundCourier = await User.findOneAndUpdate(
-    { _id: userId },
-    { $set: { role: UserRoleEnum.user } },
-    { new: true },
-  );
-
-  if (!foundCourier) {
-    throw new BadUserInputError('User not found!');
-  }
-
-  return { payload: foundCourier };
 };

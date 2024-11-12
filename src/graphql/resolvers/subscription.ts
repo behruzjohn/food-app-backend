@@ -1,13 +1,16 @@
-import { subscriptions } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import * as orderService from 'src/modules/order/order.service';
+import * as courierService from 'src/modules/courier/courier.service';
 import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { pubsub } from '..';
 import { CreateOrderProps } from 'src/modules/order/props/createOrder.props';
 import { Context } from 'src/types/context';
+import { resolversHandlers } from 'src/common';
+import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
+import { Subscription } from 'src/common/resolver/resolver.type';
 
-export const subscription = subscriptions({
+export const subscription = resolversHandlers(SUBSCRIPTIONS)<Subscription>({
   UPDATE_ORDER_STATUS_BY_ID: {
     subscribe: async (_, args: UpdateOrderStatusProps) => {
       await orderService.updateOrderStatusById(args);
@@ -36,6 +39,12 @@ export const subscription = subscriptions({
     subscribe: async (_, args: CreateOrderProps, context: Context) => {
       await orderService.createOrder(args, context);
       return pubsub.asyncIterator([EVENTS.CREATE_ORDER]);
+    },
+  },
+  ATTACH_ORDER: {
+    subscribe: async (_, args: GetOrderByIdProps, context: Context) => {
+      await courierService.attachOrder(args, context);
+      return pubsub.asyncIterator([EVENTS.ATTACH_ORDER]);
     },
   },
 });

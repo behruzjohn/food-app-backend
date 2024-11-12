@@ -5,46 +5,17 @@ import {
   parse,
 } from 'graphql';
 import { OPERATION_DEFINITION } from 'src/constants/definitions';
-import { MUTATIONS } from 'src/constants/mutations';
-import { QUERIES } from 'src/constants/queries';
-import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
-import { Resolver, Subscription } from './resolver.type';
-import { tokenToString } from 'typescript';
 
-export function queries(
-  resolvers: Record<keyof typeof QUERIES, Resolver<unknown, unknown>>,
-) {
-  const renamedResolvers = {};
+export function resolversHandlers<T extends Record<string, any>>(keys: T) {
+  return <THandler>(resolvers: Record<keyof typeof keys, THandler>) => {
+    const renamedResolvers = {};
 
-  Object.keys(resolvers).forEach((resolver) => {
-    renamedResolvers[QUERIES[resolver]] = resolvers[resolver];
-  });
+    Object.keys(resolvers).forEach((resolver) => {
+      renamedResolvers[keys[resolver]] = resolvers[resolver];
+    });
 
-  return renamedResolvers;
-}
-
-export function mutations(
-  resolvers: Record<keyof typeof MUTATIONS, Resolver<unknown, unknown>>,
-) {
-  const renamedResolvers = {};
-
-  Object.keys(resolvers).forEach((resolver) => {
-    renamedResolvers[MUTATIONS[resolver]] = resolvers[resolver];
-  });
-
-  return renamedResolvers;
-}
-
-export function subscriptions(
-  resolvers: Record<keyof typeof SUBSCRIPTIONS, Subscription>,
-) {
-  const renamedResolvers = {};
-
-  Object.keys(resolvers).forEach((resolver) => {
-    renamedResolvers[SUBSCRIPTIONS[resolver]] = resolvers[resolver];
-  });
-
-  return renamedResolvers;
+    return renamedResolvers;
+  };
 }
 
 export const extractExecuteResolvers = (query: string): string[] => {
