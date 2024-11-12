@@ -1,14 +1,15 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
+import { POPULATIONS } from 'src/constants/populations';
+import { saveFile } from 'src/helpers/file';
+import Category from '../category/category.model';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
 import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFood.props';
-import { GetFoodByIdProps } from './props/getFood.props';
-import { UpdateFoodProps } from './props/updateFood.props';
-import { saveFile } from 'src/helpers/file';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
-import Category from '../category/category.model';
-import { POPULATIONS } from 'src/constants/populations';
+import { GetFoodByIdProps } from './props/getFood.props';
+import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
+import { UpdateFoodProps } from './props/updateFood.props';
 
 export const createFood = async ({
   image,
@@ -102,4 +103,12 @@ export const getAllFoods = async ({
   ).populate(POPULATIONS.food);
 
   return { payload: foundFoods };
+};
+
+export const getFoodsByCategory = async ({
+  categoryId,
+}: GetFoodsByCategoryProps): Promise<FoodsOutput> => {
+  const foundFoodsByCategory = await Food.find({ category: categoryId });
+
+  return { payload: foundFoodsByCategory };
 };
