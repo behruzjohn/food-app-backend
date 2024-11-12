@@ -8,7 +8,7 @@ import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
-import { GetFoodsByCategoriesProps } from './props/getFoodsByCategory.props';
+import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
 import { UpdateFoodProps } from './props/updateFood.props';
 
 export const createFood = async ({
@@ -107,7 +107,7 @@ export const getAllFoods = async ({
 
 export const getFoodsByCategory = async ({
   categoryId,
-}: GetFoodsByCategoriesProps): Promise<FoodsOutput> => {
+}: GetFoodsByCategoryProps): Promise<FoodsOutput> => {
   const foundFoodsByCategory = await Food.find({ category: categoryId });
 
   return { payload: foundFoodsByCategory };
