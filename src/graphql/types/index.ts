@@ -9,6 +9,7 @@ import { mutationType } from './mutation';
 import { queryType } from './query';
 import { scalarTypes } from './scalars';
 import { subscriptionType } from './subscription';
+import { courierTypes } from 'src/modules/courier/courier.types';
 
 export const typeDefs = gql`
   ${scalarTypes}
@@ -19,6 +20,7 @@ export const typeDefs = gql`
   ${orderTypes}
   ${cartItemTypes}
   ${categoryTypes}
+  ${courierTypes}
 
   ${subscriptionType}
   ${queryType}

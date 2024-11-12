@@ -1,4 +1,3 @@
-import { mutations } from 'src/common';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
 import { CreateCategoryProps } from 'src/modules/category/props/createCategoryProps';
@@ -7,15 +6,20 @@ import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryPr
 import { CreateFoodProps } from 'src/modules/food/props/createFood.props';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFood.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
-import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
+import * as courierService from '../../modules/courier/courier.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
 import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
-import * as userService from '../../modules/user/user.service';
+import { resolversHandlers } from 'src/common';
+import { MUTATIONS } from 'src/constants/mutations';
+import { Resolver } from 'src/common/resolver/resolver.type';
+import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
 
-export const mutation = mutations({
+export const mutation = resolversHandlers(MUTATIONS)<
+  Resolver<unknown, unknown>
+>({
   CREATE_CART_ITEM: (_, args: CreateCartItemProps, context) => {
     return cartItemService.createCartItem(args, context);
   },
@@ -47,13 +51,13 @@ export const mutation = mutations({
   UPDATE_CATEGORY_BY_ID: (_, args: UpdateCategoryProps) => {
     return categoryService.updateCategoryById(args);
   },
-  CREATE_COURIER: (_, args: GetUsersByPhoneProps) => {
-    return userService.createCourier(args);
-  },
-  DELETE_COURIER_BY_ID: (_, args: GetUserByIdProps) => {
-    return userService.deleteCourierById(args);
+  DELETE_COURIER_BY_ID: (_, args: GetCourierByIdProps) => {
+    return courierService.deleteCourierById(args);
   },
   CLEAR_USER_CART: (_, __, context) => {
     return cartItemService.clearUserCart(context);
+  },
+  CREATE_COURIER: (_, args: GetUserByIdProps) => {
+    return courierService.createCourier(args);
   },
 });

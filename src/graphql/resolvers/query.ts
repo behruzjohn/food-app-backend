@@ -1,4 +1,3 @@
-import { queries } from 'src/common';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
@@ -15,8 +14,12 @@ import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
+import * as courierService from '../../modules/courier/courier.service';
+import { resolversHandlers } from 'src/common';
+import { QUERIES } from 'src/constants/queries';
+import { Resolver } from 'src/common/resolver/resolver.type';
 
-export const query = queries({
+export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   LOGIN: (_, args: LoginProps) => {
     return authService.login(args);
   },
@@ -53,5 +56,8 @@ export const query = queries({
   },
   GET_FOODS_BY_CATEGORY: (_, args: GetFoodsByCategoriesProps) => {
     return foodService.getFoodsByCategory(args);
+  },
+  GET_ALL_COURIERS: () => {
+    return courierService.getAllCouriers();
   },
 });

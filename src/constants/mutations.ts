@@ -8,7 +8,7 @@ export const MUTATIONS = {
   CREATE_CATEGORY: 'createCategory',
   UPDATE_CATEGORY_BY_ID: 'updateCategoryById',
   DELETE_CATEGORY_BY_ID: 'deleteCategoryById',
+  CLEAR_USER_CART: 'clearUserCart',
   CREATE_COURIER: 'createCourier',
   DELETE_COURIER_BY_ID: 'deleteCourierById',
-  CLEAR_USER_CART: 'clearUserCart',
 };
