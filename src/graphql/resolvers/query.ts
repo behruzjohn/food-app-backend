@@ -1,7 +1,9 @@
 import { queries } from 'src/common';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
+import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
+import { GetFoodsByCategoriesProps } from 'src/modules/food/props/getFoodsByCategory.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
@@ -13,7 +15,6 @@ import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
-import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 
 export const query = queries({
   LOGIN: (_, args: LoginProps) => {
@@ -49,5 +50,8 @@ export const query = queries({
   },
   GET_ALL_CATEGORIES: () => {
     return categoryService.getAllCategories();
+  },
+  GET_FOODS_BY_CATEGORY: (_, args: GetFoodsByCategoriesProps) => {
+    return foodService.getFoodsByCategory(args);
   },
 });
