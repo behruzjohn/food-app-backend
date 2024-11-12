@@ -12,10 +12,7 @@ const userSchema = new Schema({
     default: UserRoleEnum.user,
   },
   phone: { type: String, validator: (v: string) => v.startsWith('+998') },
-  telegramId: {
-    type: Number,
-    validator: (v: number) => v.toString().length === TELEGRAM_ID_LENGTH,
-  },
+  telegramId: { type: String },
 });
 
 export const User = model(MODELS.USER, userSchema);

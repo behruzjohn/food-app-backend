@@ -3,6 +3,6 @@ import { UserRoleEnum } from 'src/enums/role.enum';
 
 export type JWTAuthPayload = {
   _id: Types.ObjectId;
-  telegramId: number;
+  telegramId: string;
   role: UserRoleEnum;
 };

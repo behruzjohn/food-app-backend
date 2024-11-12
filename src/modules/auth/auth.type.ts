@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-core';
 
 export const authTypes = gql`
   input AuthInput {
-    id: Int
+    id: String
     first_name: String
     last_name: String
     username: String
