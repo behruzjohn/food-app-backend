@@ -13,6 +13,7 @@ const orderSchema = new Schema({
   foods: [{ type: Types.ObjectId, ref: MODELS.CART_ITEM }],
   createdBy: { type: Types.ObjectId, ref: MODELS.USER },
   to: { type: [Number, Number] },
+  attachedFor: { type: Types.ObjectId, ref: MODELS.USER },
 });
 
 export const Order = model(MODELS.ORDER, orderSchema);

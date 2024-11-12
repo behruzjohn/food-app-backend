@@ -4,4 +4,5 @@ export const MODELS = {
   FOOD: 'Food',
   CART_ITEM: 'CartItem',
   CATEGORIES: 'Category',
+  COURIERS: 'Couriers',
 };
