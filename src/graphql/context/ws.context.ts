@@ -1,6 +1,6 @@
+import { Request } from 'express';
 import { extractExecuteResolvers } from 'src/common';
 import { authMiddleware } from './middlewares/auth.middleware';
-import { Request } from 'express';
 
 export async function subscriptionContext({
   connectionParams,
@@ -10,7 +10,7 @@ export async function subscriptionContext({
   payload: any;
 }) {
   const authToken =
-    connectionParams.Authorization || connectionParams.authorization;
+    connectionParams?.Authorization || connectionParams?.authorization;
 
   const mockRequest = {
     headers: { authorization: authToken || '' },

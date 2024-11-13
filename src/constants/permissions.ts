@@ -10,7 +10,6 @@ export const PERMISSIONS: Permissions = {
     'GET_USER_BY_ID',
     'GET_ALL_FOODS',
     'GET_CART_ITEMS_BY_USER_ID',
-    'CREATE_ORDER',
   ),
   admin: resolvers(
     'GET_FOOD_BY_ID',
@@ -32,6 +31,7 @@ export const PERMISSIONS: Permissions = {
     'GET_ALL_CATEGORIES',
     'GET_CATEGORY_BY_ID',
     'UPDATE_CATEGORY_BY_ID',
+    'GET_ORDERS_BY_STATUS',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
 };
