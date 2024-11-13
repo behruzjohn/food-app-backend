@@ -1,5 +1,5 @@
 export interface FoodUpdateInput {
-  title?: string;
+  shortName?: string;
   name?: string;
   description?: string;
   price?: number;
