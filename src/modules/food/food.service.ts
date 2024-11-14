@@ -10,6 +10,8 @@ import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
 import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
 import { UpdateFoodProps } from './props/updateFood.props';
+import { Context } from 'src/types/context';
+import { User } from '../user/user.model';
 
 export const createFood = async ({
   image,
@@ -66,10 +68,70 @@ export const deleteFoodById = async ({
   const deletedFood = await Food.findByIdAndDelete(foodId);
 
   if (!deletedFood) {
-    throw new BadUserInputError('Food not found!');
+    throw new BadUserInputError('Food not found');
   }
 
   return { payload: deletedFood };
+};
+
+export const getFavoriteFoods = async ({
+  user,
+}: Context): Promise<FoodsOutput> => {
+  const foundUser = await User.findById(user._id);
+
+  const favoriteFoods = foundUser.favoriteFoods.map((_id) => ({ _id }));
+
+  const foundFoods = await Food.find({
+    $or: favoriteFoods,
+  });
+
+  return { payload: foundFoods };
+};
+
+export const addFoodToFavorites = async (
+  { foodId }: GetFoodByIdProps,
+  { user }: Context,
+): Promise<FoodOutput> => {
+  const updatedFood = await Food.findByIdAndUpdate(
+    foodId,
+    {
+      $inc: { likes: 1 },
+    },
+    { new: true },
+  );
+
+  if (!updatedFood) {
+    throw new BadUserInputError('Food not found');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    $push: { favoriteFoods: foodId },
+  });
+
+  return { payload: updatedFood };
+};
+
+export const removeFoodFromFavorites = async (
+  { foodId }: GetFoodByIdProps,
+  { user }: Context,
+): Promise<FoodOutput> => {
+  const updatedFood = await Food.findByIdAndUpdate(
+    foodId,
+    {
+      $inc: { likes: -1 },
+    },
+    { new: true },
+  );
+
+  if (!updatedFood) {
+    throw new BadUserInputError('Food not found');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    $pull: { favoriteFoods: foodId },
+  });
+
+  return { payload: updatedFood };
 };
 
 export const getAllFoods = async ({

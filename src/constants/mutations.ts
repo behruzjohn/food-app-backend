@@ -12,4 +12,6 @@ export const MUTATIONS = {
   CREATE_COURIER: 'createCourier',
   DELETE_COURIER_BY_ID: 'deleteCourierById',
   UPDATE_COURIER_BY_ID: 'updateCourierById',
+  ADD_FOOD_TO_FAVORITES: 'addFoodToFavorites',
+  REMOVE_FOOD_FROM_FAVORITES: 'removeFoodFromFavorites',
 };

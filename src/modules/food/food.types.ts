@@ -10,6 +10,7 @@ export const foodTypes = gql`
     price: Int
     discount: Int
     category: ID
+    likes: Int
   }
 
   type FoodOutput {

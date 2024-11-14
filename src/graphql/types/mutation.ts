@@ -16,5 +16,7 @@ export const mutationType = gql`
     ${MUTATIONS.DELETE_COURIER_BY_ID}(userId: ID!): UserOutput
     ${MUTATIONS.CLEAR_USER_CART}: CartItemsOutput
     ${MUTATIONS.UPDATE_COURIER_BY_ID}(courierId: ID!, data: UpdateCourierInput!): CourierOutput
+    ${MUTATIONS.ADD_FOOD_TO_FAVORITES}(foodId: ID!): FoodOutput
+    ${MUTATIONS.REMOVE_FOOD_FROM_FAVORITES}(foodId: ID!): FoodOutput
   }
 `;
