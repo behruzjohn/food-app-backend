@@ -9,7 +9,6 @@ import { RoleEnum } from 'src/enums/role.enum';
 import { PERMISSIONS } from 'src/constants/permissions';
 import e from 'express';
 import { Courier } from 'src/modules/courier/courier.model';
-import { Document, Model } from 'mongoose';
 import { Types } from 'mongoose';
 
 export const authMiddleware = async (
@@ -29,9 +28,11 @@ export const authMiddleware = async (
   let foundUser: { _id: Types.ObjectId };
 
   if (isTokenValid) {
+    const queryFilter = { _id: decodedToken._id };
+
     foundUser = await (decodedToken.role === RoleEnum.user
-      ? User.exists(decodedToken._id)
-      : Courier.exists(decodedToken._id));
+      ? User.exists(queryFilter)
+      : Courier.exists(queryFilter));
   }
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {

@@ -9,6 +9,7 @@ export const foodTypes = gql`
     description: String
     price: Int
     discount: Int
+    category: ID
   }
 
   type FoodOutput {
