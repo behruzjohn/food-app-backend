@@ -10,6 +10,7 @@ import { PERMISSIONS } from 'src/constants/permissions';
 import e from 'express';
 import { Courier } from 'src/modules/courier/courier.model';
 import { Types } from 'mongoose';
+import { UserRoleEnum } from 'src/enums/userRole.enum';
 
 export const authMiddleware = async (
   req: e.Request,
@@ -21,7 +22,7 @@ export const authMiddleware = async (
 
   let isTokenValid = true;
 
-  if (!decodedToken?._id || !decodedToken?.telegramId) {
+  if (!decodedToken?._id || !decodedToken?.role) {
     isTokenValid = false;
   }
 
@@ -30,7 +31,7 @@ export const authMiddleware = async (
   if (isTokenValid) {
     const queryFilter = { _id: decodedToken._id };
 
-    foundUser = await (decodedToken.role === RoleEnum.user
+    foundUser = await (UserRoleEnum[decodedToken.role]
       ? User.exists(queryFilter)
       : Courier.exists(queryFilter));
   }

@@ -33,6 +33,7 @@ export const PERMISSIONS: Permissions = {
     'GET_CATEGORY_BY_ID',
     'UPDATE_CATEGORY_BY_ID',
     'ATTACH_ORDER_TO_COURIER',
+    'GET_ALL_COURIERS',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
 };

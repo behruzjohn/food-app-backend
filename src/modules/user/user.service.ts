@@ -6,7 +6,6 @@ import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { GetUsersByPhoneProps } from './props/getUsersByPhone.props';
-import { GetUsersByRoleProps } from './props/getUsersByRole.props';
 import { User } from './user.model';
 
 export const getAllUsers = async (): Promise<UsersOutput> => {
@@ -26,14 +25,6 @@ export const getUserById = async (
   }
 
   return { payload: foundUser };
-};
-
-export const getUsersByRole = async ({
-  role,
-}: GetUsersByRoleProps): Promise<UsersOutput> => {
-  const foundUsers = await User.find({ role });
-
-  return { payload: foundUsers };
 };
 
 export const getUsersByPhone = async ({

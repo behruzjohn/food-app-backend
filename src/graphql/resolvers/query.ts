@@ -5,7 +5,6 @@ import { GetFoodsByCategoryProps } from 'src/modules/food/props/getFoodsByCatego
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
-import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
 import { Context } from 'src/types/context';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
@@ -39,9 +38,6 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
     return cartItemService.getCartItemsByUserId(context);
   },
   GET_DASHBOARD: () => 1,
-  GET_USERS_BY_ROLE: (_, args: GetUsersByRoleProps) => {
-    return userService.getUsersByRole(args);
-  },
   GET_USERS_BY_PHONE: (_, args: GetUsersByPhoneProps) => {
     return userService.getUsersByPhone(args);
   },

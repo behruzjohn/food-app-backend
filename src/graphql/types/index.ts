@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-core';
-import { authTypes } from 'src/modules/auth/auth.type';
+import { authTypes } from 'src/modules/auth/auth.types';
 import { cartItemTypes } from 'src/modules/cartItem/cartItem.types';
 import { categoryTypes } from 'src/modules/category/category.types';
 import { foodTypes } from 'src/modules/food/food.types';

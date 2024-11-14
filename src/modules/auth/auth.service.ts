@@ -33,7 +33,7 @@ export const telegramUserLogin = async ({
 
   const jwtPayload: JWTAuthPayload = {
     _id: user._id,
-    role: RoleEnum['user'],
+    role: RoleEnum[user.role],
   };
 
   const token = createToken(jwtPayload, { expiresIn: '7d' });

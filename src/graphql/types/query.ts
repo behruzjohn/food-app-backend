@@ -12,7 +12,6 @@ export const queryType = gql`
     ${QUERIES.GET_USERS_BY_PHONE}(phone: String!): UsersOutput
     ${QUERIES.GET_DASHBOARD}: Int
     ${QUERIES.GET_ALL_FOODS}(name: String, category: String): FoodsOutput
-    ${QUERIES.GET_USERS_BY_ROLE}(role: RoleEnum): UsersOutput
     ${QUERIES.GET_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
     ${QUERIES.GET_ALL_CATEGORIES}: CategoriesOutput
     ${QUERIES.GET_FOODS_BY_CATEGORY}(categoryId: ID!): FoodsOutput
