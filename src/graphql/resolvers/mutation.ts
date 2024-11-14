@@ -66,4 +66,10 @@ export const mutation = resolversHandlers(MUTATIONS)<
   UPDATE_COURIER_BY_ID: (_, args: UpdateCourierByIdProps) => {
     return courierService.updateCourierById(args);
   },
+  ADD_FOOD_TO_FAVORITES: (_, args: GetFoodByIdProps, context) => {
+    return foodService.addFoodToFavorites(args, context);
+  },
+  REMOVE_FOOD_FROM_FAVORITES: (_, args: GetFoodByIdProps, context) => {
+    return foodService.removeFoodFromFavorites(args, context);
+  },
 });

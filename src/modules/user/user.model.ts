@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import { MODELS } from '../../constants/models';
 import { UserRoleEnum } from 'src/enums/userRole.enum';
 
@@ -8,6 +8,7 @@ const userSchema = new Schema({
   role: { type: String, enum: Object.keys(UserRoleEnum) },
   telegramId: { type: String },
   phone: { type: String, validator: (v: string) => v.startsWith('+998') },
+  favoriteFoods: [{ type: Types.ObjectId, ref: MODELS.FOOD }],
   password: { type: String },
 });
 

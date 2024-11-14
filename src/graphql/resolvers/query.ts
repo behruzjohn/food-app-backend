@@ -56,4 +56,7 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_ALL_COURIERS: () => {
     return courierService.getAllCouriers();
   },
+  GET_FAVORITE_FOODS: (_, __, context: Context) => {
+    return foodService.getFavoriteFoods(context);
+  },
 });
