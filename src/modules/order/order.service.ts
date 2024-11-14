@@ -11,6 +11,7 @@ import { GetOrderByIdProps } from './props/getOrder.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 import { getCartItemsByUserId } from '../cartItem/cartItem.service';
 import { POPULATIONS } from 'src/constants/populations';
+import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
@@ -36,6 +37,8 @@ export const createOrder = async (
     foods: payload.items.map((item) => item['_id']),
     totalPrice: payload.totalPrice,
   });
+
+  await cartItemService.clearUserCart({ user });
 
   const populatedOrder = await createdOrder.populate(POPULATIONS.order);
 
