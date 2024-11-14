@@ -11,4 +11,5 @@ export const MUTATIONS = {
   CLEAR_USER_CART: 'clearUserCart',
   CREATE_COURIER: 'createCourier',
   DELETE_COURIER_BY_ID: 'deleteCourierById',
+  UPDATE_COURIER_BY_ID: 'updateCourierById',
 };

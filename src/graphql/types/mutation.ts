@@ -15,5 +15,6 @@ export const mutationType = gql`
     ${MUTATIONS.CREATE_COURIER}(data: CourierInput!): CourierOutput
     ${MUTATIONS.DELETE_COURIER_BY_ID}(userId: ID!): UserOutput
     ${MUTATIONS.CLEAR_USER_CART}: CartItemsOutput
+    ${MUTATIONS.UPDATE_COURIER_BY_ID}(courierId: ID!, data: UpdateCourierInput!): CourierOutput
   }
 `;

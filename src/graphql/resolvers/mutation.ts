@@ -18,6 +18,7 @@ import { MUTATIONS } from 'src/constants/mutations';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
 import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
+import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -61,5 +62,8 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   CREATE_COURIER: (_, args: CreateCourierProps) => {
     return adminService.createCourier(args);
+  },
+  UPDATE_COURIER_BY_ID: (_, args: UpdateCourierByIdProps) => {
+    return courierService.updateCourierById(args);
   },
 });
