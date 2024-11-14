@@ -1,6 +1,7 @@
 import { extractExecuteResolvers } from 'src/common';
 import { authMiddleware } from './middlewares/auth.middleware';
 import { Request } from 'express';
+import { AuthenticationError } from 'apollo-server-core';
 
 export async function subscriptionContext({
   connectionParams,
@@ -10,21 +11,24 @@ export async function subscriptionContext({
   payload: any;
 }) {
   const authToken =
-    connectionParams.Authorization || connectionParams.authorization;
+    connectionParams?.Authorization || connectionParams?.authorization;
 
   const mockRequest = {
     headers: { authorization: authToken || '' },
   } as Request;
 
-  const authContext = await authMiddleware(mockRequest, []);
-
   if (payload && payload.query) {
-    const { query, operationName } = payload;
+    const { query } = payload;
 
     const executeResolvers = extractExecuteResolvers(query);
 
-    return { ...authContext, executeResolvers, operationName };
-  }
+    const authContext = await authMiddleware(
+      mockRequest,
+      executeResolvers,
+    ).catch((err) => {
+      throw err;
+    });
 
-  return { ...authContext };
+    return { ...authContext };
+  }
 }

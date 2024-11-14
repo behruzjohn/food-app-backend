@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import { httpServer } from './httpServer';
 import { ROUTES } from 'src/constants/routes';
+import { httpContext } from 'src/graphql/context/http.context';
 
 const app = express();
 
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const server = new ApolloServer({
   schema,
-  context: ({ req }) => ({ req }),
+  context: httpContext,
 });
 
 server

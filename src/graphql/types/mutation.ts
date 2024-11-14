@@ -12,7 +12,7 @@ export const mutationType = gql`
     ${MUTATIONS.DELETE_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
     ${MUTATIONS.CREATE_CATEGORY}(category: CategoryInput!): CategoryOutput
     ${MUTATIONS.DELETE_FOOD_BY_ID}(foodId: ID!): FoodDeleteOutput
-    ${MUTATIONS.CREATE_COURIER}(userId: ID!): CourierOutput
+    ${MUTATIONS.CREATE_COURIER}(data: CourierInput!): CourierOutput
     ${MUTATIONS.DELETE_COURIER_BY_ID}(userId: ID!): UserOutput
     ${MUTATIONS.CLEAR_USER_CART}: CartItemsOutput
   }

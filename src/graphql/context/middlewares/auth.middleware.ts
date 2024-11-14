@@ -5,9 +5,12 @@ import { Context, ContextUser } from '../../../types/context';
 import { User } from '../../../modules/user/user.model';
 import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
 import { BadUserInputError } from 'src/common';
-import { UserRoleEnum } from 'src/enums/role.enum';
+import { RoleEnum } from 'src/enums/role.enum';
 import { PERMISSIONS } from 'src/constants/permissions';
 import e from 'express';
+import { Courier } from 'src/modules/courier/courier.model';
+import { Document, Model } from 'mongoose';
+import { Types } from 'mongoose';
 
 export const authMiddleware = async (
   req: e.Request,
@@ -23,7 +26,13 @@ export const authMiddleware = async (
     isTokenValid = false;
   }
 
-  const foundUser = isTokenValid ? await User.findById(decodedToken._id) : null;
+  let foundUser: { _id: Types.ObjectId };
+
+  if (isTokenValid) {
+    foundUser = await (decodedToken.role === RoleEnum.user
+      ? User.exists(decodedToken._id)
+      : Courier.exists(decodedToken._id));
+  }
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {
     if (PUBLIC_RESOLVERS.has(resolver)) {
@@ -40,7 +49,7 @@ export const authMiddleware = async (
       throw new AuthenticationError('Token expired');
     }
 
-    return PERMISSIONS[<UserRoleEnum>foundUser.role].has(resolver);
+    return PERMISSIONS[decodedToken.role]?.has(resolver);
   });
 
   if (!isAccessibleRequest) {
@@ -50,8 +59,7 @@ export const authMiddleware = async (
   return {
     user: {
       _id: foundUser?._id,
-      telegramId: foundUser?.telegramId,
-      role: <UserRoleEnum>foundUser?.role,
+      role: decodedToken.role,
     },
   };
 };

@@ -7,33 +7,12 @@ import { pubsub } from 'src/graphql';
 import { EVENTS } from 'src/constants/events';
 import { CouriersOutput } from './outputs/couriers.output';
 import { CourierOutput } from './outputs/courier.output';
-import { GetUserByIdProps } from '../user/props/getUserById.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
-import { User } from '../user/user.model';
-import { UserRoleEnum } from 'src/enums/role.enum';
 
 export const getAllCouriers = async (): Promise<CouriersOutput> => {
   const foundCouriers = await Courier.find();
 
   return { payload: foundCouriers };
-};
-
-export const createCourier = async ({
-  userId,
-}: GetUserByIdProps): Promise<CourierOutput> => {
-  const updatedUser = await User.findByIdAndUpdate(userId, {
-    role: UserRoleEnum.courier,
-  });
-
-  if (!updatedUser) {
-    throw new UserInputError('User not found');
-  }
-
-  const createdCourier = await Courier.create({
-    user: updatedUser._id,
-  });
-
-  return { payload: createdCourier };
 };
 
 export const deleteCourierById = async ({

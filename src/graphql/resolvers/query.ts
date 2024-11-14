@@ -1,4 +1,4 @@
-import { LoginProps } from 'src/modules/auth/props/logIn.props';
+import { TelegramUserLoginProps } from 'src/modules/auth/props/telegramUserLogin.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
@@ -20,8 +20,8 @@ import { QUERIES } from 'src/constants/queries';
 import { Resolver } from 'src/common/resolver/resolver.type';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
-  LOGIN: (_, args: LoginProps) => {
-    return authService.login(args);
+  TELEGRAM_USER_LOGIN: (_, args: TelegramUserLoginProps) => {
+    return authService.telegramUserLogin(args);
   },
   GET_ALL_USERS: () => {
     return userService.getAllUsers();

@@ -9,5 +9,6 @@ export const subscriptionType = gql`
     ${SUBSCRIPTIONS.START_COOKING_FOOD}(orderId: ID!): OrderOutput
     ${SUBSCRIPTIONS.CREATE_ORDER}(order: OrderInput!): OrderOutput
     ${SUBSCRIPTIONS.ATTACH_ORDER}(orderId: ID!): CourierOutput
+    ${SUBSCRIPTIONS.ATTACH_ORDER_TO_COURIER}(orderId: ID!, courierId: ID!): CourierOutput
   }
 `;

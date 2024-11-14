@@ -14,10 +14,11 @@ export function startWsServer() {
   useServer(
     {
       schema,
-      context: (ctx, msg) => {
-        const connectionParams = ctx.connectionParams;
-        const payload = msg.payload;
-        return subscriptionContext({ connectionParams, payload });
+      context: async ({ connectionParams }, { payload }) => {
+        return await subscriptionContext({
+          connectionParams,
+          payload,
+        }).catch(() => {});
       },
     },
     wsServer,

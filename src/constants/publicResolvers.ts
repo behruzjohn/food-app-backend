@@ -1,7 +1,7 @@
 import { resolvers } from 'src/common';
 
 export const PUBLIC_RESOLVERS = resolvers(
-  'LOGIN',
+  'TELEGRAM_USER_LOGIN',
   'GET_ALL_FOODS',
   'GET_USER_BY_ID',
   'GET_ALL_CATEGORIES',

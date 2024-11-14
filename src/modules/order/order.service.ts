@@ -21,7 +21,7 @@ export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
     throw new UserInputError('Order is not found');
   }
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, { payload: updatedOrder });
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, { payload: updatedOrder });
 };
 
 export const createOrder = async (
@@ -74,7 +74,7 @@ export const updateOrderStatusById = async ({
 
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
 };
@@ -94,7 +94,7 @@ export const deliverOrderById = async ({ orderId }: GetOrderByIdProps) => {
 
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
 };
@@ -106,7 +106,7 @@ export const receiveOrderById = async ({ orderId }: GetOrderByIdProps) => {
 
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: message,
   });
 };

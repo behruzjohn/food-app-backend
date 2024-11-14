@@ -3,8 +3,21 @@ import { gql } from 'apollo-server-core';
 export const courierTypes = gql`
   type Courier {
     _id: ID
+    name: String
+    phone: String
+    password: String
     orders: [Order]
-    user: User
+  }
+
+  input CourierInput {
+    name: String!
+    phone: String!
+    password: String!
+  }
+
+  input SignInAsCourierInput {
+    phone: String!
+    password: String!
   }
 
   type CourierOutput {

@@ -10,12 +10,14 @@ import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
 import * as courierService from '../../modules/courier/courier.service';
+import * as adminService from '../../modules/admin/admin.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
 import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import { resolversHandlers } from 'src/common';
 import { MUTATIONS } from 'src/constants/mutations';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
+import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -57,7 +59,7 @@ export const mutation = resolversHandlers(MUTATIONS)<
   CLEAR_USER_CART: (_, __, context) => {
     return cartItemService.clearUserCart(context);
   },
-  CREATE_COURIER: (_, args: GetUserByIdProps) => {
-    return courierService.createCourier(args);
+  CREATE_COURIER: (_, args: CreateCourierProps) => {
+    return adminService.createCourier(args);
   },
 });
