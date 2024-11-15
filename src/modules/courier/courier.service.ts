@@ -1,4 +1,5 @@
 import { UserInputError } from 'apollo-server-core';
+import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { UserRoleEnum } from 'src/enums/role.enum';
 import { pubsub } from 'src/graphql';
@@ -10,12 +11,20 @@ import { User } from '../user/user.model';
 import { Courier } from './courier.model';
 import { CourierOutput } from './outputs/courier.output';
 import { CouriersOutput } from './outputs/couriers.output';
+import { GetCouriersProps } from './props/getCourier.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
 
-export const getAllCouriers = async (): Promise<CouriersOutput> => {
-  const foundCouriers = await Courier.find();
+export const getCouriers = async ({
+  name,
+  phone,
+}: GetCouriersProps): Promise<CouriersOutput> => {
+  const foundsCourier = await Courier.find({ name, phone });
 
-  return { payload: foundCouriers };
+  if (!foundsCourier) {
+    throw new BadRequestError('Courier not found!');
+  }
+
+  return { payload: foundsCourier };
 };
 
 export const createCourier = async ({

@@ -3,6 +3,7 @@ import { Resolver } from 'src/common/resolver/resolver.type';
 import { QUERIES } from 'src/constants/queries';
 import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
+import { GetCouriersProps } from 'src/modules/courier/props/getCourier.props';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
 import { GetFoodsByCategoryProps } from 'src/modules/food/props/getFoodsByCategory.props';
@@ -58,8 +59,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_FOODS_BY_CATEGORY: (_, args: GetFoodsByCategoryProps) => {
     return foodService.getFoodsByCategory(args);
   },
-  GET_ALL_COURIERS: () => {
-    return courierService.getAllCouriers();
+  GET_COURIERS: (_, args: GetCouriersProps) => {
+    return courierService.getCouriers(args);
   },
   GET_ORDERS_BY_STATUS: (_, args: GetOrdersByStatusProps) => {
     return orderService.getOrdersByStatus(args);

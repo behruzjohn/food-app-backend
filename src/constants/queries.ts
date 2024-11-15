@@ -12,6 +12,6 @@ export const QUERIES = {
   GET_ALL_CATEGORIES: 'getAllCategories',
   GET_CATEGORY_BY_ID: 'getCategoryById',
   GET_FOODS_BY_CATEGORY: 'getFoodsByCategory',
-  GET_ALL_COURIERS: 'getAllCouriers',
+  GET_COURIERS: 'getCouriers',
   GET_ORDERS_BY_STATUS: 'getOrdersByStatus',
 };

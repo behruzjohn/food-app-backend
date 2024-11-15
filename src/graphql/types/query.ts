@@ -17,7 +17,7 @@ export const queryType = gql`
     ${QUERIES.GET_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
     ${QUERIES.GET_ALL_CATEGORIES}: CategoriesOutput
     ${QUERIES.GET_FOODS_BY_CATEGORY}(categoryId: ID!): FoodsOutput
-    ${QUERIES.GET_ALL_COURIERS}: CouriersOutput
+    ${QUERIES.GET_COURIERS}(name: String, phone: Int): CourierOutput
     ${QUERIES.GET_ORDERS_BY_STATUS}(status: String, ${paginationProps}): OrdersOutput
   }
 `;
