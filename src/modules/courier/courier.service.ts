@@ -1,16 +1,16 @@
-import { Context } from 'src/types/context';
-import { Courier } from './courier.model';
 import { UserInputError } from 'apollo-server-core';
-import { GetOrderByIdProps } from '../order/props/getOrder.props';
-import { Order } from '../order/order.model';
-import { pubsub } from 'src/graphql';
 import { EVENTS } from 'src/constants/events';
-import { CouriersOutput } from './outputs/couriers.output';
-import { CourierOutput } from './outputs/courier.output';
-import { GetUserByIdProps } from '../user/props/getUserById.props';
-import { GetCourierByIdProps } from './props/getCourierById.props';
-import { User } from '../user/user.model';
 import { UserRoleEnum } from 'src/enums/role.enum';
+import { pubsub } from 'src/graphql';
+import { Context } from 'src/types/context';
+import { Order } from '../order/order.model';
+import { GetOrderByIdProps } from '../order/props/getOrder.props';
+import { GetUserByIdProps } from '../user/props/getUserById.props';
+import { User } from '../user/user.model';
+import { Courier } from './courier.model';
+import { CourierOutput } from './outputs/courier.output';
+import { CouriersOutput } from './outputs/couriers.output';
+import { GetCourierByIdProps } from './props/getCourierById.props';
 
 export const getAllCouriers = async (): Promise<CouriersOutput> => {
   const foundCouriers = await Courier.find();
@@ -47,7 +47,7 @@ export const deleteCourierById = async ({
 export const attachOrder = async (
   { orderId }: GetOrderByIdProps,
   { user }: Context,
-) => {
+): Promise<CourierOutput> => {
   const foundCourier = await Courier.findOne({ user: user._id });
 
   if (!foundCourier) {
@@ -70,4 +70,6 @@ export const attachOrder = async (
   await foundOrder.save();
 
   await pubsub.publish(EVENTS.ATTACH_ORDER, { payload: foundCourier });
+
+  return { payload: foundCourier };
 };

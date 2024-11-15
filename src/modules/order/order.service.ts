@@ -1,4 +1,5 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
+import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { POPULATIONS } from 'src/constants/populations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
@@ -29,7 +30,7 @@ export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
 export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
-) => {
+): Promise<OrderOutput> => {
   const { payload } = await getCartItemsByUserId({ user });
 
   const createdOrder = await Order.create({
@@ -46,6 +47,8 @@ export const createOrder = async (
   pubsub.publish(EVENTS.CREATE_ORDER, {
     [SUBSCRIPTIONS.CREATE_ORDER]: message,
   });
+
+  return { payload: createdOrder };
 };
 
 export const getOrderById = async ({
@@ -63,7 +66,7 @@ export const getOrderById = async ({
 export const updateOrderStatusById = async ({
   orderId,
   status,
-}: UpdateOrderStatusProps) => {
+}: UpdateOrderStatusProps): Promise<OrderOutput> => {
   const updatedOrder = await Order.findByIdAndUpdate(
     orderId,
     { status },
@@ -79,9 +82,13 @@ export const updateOrderStatusById = async ({
   pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
+
+  return { payload: updatedOrder };
 };
 
-export const deliverOrderById = async ({ orderId }: GetOrderByIdProps) => {
+export const deliverOrderById = async ({
+  orderId,
+}: GetOrderByIdProps): Promise<OrderOutput> => {
   const updatedOrder = await Order.findByIdAndUpdate(
     orderId,
     {
@@ -99,9 +106,12 @@ export const deliverOrderById = async ({ orderId }: GetOrderByIdProps) => {
   pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
+  return { payload: updatedOrder };
 };
 
-export const receiveOrderById = async ({ orderId }: GetOrderByIdProps) => {
+export const receiveOrderById = async ({
+  orderId,
+}: GetOrderByIdProps): Promise<OrderOutput> => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
   }).populate(POPULATIONS.order);
@@ -115,12 +125,36 @@ export const receiveOrderById = async ({ orderId }: GetOrderByIdProps) => {
   pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
     [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: message,
   });
+
+  return { payload: updatedOrder };
 };
 
 export const getOrdersByStatus = async ({
   status,
+  limit,
+  page = 1,
 }: GetOrdersByStatusProps): Promise<OrdersOutput> => {
-  const foundOrders = await Order.find({ status });
+  const { docs: foundOrders, ...pagination } = await Order.find({
+    status,
+  }).paginate(POPULATIONS.order);
 
-  return { payload: foundOrders };
+  return { payload: foundOrders, ...pagination };
+};
+
+export const startCookingFood = async ({
+  orderId,
+  status,
+}: UpdateOrderStatusProps): Promise<OrderOutput> => {
+  const changeStatus = await Order.findByIdAndUpdate(
+    orderId,
+    { status: status },
+    {
+      new: true,
+    },
+  );
+  console.log(changeStatus);
+  if (!changeStatus) {
+    throw new BadRequestError('Order not found!');
+  }
+  return { payload: changeStatus };
 };

@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server-core';
 import { QUERIES } from '../../constants/queries';
+import { paginationProps } from './common';
 
 export const queryType = gql`
   type Query {
@@ -11,12 +12,12 @@ export const queryType = gql`
     ${QUERIES.GET_USER_BY_ID}(userId: ID): UserOutput
     ${QUERIES.GET_USERS_BY_PHONE}(phone: String!): UsersOutput
     ${QUERIES.GET_DASHBOARD}: Int
-    ${QUERIES.GET_ALL_FOODS}(name: String, category: String): FoodsOutput
+    ${QUERIES.GET_ALL_FOODS}(name: String, category: String, ${paginationProps}): FoodsOutput
     ${QUERIES.GET_USERS_BY_ROLE}(role: UserRoleEnum): UsersOutput
     ${QUERIES.GET_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
     ${QUERIES.GET_ALL_CATEGORIES}: CategoriesOutput
     ${QUERIES.GET_FOODS_BY_CATEGORY}(categoryId: ID!): FoodsOutput
     ${QUERIES.GET_ALL_COURIERS}: CouriersOutput
-    ${QUERIES.GET_ORDERS_BY_STATUS}(status: String): OrdersOutput
+    ${QUERIES.GET_ORDERS_BY_STATUS}(status: String, ${paginationProps}): OrdersOutput
   }
 `;

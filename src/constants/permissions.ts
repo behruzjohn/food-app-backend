@@ -32,6 +32,13 @@ export const PERMISSIONS: Permissions = {
     'GET_CATEGORY_BY_ID',
     'UPDATE_CATEGORY_BY_ID',
     'GET_ORDERS_BY_STATUS',
+
+    'UPDATE_ORDER_STATUS_BY_ID',
+    'DELIVER_ORDER_BY_ID',
+    'RECEIVE_ORDER_BY_ID',
+    'START_COOKING_FOOD',
+    'CREATE_ORDER',
+    'ATTACH_ORDER',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
 };

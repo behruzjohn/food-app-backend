@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-core';
+import { paginationType } from 'src/graphql/types/common';
 
 export const foodTypes = gql`
   type Food {
@@ -39,5 +40,9 @@ export const foodTypes = gql`
     description: String
     shortName: String
     category: ID
+  }
+  type PagenatedFoodOutput{
+    payload: [Food]
+    ${paginationType}
   }
 `;

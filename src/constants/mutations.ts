@@ -11,4 +11,10 @@ export const MUTATIONS = {
   CLEAR_USER_CART: 'clearUserCart',
   CREATE_COURIER: 'createCourier',
   DELETE_COURIER_BY_ID: 'deleteCourierById',
+  UPDATE_ORDER_STATUS_BY_ID: 'updateOrderStatusById',
+  DELIVER_ORDER_BY_ID: 'deliverOrderById',
+  RECEIVE_ORDER_BY_ID: 'reveiveOrderById',
+  START_COOKING_FOOD: 'startCookingFood',
+  CREATE_ORDER: 'createOrder',
+  ATTACH_ORDER: 'attachOrder',
 };

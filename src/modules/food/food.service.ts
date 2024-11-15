@@ -1,6 +1,7 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
 import { saveFile } from 'src/helpers/file';
+import { Paginated } from 'src/types/pagenated';
 import Category from '../category/category.model';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
@@ -8,8 +9,8 @@ import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
-import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
 import { UpdateFoodProps } from './props/updateFood.props';
+import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
 
 export const createFood = async ({
   image,
@@ -75,7 +76,9 @@ export const deleteFoodById = async ({
 export const getAllFoods = async ({
   name,
   category,
-}: GetAllFoodsProps): Promise<FoodsOutput> => {
+  limit,
+  page = 1,
+}: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
   let categoryIds = [];
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
@@ -98,17 +101,13 @@ export const getAllFoods = async ({
     searchConditions.push({ category: { $in: categoryIds } });
   }
 
-  const foundFoods = await Food.find(
+  const { docs: foundFoods, ...pagination } = await Food.find(
     searchConditions.length ? { $or: searchConditions } : {},
-  ).populate(POPULATIONS.food);
+  ).paginate(POPULATIONS.food);
 
-  return { payload: foundFoods };
+  return { payload: foundFoods, ...pagination };
 };
 
-export const getFoodsByCategory = async ({
-  categoryId,
-}: GetFoodsByCategoryProps): Promise<FoodsOutput> => {
-  const foundFoodsByCategory = await Food.find({ category: categoryId });
-
-  return { payload: foundFoodsByCategory };
-};
+export function getFoodsByCategory(args: GetFoodsByCategoryProps): unknown {
+  throw new Error('Function not implemented.');
+}
