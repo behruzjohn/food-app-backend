@@ -28,12 +28,13 @@ export const telegramUserLogin = async ({
     user = await User.create({
       name: auth.first_name,
       photo: auth.photo_url,
+      role: RoleEnum.user,
     });
   }
 
   const jwtPayload: JWTAuthPayload = {
     _id: user._id,
-    role: RoleEnum[user.role],
+    role: <RoleEnum>user.role,
   };
 
   const token = createToken(jwtPayload, { expiresIn: '7d' });
