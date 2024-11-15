@@ -5,6 +5,7 @@ import {
   parse,
 } from 'graphql';
 import { OPERATION_DEFINITION } from 'src/constants/definitions';
+import { EXCEPTION_SELECTIONS_NODES } from 'src/constants/exceptionSelectionsNodes';
 
 export function resolversHandlers<T extends Record<string, any>>(keys: T) {
   return <THandler>(resolvers: Record<keyof typeof keys, THandler>) => {
@@ -29,9 +30,15 @@ export const extractExecuteResolvers = (query: string): string[] => {
 
   if (!operationDefinition) return [];
 
-  const executeResolvers = (<FieldNode[]>(
-    operationDefinition.selectionSet.selections
-  )).map(({ name }) => name.value);
+  const executeResolvers: string[] = [];
+
+  const { selections } = operationDefinition.selectionSet;
+
+  for (const { name } of <FieldNode[]>selections) {
+    if (!EXCEPTION_SELECTIONS_NODES.includes(name.value)) {
+      executeResolvers.push(name.value);
+    }
+  }
 
   return executeResolvers;
 };
