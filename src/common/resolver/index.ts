@@ -35,7 +35,7 @@ export const extractExecuteResolvers = (query: string): string[] => {
   const { selections } = operationDefinition.selectionSet;
 
   for (const { name } of <FieldNode[]>selections) {
-    if (!EXCEPTION_SELECTIONS_NODES.includes(name.value)) {
+    if (!EXCEPTION_SELECTIONS_NODES.has(name.value)) {
       executeResolvers.push(name.value);
     }
   }

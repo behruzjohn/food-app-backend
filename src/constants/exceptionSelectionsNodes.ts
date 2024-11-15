@@ -1,1 +1,1 @@
-export const EXCEPTION_SELECTIONS_NODES = ['__tipename'];
+export const EXCEPTION_SELECTIONS_NODES = new Set(['__tipename']);
