@@ -29,6 +29,7 @@ export const telegramUserLogin = async ({
       name: auth.first_name,
       photo: auth.photo_url,
       role: RoleEnum.user,
+      telegramId: auth.id,
     });
   }
 
