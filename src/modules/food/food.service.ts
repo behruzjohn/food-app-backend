@@ -9,8 +9,8 @@ import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
-import { UpdateFoodProps } from './props/updateFood.props';
 import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
+import { UpdateFoodProps } from './props/updateFood.props';
 
 export const createFood = async ({
   image,
@@ -103,7 +103,9 @@ export const getAllFoods = async ({
 
   const { docs: foundFoods, ...pagination } = await Food.find(
     searchConditions.length ? { $or: searchConditions } : {},
-  ).paginate(POPULATIONS.food);
+  )
+    .populate(POPULATIONS.food)
+    .paginate({ limit, page });
 
   return { payload: foundFoods, ...pagination };
 };

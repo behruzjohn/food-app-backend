@@ -1,6 +1,5 @@
 import { model, Schema } from 'mongoose';
 import { MODELS } from '../../constants/models';
-import { TELEGRAM_ID_LENGTH } from '../../constants/validations';
 import { UserRoleEnum } from '../../enums/role.enum';
 
 const userSchema = new Schema({
@@ -15,4 +14,4 @@ const userSchema = new Schema({
   telegramId: { type: String },
 });
 
-export const User = model(MODELS.USER, userSchema);
+export const User = model(MODELS.USER, userSchema, 'users');

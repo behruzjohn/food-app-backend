@@ -31,7 +31,6 @@ export const PERMISSIONS: Permissions = {
     'DELETE_COURIER_BY_ID',
     'GET_ALL_CATEGORIES',
     'GET_CATEGORY_BY_ID',
-    'GET_ORDERS_BY_STATUS',
     'DELIVER_ORDER_BY_ID',
     'RECEIVE_ORDER_BY_ID',
     'START_COOKING_FOOD',
@@ -39,6 +38,7 @@ export const PERMISSIONS: Permissions = {
     'DELETE_CATEGORY_BY_ID',
     'UPDATE_ORDER_STATUS_BY_ID',
     'GET_CART_ITEMS_BY_USER_ID',
+    'GET_ORDERS',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
 };

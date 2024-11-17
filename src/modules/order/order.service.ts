@@ -6,13 +6,14 @@ import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
 import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
+import { Paginated } from 'src/types/pagenated';
 import { getCartItemsByUserId } from '../cartItem/cartItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { OrdersOutput } from './outputs/orders.output';
 import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
-import { GetOrdersByStatusProps } from './props/GetOrdersByStatus.props';
+import { GetOrdersProps } from './props/getOrders.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
@@ -129,18 +130,6 @@ export const receiveOrderById = async ({
   return { payload: updatedOrder };
 };
 
-export const getOrdersByStatus = async ({
-  status,
-  limit,
-  page = 1,
-}: GetOrdersByStatusProps): Promise<OrdersOutput> => {
-  const { docs: foundOrders, ...pagination } = await Order.find({
-    status,
-  }).paginate(POPULATIONS.order);
-
-  return { payload: foundOrders, ...pagination };
-};
-
 export const startCookingFood = async ({
   orderId,
   status,
@@ -152,9 +141,30 @@ export const startCookingFood = async ({
       new: true,
     },
   );
-  console.log(changeStatus);
+
   if (!changeStatus) {
     throw new BadRequestError('Order not found!');
   }
+
   return { payload: changeStatus };
+};
+
+export const getOrders = async ({
+  statuses,
+  limit,
+  page,
+}: GetOrdersProps): Promise<Paginated<OrdersOutput>> => {
+  const filter: any = {};
+
+  if (Array.isArray(statuses) && statuses.length) {
+    filter['$or'] = statuses.map((status) => ({ status }));
+  }
+
+  const { docs: foundFoods, ...pagination } = await Order.find(filter)
+    .populate(POPULATIONS.order)
+    .paginate({ limit, page });
+
+  console.log(foundFoods);
+
+  return { payload: foundFoods, ...pagination };
 };

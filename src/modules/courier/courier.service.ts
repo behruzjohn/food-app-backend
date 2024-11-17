@@ -1,5 +1,4 @@
 import { UserInputError } from 'apollo-server-core';
-import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { UserRoleEnum } from 'src/enums/role.enum';
 import { pubsub } from 'src/graphql';
@@ -18,13 +17,26 @@ export const getCouriers = async ({
   name,
   phone,
 }: GetCouriersProps): Promise<CouriersOutput> => {
-  const foundsCourier = await Courier.find({ name, phone });
-
-  if (!foundsCourier) {
-    throw new BadRequestError('Courier not found!');
-  }
-
-  return { payload: foundsCourier };
+  const couriers = await Courier.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    {
+      $unwind: '$user',
+    },
+    {
+      $match: {
+        $or: [{ 'user.name': name }, { 'user.phone': phone }],
+      },
+    },
+  ]);
+  console.log(couriers);
+  return { payload: couriers };
 };
 
 export const createCourier = async ({
