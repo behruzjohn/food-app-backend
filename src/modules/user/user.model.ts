@@ -1,6 +1,7 @@
 import { model, Schema, Types } from 'mongoose';
 import { MODELS } from '../../constants/models';
 import { UserRoleEnum } from 'src/enums/userRole.enum';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const userSchema = new Schema({
   photo: { type: String },
@@ -11,5 +12,7 @@ const userSchema = new Schema({
   favoriteFoods: [{ type: Types.ObjectId, ref: MODELS.FOOD }],
   password: { type: String },
 });
+
+userSchema.plugin(mongoosePaginate);
 
 export const User = model(MODELS.USER, userSchema);

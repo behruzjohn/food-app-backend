@@ -74,16 +74,17 @@ export const deleteFoodById = async ({
   return { payload: deletedFood };
 };
 
-export const getFavoriteFoods = async ({
-  user,
-}: Context): Promise<FoodsOutput> => {
+export const getFavoriteFoods = async (
+  { limit, page }: PaginateProps,
+  { user }: Context,
+): Promise<Paginated<FoodsOutput>> => {
   const foundUser = await User.findById(user._id);
 
   const favoriteFoods = foundUser.favoriteFoods.map((_id) => ({ _id }));
 
   const foundFoods = await Food.find({
     $or: favoriteFoods,
-  });
+  }).paginate({ limit, page });
 
   return { payload: foundFoods };
 };
