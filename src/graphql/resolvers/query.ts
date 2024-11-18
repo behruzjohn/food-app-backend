@@ -50,9 +50,6 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_ALL_CATEGORIES: () => {
     return categoryService.getAllCategories();
   },
-  GET_FOODS_BY_CATEGORY: (_, args: GetFoodsByCategoryProps) => {
-    return foodService.getFoodsByCategory(args);
-  },
   GET_ALL_COURIERS: () => {
     return courierService.getAllCouriers();
   },

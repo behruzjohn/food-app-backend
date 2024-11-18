@@ -136,16 +136,16 @@ export const removeFoodFromFavorites = async (
 
 export const getAllFoods = async ({
   name,
-  category,
+  categories,
 }: GetAllFoodsProps): Promise<FoodsOutput> => {
-  let categoryIds = [];
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
-  if (category) {
+  if (name && !categories?.length) {
     const matchedCategory = await Category.find({
-      name: { $regex: new RegExp(category, 'i') },
+      name: { $regex: new RegExp(name, 'i') },
     });
-    categoryIds = matchedCategory.map((category) => category._id);
+
+    categories = matchedCategory.map((category) => category._id);
   }
 
   const searchConditions = [];
@@ -156,8 +156,9 @@ export const getAllFoods = async ({
       { name: { $regex: nameRegex } },
     );
   }
-  if (categoryIds.length) {
-    searchConditions.push({ category: { $in: categoryIds } });
+
+  if (categories?.length) {
+    searchConditions.push({ category: { $in: categories } });
   }
 
   const foundFoods = await Food.find(
@@ -165,12 +166,4 @@ export const getAllFoods = async ({
   ).populate(POPULATIONS.food);
 
   return { payload: foundFoods };
-};
-
-export const getFoodsByCategory = async ({
-  categoryId,
-}: GetFoodsByCategoryProps): Promise<FoodsOutput> => {
-  const foundFoodsByCategory = await Food.find({ category: categoryId });
-
-  return { payload: foundFoodsByCategory };
 };

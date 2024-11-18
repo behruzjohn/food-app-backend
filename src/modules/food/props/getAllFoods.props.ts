@@ -1,4 +1,6 @@
+import { Types } from 'mongoose';
+
 export type GetAllFoodsProps = {
   name?: string;
-  category?: string;
+  categories: Types.ObjectId[];
 };
