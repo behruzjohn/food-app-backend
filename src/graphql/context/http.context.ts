@@ -3,7 +3,10 @@ import { INTROSPECTION_QUERY } from 'src/constants/commonResolvers';
 import { authMiddleware } from './middlewares/auth.middleware';
 import e from 'express';
 
-export async function httpContext({ req }: { req: e.Request }) {
+export async function httpContext(
+  { req }: { req: e.Request },
+  lang: 'http' | 'graphql' = 'graphql',
+) {
   if (!req || !req.body) {
     return {};
   }
@@ -18,11 +21,17 @@ export async function httpContext({ req }: { req: e.Request }) {
     ? JSON.parse(req.body['operations'])
     : req.body;
 
-  const executeResolvers = extractExecuteResolvers(body.query);
+  if (lang === 'graphql') {
+    const executeResolvers = extractExecuteResolvers(body.query);
 
-  req.body = { ...req.body, ...body };
+    req.body = { ...req.body, ...body };
 
-  const authContext = await authMiddleware(req, executeResolvers);
+    const authContext = await authMiddleware(req, executeResolvers, lang);
+
+    return { ...authContext };
+  }
+
+  const authContext = await authMiddleware(req, [], lang);
 
   return { ...authContext };
 }

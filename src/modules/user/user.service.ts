@@ -1,16 +1,15 @@
 import { ApolloError } from 'apollo-server-core';
 import { BadRequestError } from 'src/common';
-import { UserRoleEnum } from 'src/enums/role.enum';
+import { RoleEnum } from 'src/enums/role.enum';
 import { Context } from 'src/types/context';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { GetUsersByPhoneProps } from './props/getUsersByPhone.props';
-import { GetUsersByRoleProps } from './props/getUsersByRole.props';
 import { User } from './user.model';
 
 export const getAllUsers = async (): Promise<UsersOutput> => {
-  const foundUsers = await User.find({ role: UserRoleEnum.user });
+  const foundUsers = await User.find({ role: RoleEnum.user });
 
   return { payload: foundUsers };
 };
@@ -26,14 +25,6 @@ export const getUserById = async (
   }
 
   return { payload: foundUser };
-};
-
-export const getUsersByRole = async ({
-  role,
-}: GetUsersByRoleProps): Promise<UsersOutput> => {
-  const foundUsers = await User.find({ role });
-
-  return { payload: foundUsers };
 };
 
 export const getUsersByPhone = async ({

@@ -1,7 +1,3 @@
-import { resolversHandlers } from 'src/common';
-import { Resolver } from 'src/common/resolver/resolver.type';
-import { QUERIES } from 'src/constants/queries';
-import { LoginProps } from 'src/modules/auth/props/logIn.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { GetCouriersProps } from 'src/modules/courier/props/getCourier.props';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
@@ -10,8 +6,11 @@ import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetOrdersProps } from 'src/modules/order/props/getOrders.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
-import { GetUsersByRoleProps } from 'src/modules/user/props/getUsersByRole.props';
-import { Context } from 'src/types/context';
+import { resolversHandlers } from 'src/common';
+import { QUERIES } from 'src/constants/queries';
+import { Resolver } from 'src/common/resolver/resolver.type';
+import { TelegramLoginProps } from 'src/modules/auth/props/telegramLogin.props';
+import { PaginateProps } from 'src/props/paginate.props';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
@@ -21,13 +20,13 @@ import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
-  LOGIN: (_, args: LoginProps) => {
-    return authService.login(args);
+  TELEGRAM_USER_LOGIN: (_, args: TelegramLoginProps) => {
+    return authService.telegramUserLogin(args);
   },
   GET_ALL_USERS: () => {
     return userService.getAllUsers();
   },
-  GET_USER_BY_ID: (_, args: GetUserByIdProps, context: Context) => {
+  GET_USER_BY_ID: (_, args: GetUserByIdProps, context) => {
     return userService.getUserById(args, context);
   },
   GET_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
@@ -40,9 +39,6 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
     return cartItemService.getCartItemsByUserId(context);
   },
   GET_DASHBOARD: () => 1,
-  GET_USERS_BY_ROLE: (_, args: GetUsersByRoleProps) => {
-    return userService.getUsersByRole(args);
-  },
   GET_USERS_BY_PHONE: (_, args: GetUsersByPhoneProps) => {
     return userService.getUsersByPhone(args);
   },
@@ -60,5 +56,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   },
   GET_ORDERS: (_, args: GetOrdersProps) => {
     return orderService.getOrders(args);
+  },
+  GET_FAVORITE_FOODS: (_, args: PaginateProps, context) => {
+    return foodService.getFavoriteFoods(args, context);
   },
 });

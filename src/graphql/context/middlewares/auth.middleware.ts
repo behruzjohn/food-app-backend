@@ -1,17 +1,21 @@
-import { AuthenticationError } from 'apollo-server-core';
+import { AuthenticationError, UserInputError } from 'apollo-server-core';
 import { AUTH_TYPE } from '../../../constants/auth';
 import { decodeToken, isTokenExpired } from '../../../utils/jwt';
 import { Context, ContextUser } from '../../../types/context';
 import { User } from '../../../modules/user/user.model';
 import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
 import { BadUserInputError } from 'src/common';
-import { UserRoleEnum } from 'src/enums/role.enum';
-import { PERMISSIONS } from 'src/constants/permissions';
+import { RESOLVERS_PERMISSIONS } from 'src/constants/resolversPermissions';
 import e from 'express';
+import { Courier } from 'src/modules/courier/courier.model';
+import { Types } from 'mongoose';
+import { UserRoleEnum } from 'src/enums/userRole.enum';
+import { ENDPOINTS_PERMISSIONS } from 'src/constants/endpointsPermissions';
 
 export const authMiddleware = async (
   req: e.Request,
   executeResolvers: string[],
+  lang: 'http' | 'graphql' = 'http',
 ): Promise<Context> => {
   const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
@@ -19,17 +23,29 @@ export const authMiddleware = async (
 
   let isTokenValid = true;
 
-  if (!decodedToken?._id || !decodedToken?.telegramId) {
+  if (!decodedToken?._id || !decodedToken?.role) {
     isTokenValid = false;
   }
 
-  const foundUser = isTokenValid ? await User.findById(decodedToken._id) : null;
+  let foundUser: { _id: Types.ObjectId };
+
+  if (isTokenValid) {
+    const queryFilter = { _id: decodedToken._id };
+
+    foundUser = await (UserRoleEnum[decodedToken.role]
+      ? User.exists(queryFilter)
+      : Courier.exists(queryFilter));
+  }
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {
     if (PUBLIC_RESOLVERS.has(resolver)) {
       return true;
     } else if (!foundUser) {
       throw new AuthenticationError('User is not found');
+    }
+
+    if (!isTokenValid) {
+      throw new UserInputError('Invalid token');
     }
 
     if (tokenType !== AUTH_TYPE || !token) {
@@ -40,7 +56,13 @@ export const authMiddleware = async (
       throw new AuthenticationError('Token expired');
     }
 
-    return PERMISSIONS[<UserRoleEnum>foundUser.role].has(resolver);
+    if (lang === 'graphql') {
+      return RESOLVERS_PERMISSIONS[decodedToken.role]?.has(resolver);
+    } else {
+      return ENDPOINTS_PERMISSIONS[decodedToken.role]?.has(
+        `${req.method}-${req.route}`,
+      );
+    }
   });
 
   if (!isAccessibleRequest) {
@@ -50,8 +72,7 @@ export const authMiddleware = async (
   return {
     user: {
       _id: foundUser?._id,
-      telegramId: foundUser?.telegramId,
-      role: <UserRoleEnum>foundUser?.role,
+      role: decodedToken.role,
     },
   };
 };

@@ -1,17 +1,18 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import { MODELS } from '../../constants/models';
-import { UserRoleEnum } from '../../enums/role.enum';
+import { UserRoleEnum } from 'src/enums/userRole.enum';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const userSchema = new Schema({
-  photo: { type: String, required: true },
+  photo: { type: String },
   name: { type: String, required: true },
-  role: {
-    type: String,
-    enum: Object.keys(UserRoleEnum),
-    default: UserRoleEnum.user,
-  },
-  phone: { type: String, validator: (v: string) => v.startsWith('+998') },
+  role: { type: String, enum: Object.keys(UserRoleEnum) },
   telegramId: { type: String },
+  phone: { type: String, validator: (v: string) => v.startsWith('+998') },
+  favoriteFoods: [{ type: Types.ObjectId, ref: MODELS.FOOD }],
+  password: { type: String },
 });
 
-export const User = model(MODELS.USER, userSchema, 'users');
+userSchema.plugin(mongoosePaginate);
+
+export const User = model(MODELS.USER, userSchema);

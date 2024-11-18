@@ -1,16 +1,16 @@
 export const QUERIES = {
-  LOGIN: 'login',
+  TELEGRAM_USER_LOGIN: 'telegramUserLogin',
   GET_ALL_USERS: 'getAllUsers',
   GET_DASHBOARD: 'getDashboard',
   GET_CART_ITEMS_BY_USER_ID: 'getCartItemsByUserId',
   GET_USER_BY_ID: 'getUserById',
   GET_FOOD_BY_ID: 'getFoodById',
   GET_ORDER_BY_ID: 'getOrderById',
-  GET_USERS_BY_ROLE: 'getUsersByRole',
   GET_USERS_BY_PHONE: 'getUsersByPhone',
   GET_ALL_FOODS: 'getAllFoods',
   GET_ALL_CATEGORIES: 'getAllCategories',
   GET_CATEGORY_BY_ID: 'getCategoryById',
   GET_COURIERS: 'getCouriers',
   GET_ORDERS: 'getOrders',
+  GET_FAVORITE_FOODS: 'getFavoriteFoods',
 };

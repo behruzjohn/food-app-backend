@@ -10,6 +10,7 @@ const foodSchema = new Schema({
   price: { type: Number, required: true },
   discount: { type: Number },
   category: { type: String, ref: MODELS.CATEGORIES, required: true },
+  likes: { type: Number, default: 0, min: 0 },
 });
 
 foodSchema.plugin(mongoosePaginateV2);

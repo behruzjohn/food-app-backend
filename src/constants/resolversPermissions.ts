@@ -1,7 +1,7 @@
 import { resolvers } from 'src/common';
-import { Permissions } from 'src/types/permissions';
+import { ResolversPermissions } from 'src/types/resolversPermissions';
 
-export const PERMISSIONS: Permissions = {
+export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
   user: resolvers(
     'CREATE_CART_ITEM',
     'CREATE_ORDER',
@@ -39,7 +39,7 @@ export const PERMISSIONS: Permissions = {
     'UPDATE_ORDER_STATUS_BY_ID',
     'GET_CART_ITEMS_BY_USER_ID',
     'GET_ORDERS',
-    'GET_USERS_BY_ROLE',
+    'ATTACH_ORDER_TO_COURIER',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),
 };

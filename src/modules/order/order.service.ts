@@ -6,7 +6,7 @@ import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
 import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
-import { Paginated } from 'src/types/pagenated';
+import { Paginated } from 'src/types/paginated';
 import { getCartItemsByUserId } from '../cartItem/cartItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
@@ -15,6 +15,7 @@ import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
+import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
@@ -25,7 +26,7 @@ export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
     throw new UserInputError('Order is not found');
   }
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, { payload: updatedOrder });
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, { payload: updatedOrder });
 };
 
 export const createOrder = async (
@@ -40,6 +41,8 @@ export const createOrder = async (
     foods: payload.items.map((item) => item['_id']),
     totalPrice: payload.totalPrice,
   });
+
+  await cartItemService.clearUserCart({ user });
 
   const populatedOrder = await createdOrder.populate(POPULATIONS.order);
 
@@ -81,7 +84,7 @@ export const updateOrderStatusById = async ({
 
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
 
@@ -105,7 +108,7 @@ export const deliverOrderById = async ({
 
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
   return { payload: updatedOrder };
@@ -120,11 +123,7 @@ export const receiveOrderById = async ({
 
   const message = { payload: updatedOrder };
 
-  setTimeout(async () => {
-    await Order.findByIdAndDelete(orderId);
-  }, 1000);
-
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS_BY_ID, {
+  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: message,
   });
 

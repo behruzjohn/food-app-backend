@@ -1,6 +1,7 @@
+import { Types } from 'mongoose';
 import { PaginateProps } from 'src/props/paginate.props';
 
 export type GetAllFoodsProps = {
   name?: string;
-  category?: string;
+  categories: Types.ObjectId[];
 } & PaginateProps;

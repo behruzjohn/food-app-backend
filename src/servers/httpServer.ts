@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import { httpContext } from 'src/graphql/context/http.context';
-import { FILE_CATEGORIES } from 'src/constants/fileCategories';
-import { upload } from 'src/multer';
 import e from 'express';
+import { httpContext } from 'src/graphql/context/http.context';
+import { upload } from 'src/multer';
+import { FILE_CATEGORIES } from 'src/constants/fileCategories';
 import { ROUTES } from 'src/constants/routes';
 
 export const httpServer = express();
@@ -14,7 +14,7 @@ httpServer.use(express.urlencoded({ extended: true }));
 
 httpServer.post(
   ROUTES.UPLOAD,
-  httpContext,
+  (req) => httpContext({ req }, 'http'),
   (req: e.Request, res: e.Response) => {
     const { category } = req.params;
 

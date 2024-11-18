@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-core';
 
 export const authTypes = gql`
-  input AuthInput {
+  input TelegramUserInput {
     id: String
     first_name: String
     last_name: String

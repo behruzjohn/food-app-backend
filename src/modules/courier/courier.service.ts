@@ -1,17 +1,15 @@
 import { UserInputError } from 'apollo-server-core';
 import { EVENTS } from 'src/constants/events';
-import { UserRoleEnum } from 'src/enums/role.enum';
 import { pubsub } from 'src/graphql';
 import { Context } from 'src/types/context';
 import { Order } from '../order/order.model';
 import { GetOrderByIdProps } from '../order/props/getOrder.props';
-import { GetUserByIdProps } from '../user/props/getUserById.props';
-import { User } from '../user/user.model';
 import { Courier } from './courier.model';
 import { CourierOutput } from './outputs/courier.output';
 import { CouriersOutput } from './outputs/couriers.output';
 import { GetCouriersProps } from './props/getCourier.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
+import { UpdateCourierByIdProps } from './props/updateCourierById.props';
 
 export const getCouriers = async ({
   name,
@@ -37,24 +35,6 @@ export const getCouriers = async ({
   ]);
 
   return { payload: couriers };
-};
-
-export const createCourier = async ({
-  userId,
-}: GetUserByIdProps): Promise<CourierOutput> => {
-  const updatedUser = await User.findByIdAndUpdate(userId, {
-    role: UserRoleEnum.courier,
-  });
-
-  if (!updatedUser) {
-    throw new UserInputError('User not found');
-  }
-
-  const createdCourier = await Courier.create({
-    user: updatedUser._id,
-  });
-
-  return { payload: createdCourier };
 };
 
 export const deleteCourierById = async ({
@@ -93,4 +73,17 @@ export const attachOrder = async (
   await pubsub.publish(EVENTS.ATTACH_ORDER, { payload: foundCourier });
 
   return { payload: foundCourier };
+};
+
+export const updateCourierById = async ({
+  courierId,
+  data,
+}: UpdateCourierByIdProps): Promise<CourierOutput> => {
+  const updatedCourier = await Courier.findByIdAndUpdate(courierId, data);
+
+  if (!updatedCourier) {
+    throw new UserInputError('Courier not found');
+  }
+
+  return { payload: updatedCourier };
 };

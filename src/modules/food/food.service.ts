@@ -1,7 +1,7 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
 import { saveFile } from 'src/helpers/file';
-import { Paginated } from 'src/types/pagenated';
+import { Paginated } from 'src/types/paginated';
 import Category from '../category/category.model';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
@@ -9,8 +9,10 @@ import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
-import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
 import { UpdateFoodProps } from './props/updateFood.props';
+import { Context } from 'src/types/context';
+import { User } from '../user/user.model';
+import { PaginateProps } from 'src/props/paginate.props';
 
 export const createFood = async ({
   image,
@@ -67,26 +69,87 @@ export const deleteFoodById = async ({
   const deletedFood = await Food.findByIdAndDelete(foodId);
 
   if (!deletedFood) {
-    throw new BadUserInputError('Food not found!');
+    throw new BadUserInputError('Food not found');
   }
 
   return { payload: deletedFood };
 };
 
+export const getFavoriteFoods = async (
+  { limit, page }: PaginateProps,
+  { user }: Context,
+): Promise<Paginated<FoodsOutput>> => {
+  const foundUser = await User.findById(user._id);
+
+  const favoriteFoods = foundUser.favoriteFoods.map((_id) => ({ _id }));
+
+  const { docs: foundFoods, ...pagination } = await Food.find({
+    $or: favoriteFoods,
+  }).paginate({ limit, page });
+
+  return { payload: foundFoods, ...pagination };
+};
+
+export const addFoodToFavorites = async (
+  { foodId }: GetFoodByIdProps,
+  { user }: Context,
+): Promise<FoodOutput> => {
+  const updatedFood = await Food.findByIdAndUpdate(
+    foodId,
+    {
+      $inc: { likes: 1 },
+    },
+    { new: true },
+  );
+
+  if (!updatedFood) {
+    throw new BadUserInputError('Food not found');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    $push: { favoriteFoods: foodId },
+  });
+
+  return { payload: updatedFood };
+};
+
+export const removeFoodFromFavorites = async (
+  { foodId }: GetFoodByIdProps,
+  { user }: Context,
+): Promise<FoodOutput> => {
+  const updatedFood = await Food.findByIdAndUpdate(
+    foodId,
+    {
+      $inc: { likes: -1 },
+    },
+    { new: true },
+  );
+
+  if (!updatedFood) {
+    throw new BadUserInputError('Food not found');
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    $pull: { favoriteFoods: foodId },
+  });
+
+  return { payload: updatedFood };
+};
+
 export const getAllFoods = async ({
   name,
-  category,
+  categories,
   limit,
-  page = 1,
-}: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
-  let categoryIds = [];
+  page,
+}: GetAllFoodsProps): Promise<FoodsOutput> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
-  if (category) {
+  if (name && !categories?.length) {
     const matchedCategory = await Category.find({
-      name: { $regex: new RegExp(category, 'i') },
+      name: { $regex: new RegExp(name, 'i') },
     });
-    categoryIds = matchedCategory.map((category) => category._id);
+
+    categories = matchedCategory.map((category) => category._id);
   }
 
   const searchConditions = [];
@@ -97,8 +160,9 @@ export const getAllFoods = async ({
       { name: { $regex: nameRegex } },
     );
   }
-  if (categoryIds.length) {
-    searchConditions.push({ category: { $in: categoryIds } });
+
+  if (categories?.length) {
+    searchConditions.push({ category: { $in: categories } });
   }
 
   const { docs: foundFoods, ...pagination } = await Food.find(

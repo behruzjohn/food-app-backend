@@ -16,15 +16,18 @@ export async function subscriptionContext({
     headers: { authorization: authToken || '' },
   } as Request;
 
-  const authContext = await authMiddleware(mockRequest, []);
-
   if (payload && payload.query) {
-    const { query, operationName } = payload;
+    const { query } = payload;
 
     const executeResolvers = extractExecuteResolvers(query);
 
-    return { ...authContext, executeResolvers, operationName };
-  }
+    const authContext = await authMiddleware(
+      mockRequest,
+      executeResolvers,
+    ).catch((err) => {
+      throw err;
+    });
 
-  return { ...authContext };
+    return { ...authContext };
+  }
 }

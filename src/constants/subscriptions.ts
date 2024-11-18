@@ -5,4 +5,5 @@ export const SUBSCRIPTIONS = {
   START_COOKING_FOOD: 'startCookingFood',
   CREATE_ORDER: 'createOrder',
   ATTACH_ORDER: 'attachOrder',
+  ATTACH_ORDER_TO_COURIER: 'attachOrderToCourier',
 };
