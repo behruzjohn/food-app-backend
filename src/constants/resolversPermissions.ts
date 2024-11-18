@@ -1,7 +1,7 @@
 import { resolvers } from 'src/common';
-import { Permissions } from 'src/types/permissions';
+import { ResolversPermissions } from 'src/types/resolversPermissions';
 
-export const PERMISSIONS: Permissions = {
+export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
   user: resolvers(
     'CREATE_CART_ITEM',
     'CREATE_ORDER',

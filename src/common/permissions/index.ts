@@ -1,6 +1,8 @@
 import { MUTATIONS } from 'src/constants/mutations';
 import { QUERIES } from 'src/constants/queries';
+import { ROUTES } from 'src/constants/routes';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
+import { Method } from 'src/types/endpointsPermissions';
 
 type MutationKeys = keyof typeof MUTATIONS;
 
@@ -20,4 +22,14 @@ export function resolvers(...keys: ResolversKeys[]): Set<string> {
   );
 
   return resolvers;
+}
+
+export function endpoints(...keys: [Method, keyof typeof ROUTES][]) {
+  const validatedResolvers = [...keys].map(
+    ([method, key]) => `${method}-${ROUTES[key]}`,
+  );
+
+  const endpoints = new Set(validatedResolvers);
+
+  return endpoints;
 }

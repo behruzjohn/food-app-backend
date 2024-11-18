@@ -14,7 +14,7 @@ httpServer.use(express.urlencoded({ extended: true }));
 
 httpServer.post(
   ROUTES.UPLOAD,
-  (req) => httpContext({ req }),
+  (req) => httpContext({ req }, 'http'),
   (req: e.Request, res: e.Response) => {
     const { category } = req.params;
 
