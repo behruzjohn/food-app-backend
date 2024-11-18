@@ -109,7 +109,3 @@ export const getAllFoods = async ({
 
   return { payload: foundFoods, ...pagination };
 };
-
-export function getFoodsByCategory(args: GetFoodsByCategoryProps): unknown {
-  throw new Error('Function not implemented.');
-}

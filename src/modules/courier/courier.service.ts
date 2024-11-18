@@ -35,7 +35,7 @@ export const getCouriers = async ({
       },
     },
   ]);
-  console.log(couriers);
+
   return { payload: couriers };
 };
 

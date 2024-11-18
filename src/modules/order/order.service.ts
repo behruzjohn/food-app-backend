@@ -55,11 +55,12 @@ export const createOrder = async (
 export const getOrderById = async ({
   orderId,
 }: GetOrderByIdProps): Promise<OrderOutput> => {
-  const foundOrder = await Order.populate({ _id: orderId }, POPULATIONS.order);
+  const foundOrder = await Order.findById(orderId).populate(POPULATIONS.order);
 
   if (!foundOrder) {
     throw new ApolloError('Order not found');
   }
+  console.log(foundOrder);
 
   return { payload: foundOrder };
 };
@@ -163,8 +164,6 @@ export const getOrders = async ({
   const { docs: foundFoods, ...pagination } = await Order.find(filter)
     .populate(POPULATIONS.order)
     .paginate({ limit, page });
-
-  console.log(foundFoods);
 
   return { payload: foundFoods, ...pagination };
 };

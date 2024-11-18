@@ -6,7 +6,6 @@ import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProp
 import { GetCouriersProps } from 'src/modules/courier/props/getCourier.props';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
-import { GetFoodsByCategoryProps } from 'src/modules/food/props/getFoodsByCategory.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetOrdersProps } from 'src/modules/order/props/getOrders.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
@@ -55,9 +54,6 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   },
   GET_ALL_CATEGORIES: () => {
     return categoryService.getAllCategories();
-  },
-  GET_FOODS_BY_CATEGORY: (_, args: GetFoodsByCategoryProps) => {
-    return foodService.getFoodsByCategory(args);
   },
   GET_COURIERS: (_, args: GetCouriersProps) => {
     return courierService.getCouriers(args);
