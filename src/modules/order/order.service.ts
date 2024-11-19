@@ -5,6 +5,7 @@ import { POPULATIONS } from 'src/constants/populations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
 import { pubsub } from 'src/graphql';
+import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
 import { getCartItemsByUserId } from '../cartItem/cartItem.service';
@@ -15,7 +16,6 @@ import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
-import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
