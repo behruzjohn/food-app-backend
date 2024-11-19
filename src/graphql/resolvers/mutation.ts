@@ -1,24 +1,25 @@
+import { resolversHandlers } from 'src/common';
+import { Resolver } from 'src/common/resolver/resolver.type';
+import { MUTATIONS } from 'src/constants/mutations';
+import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
+import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
 import { CreateCategoryProps } from 'src/modules/category/props/createCategoryProps';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryProps';
+import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
+import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 import { CreateFoodProps } from 'src/modules/food/props/createFood.props';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFood.props';
-import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
+import { UpdateUserDataByIdProps } from 'src/modules/user/props/changeUserValues.props';
+import * as userService from 'src/modules/user/user.service';
+import * as adminService from '../../modules/admin/admin.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
-import * as foodService from '../../modules/food/food.service';
 import * as courierService from '../../modules/courier/courier.service';
-import * as adminService from '../../modules/admin/admin.service';
+import * as foodService from '../../modules/food/food.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
-import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
-import { resolversHandlers } from 'src/common';
-import { MUTATIONS } from 'src/constants/mutations';
-import { Resolver } from 'src/common/resolver/resolver.type';
-import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
-import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
-import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -71,5 +72,8 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   REMOVE_FOOD_FROM_FAVORITES: (_, args: GetFoodByIdProps, context) => {
     return foodService.removeFoodFromFavorites(args, context);
+  },
+  UPDATE_USER_BY_ID: (_, args: UpdateUserDataByIdProps) => {
+    return userService.updateUserById(args);
   },
 });

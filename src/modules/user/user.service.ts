@@ -4,6 +4,7 @@ import { RoleEnum } from 'src/enums/role.enum';
 import { Context } from 'src/types/context';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
+import { UpdateUserDataByIdProps } from './props/changeUserValues.props';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { GetUsersByPhoneProps } from './props/getUsersByPhone.props';
 import { User } from './user.model';
@@ -39,4 +40,17 @@ export const getUsersByPhone = async ({
   }
 
   return { payload: foundUsers };
+};
+
+export const updateUserById = async ({
+  userId,
+  data,
+}: UpdateUserDataByIdProps): Promise<UserOutput> => {
+  const foundUser = await User.findByIdAndUpdate(userId, data, { new: true });
+
+  if (!foundUser) {
+    throw new BadRequestError('Error during changing properties!');
+  }
+
+  return { payload: foundUser };
 };

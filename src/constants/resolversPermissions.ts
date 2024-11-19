@@ -34,6 +34,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_CATEGORY_BY_ID',
     'UPDATE_CATEGORY_BY_ID',
     'ATTACH_ORDER_TO_COURIER',
+    'UPDATE_USER_BY_ID',
     'GET_ALL_COURIERS',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID'),

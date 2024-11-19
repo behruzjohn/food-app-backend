@@ -18,5 +18,6 @@ export const mutationType = gql`
     ${MUTATIONS.UPDATE_COURIER_BY_ID}(courierId: ID!, data: UpdateCourierInput!): CourierOutput
     ${MUTATIONS.ADD_FOOD_TO_FAVORITES}(foodId: ID!): FoodOutput
     ${MUTATIONS.REMOVE_FOOD_FROM_FAVORITES}(foodId: ID!): FoodOutput
+    ${MUTATIONS.UPDATE_USER_BY_ID}(userId: ID!, data: UpdateUserDataByIdPropsInput): UserOutput 
   }
 `;

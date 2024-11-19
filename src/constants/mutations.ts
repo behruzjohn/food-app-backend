@@ -14,4 +14,5 @@ export const MUTATIONS = {
   UPDATE_COURIER_BY_ID: 'updateCourierById',
   ADD_FOOD_TO_FAVORITES: 'addFoodToFavorites',
   REMOVE_FOOD_FROM_FAVORITES: 'removeFoodFromFavorites',
+  UPDATE_USER_BY_ID: 'updateUserById',
 };

@@ -21,4 +21,9 @@ export const userTypes = gql`
   type UsersOutput {
     payload: [User]
   }
+  input UpdateUserDataByIdPropsInput {
+    name: String
+    password: String
+    phone: String
+  }
 `;
