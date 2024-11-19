@@ -1,23 +1,24 @@
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
+import { GetCouriersProps } from 'src/modules/courier/props/getCourier.props';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
-import { GetFoodsByCategoryProps } from 'src/modules/food/props/getFoodsByCategory.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
+import { GetOrdersProps } from 'src/modules/order/props/getOrders.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersByPhoneProps } from 'src/modules/user/props/getUsersByPhone.props';
-import { Context } from 'src/types/context';
-import * as authService from '../../modules/auth/auth.service';
-import * as cartItemService from '../../modules/cartItem/cartItem.service';
-import * as categoryService from '../../modules/category/category.service';
-import * as foodService from '../../modules/food/food.service';
-import * as orderService from '../../modules/order/order.service';
-import * as userService from '../../modules/user/user.service';
-import * as courierService from '../../modules/courier/courier.service';
 import { resolversHandlers } from 'src/common';
 import { QUERIES } from 'src/constants/queries';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { TelegramLoginProps } from 'src/modules/auth/props/telegramLogin.props';
 import { SignInProps } from 'src/modules/auth/props/signIn.props';
+import { PaginateProps } from 'src/props/paginate.props';
+import * as authService from '../../modules/auth/auth.service';
+import * as cartItemService from '../../modules/cartItem/cartItem.service';
+import * as categoryService from '../../modules/category/category.service';
+import * as courierService from '../../modules/courier/courier.service';
+import * as foodService from '../../modules/food/food.service';
+import * as orderService from '../../modules/order/order.service';
+import * as userService from '../../modules/user/user.service';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   TELEGRAM_USER_LOGIN: (_, args: TelegramLoginProps) => {
@@ -26,7 +27,7 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_ALL_USERS: () => {
     return userService.getAllUsers();
   },
-  GET_USER_BY_ID: (_, args: GetUserByIdProps, context: Context) => {
+  GET_USER_BY_ID: (_, args: GetUserByIdProps, context) => {
     return userService.getUserById(args, context);
   },
   GET_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
@@ -51,11 +52,14 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_ALL_CATEGORIES: () => {
     return categoryService.getAllCategories();
   },
-  GET_ALL_COURIERS: () => {
-    return courierService.getAllCouriers();
+  GET_COURIERS: (_, args: GetCouriersProps) => {
+    return courierService.getCouriers(args);
   },
-  GET_FAVORITE_FOODS: (_, __, context: Context) => {
-    return foodService.getFavoriteFoods(context);
+  GET_ORDERS: (_, args: GetOrdersProps) => {
+    return orderService.getOrders(args);
+  },
+  GET_FAVORITE_FOODS: (_, args: PaginateProps, context) => {
+    return foodService.getFavoriteFoods(args, context);
   },
   SIGN_IN: (_, args: SignInProps) => {
     return authService.signIn(args);

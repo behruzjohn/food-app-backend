@@ -1,11 +1,20 @@
+import { resolversHandlers } from 'src/common';
+import { Resolver } from 'src/common/resolver/resolver.type';
+import { MUTATIONS } from 'src/constants/mutations';
+import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
 import { CreateCategoryProps } from 'src/modules/category/props/createCategoryProps';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryProps';
+import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
 import { CreateFoodProps } from 'src/modules/food/props/createFood.props';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFood.props';
-import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
+import * as orderService from 'src/modules/order/order.service';
+import { CreateOrderProps } from 'src/modules/order/props/createOrder.props';
+import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
+import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
+import { Context } from 'src/types/context';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
 import * as foodService from '../../modules/food/food.service';
@@ -13,11 +22,6 @@ import * as authService from '../../modules/auth/auth.service';
 import * as courierService from '../../modules/courier/courier.service';
 import * as adminService from '../../modules/admin/admin.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
-import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
-import { resolversHandlers } from 'src/common';
-import { MUTATIONS } from 'src/constants/mutations';
-import { Resolver } from 'src/common/resolver/resolver.type';
-import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
 import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
 import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 import { SignUpProps } from 'src/modules/auth/props/signUp.props';
@@ -80,5 +84,23 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   CONFIRM_SIGN_UP: (_, args: ConfirmSignUpProps) => {
     return authService.confirmSignUp(args);
+  },
+  UPDATE_ORDER_STATUS_BY_ID: (_, args: UpdateOrderStatusProps) => {
+    return orderService.updateOrderStatusById(args);
+  },
+  DELIVER_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {
+    return orderService.deliverOrderById(args);
+  },
+  RECEIVE_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {
+    return orderService.receiveOrderById(args);
+  },
+  START_COOKING_FOOD: (_, args: GetOrderByIdProps) => {
+    return orderService.startCookingOrder(args);
+  },
+  CREATE_ORDER: (_, args: CreateOrderProps, context: Context) => {
+    return orderService.createOrder(args, context);
+  },
+  ATTACH_ORDER: (_, args: GetOrderByIdProps, context: Context) => {
+    return courierService.attachOrder(args, context);
   },
 });

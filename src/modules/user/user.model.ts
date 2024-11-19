@@ -1,6 +1,6 @@
 import { model, Schema, Types } from 'mongoose';
-import { MODELS } from '../../constants/models';
 import { UserRoleEnum } from 'src/enums/userRole.enum';
+import { MODELS } from '../../constants/models';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { hash } from 'src/utils/bcrypt';
 import { PASSWORD_HASH_ROUNDS } from 'src/constants/auth';
@@ -8,7 +8,12 @@ import { PASSWORD_HASH_ROUNDS } from 'src/constants/auth';
 const userSchema = new Schema({
   photo: { type: String },
   name: { type: String, required: true },
-  role: { type: String, enum: Object.keys(UserRoleEnum), required: true },
+  role: {
+    type: String,
+    enum: Object.keys(UserRoleEnum),
+    default: MODELS.USER,
+    required: true,
+  },
   telegramId: { type: String },
   phone: {
     type: String,

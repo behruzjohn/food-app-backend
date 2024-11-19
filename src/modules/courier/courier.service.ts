@@ -1,19 +1,40 @@
-import { Context } from 'src/types/context';
-import { Courier } from './courier.model';
 import { UserInputError } from 'apollo-server-core';
-import { GetOrderByIdProps } from '../order/props/getOrder.props';
-import { Order } from '../order/order.model';
-import { pubsub } from 'src/graphql';
 import { EVENTS } from 'src/constants/events';
-import { CouriersOutput } from './outputs/couriers.output';
+import { pubsub } from 'src/graphql';
+import { Context } from 'src/types/context';
+import { Order } from '../order/order.model';
+import { GetOrderByIdProps } from '../order/props/getOrder.props';
+import { Courier } from './courier.model';
 import { CourierOutput } from './outputs/courier.output';
+import { CouriersOutput } from './outputs/couriers.output';
+import { GetCouriersProps } from './props/getCourier.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
 import { UpdateCourierByIdProps } from './props/updateCourierById.props';
 
-export const getAllCouriers = async (): Promise<CouriersOutput> => {
-  const foundCouriers = await Courier.find();
+export const getCouriers = async ({
+  name,
+  phone,
+}: GetCouriersProps): Promise<CouriersOutput> => {
+  const couriers = await Courier.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    {
+      $unwind: '$user',
+    },
+    {
+      $match: {
+        $or: [{ 'user.name': name }, { 'user.phone': phone }],
+      },
+    },
+  ]);
 
-  return { payload: foundCouriers };
+  return { payload: couriers };
 };
 
 export const deleteCourierById = async ({
@@ -27,7 +48,7 @@ export const deleteCourierById = async ({
 export const attachOrder = async (
   { orderId }: GetOrderByIdProps,
   { user }: Context,
-) => {
+): Promise<CourierOutput> => {
   const foundCourier = await Courier.findOne({ user: user._id });
 
   if (!foundCourier) {
@@ -50,6 +71,8 @@ export const attachOrder = async (
   await foundOrder.save();
 
   await pubsub.publish(EVENTS.ATTACH_ORDER, { payload: foundCourier });
+
+  return { payload: foundCourier };
 };
 
 export const updateCourierById = async ({
