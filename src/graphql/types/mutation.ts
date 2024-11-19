@@ -15,6 +15,12 @@ export const mutationType = gql`
     ${MUTATIONS.CREATE_COURIER}(data: CourierInput!): CourierOutput
     ${MUTATIONS.DELETE_COURIER_BY_ID}(userId: ID!): UserOutput
     ${MUTATIONS.CLEAR_USER_CART}: CartItemsOutput
+    ${MUTATIONS.UPDATE_ORDER_STATUS_BY_ID}(orderId: ID, status: String): OrderOutput
+    ${MUTATIONS.DELIVER_ORDER_BY_ID}(orderId: ID): OrderOutput
+    ${MUTATIONS.RECEIVE_ORDER_BY_ID}(orderId: ID): OrderOutput
+    ${MUTATIONS.START_COOKING_FOOD}(orderId: ID, status: StatusEnum): OrderOutput
+    ${MUTATIONS.CREATE_ORDER}(order: OrderInput): OrderOutput
+    ${MUTATIONS.ATTACH_ORDER}(orderId: ID): CourierOutput
     ${MUTATIONS.UPDATE_COURIER_BY_ID}(courierId: ID!, data: UpdateCourierInput!): CourierOutput
     ${MUTATIONS.ADD_FOOD_TO_FAVORITES}(foodId: ID!): FoodOutput
     ${MUTATIONS.REMOVE_FOOD_FROM_FAVORITES}(foodId: ID!): FoodOutput

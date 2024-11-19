@@ -1,7 +1,6 @@
+import { Request } from 'express';
 import { extractExecuteResolvers } from 'src/common';
 import { authMiddleware } from './middlewares/auth.middleware';
-import { Request } from 'express';
-import { AuthenticationError } from 'apollo-server-core';
 
 export async function subscriptionContext({
   connectionParams,

@@ -1,15 +1,15 @@
 import { BadUserInputError } from 'src/common';
+import { POPULATIONS } from 'src/constants/populations';
+import { calculateTotalPrice } from 'src/helpers/price';
+import { DeleteOutput } from 'src/outputs/delete.output';
 import { Context } from '../../types/context';
 import { Food } from '../food/food.model';
 import { CartItem } from './cartItem.model';
+import { CartOutput } from './outputs/cart.output';
 import { CartItemOutput } from './outputs/cartItem.output';
+import { CreateCartItemProps } from './props/createCartItem.props';
 import { MutateCartItemFoodProps } from './props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from './props/updateCartFoodQuantity.props';
-import { CreateCartItemProps } from './props/createCartItem.props';
-import { POPULATIONS } from 'src/constants/populations';
-import { CartOutput } from './outputs/cart.output';
-import { calculateTotalPrice } from 'src/helpers/price';
-import { DeleteOutput } from 'src/outputs/delete.output';
 
 export const getCartItemsByUserId = async ({
   user,
