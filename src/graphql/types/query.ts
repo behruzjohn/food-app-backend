@@ -16,5 +16,6 @@ export const queryType = gql`
     ${QUERIES.GET_ALL_CATEGORIES}: CategoriesOutput
     ${QUERIES.GET_ALL_COURIERS}: CouriersOutput
     ${QUERIES.GET_FAVORITE_FOODS}: FoodsOutput
+    ${QUERIES.SIGN_IN}(data: AuthInput!): FoodsOutput
   }
 `;

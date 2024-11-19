@@ -31,3 +31,10 @@ export function matchSha256Hash<
 
   return isMatch;
 }
+
+export const generateRandomNumbers = (length: number) => {
+  return new Date()
+    .getTime()
+    .toString()
+    .slice(length * -1);
+};

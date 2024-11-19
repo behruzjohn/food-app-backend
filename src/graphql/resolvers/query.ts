@@ -17,6 +17,7 @@ import { resolversHandlers } from 'src/common';
 import { QUERIES } from 'src/constants/queries';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { TelegramLoginProps } from 'src/modules/auth/props/telegramLogin.props';
+import { SignInProps } from 'src/modules/auth/props/signIn.props';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   TELEGRAM_USER_LOGIN: (_, args: TelegramLoginProps) => {
@@ -55,5 +56,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   },
   GET_FAVORITE_FOODS: (_, __, context: Context) => {
     return foodService.getFavoriteFoods(context);
+  },
+  SIGN_IN: (_, args: SignInProps) => {
+    return authService.signIn(args);
   },
 });

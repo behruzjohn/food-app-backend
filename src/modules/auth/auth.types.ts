@@ -11,8 +11,28 @@ export const authTypes = gql`
     hash: String
   }
 
+  input ConfirmInput {
+    code: String!
+    token: String!
+  }
+
+  input AuthInput {
+    phone: String!
+    password: String!
+  }
+
+  input SignUpInput {
+    name: String!
+    phone: String!
+    password: String!
+  }
+
   type AuthOutput {
     user: User
+    token: String
+  }
+
+  type SignUpOutput {
     token: String
   }
 `;
