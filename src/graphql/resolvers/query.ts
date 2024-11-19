@@ -10,6 +10,7 @@ import { resolversHandlers } from 'src/common';
 import { QUERIES } from 'src/constants/queries';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { TelegramLoginProps } from 'src/modules/auth/props/telegramLogin.props';
+import { SignInProps } from 'src/modules/auth/props/signIn.props';
 import { PaginateProps } from 'src/props/paginate.props';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
@@ -59,5 +60,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   },
   GET_FAVORITE_FOODS: (_, args: PaginateProps, context) => {
     return foodService.getFavoriteFoods(args, context);
+  },
+  SIGN_IN: (_, args: SignInProps) => {
+    return authService.signIn(args);
   },
 });

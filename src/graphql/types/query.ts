@@ -14,6 +14,8 @@ export const queryType = gql`
     ${QUERIES.GET_DASHBOARD}: Int
     ${QUERIES.GET_CATEGORY_BY_ID}(categoryId: ID!): CategoryOutput
     ${QUERIES.GET_ALL_CATEGORIES}: CategoriesOutput
+    ${QUERIES.GET_FAVORITE_FOODS}: FoodsOutput
+    ${QUERIES.SIGN_IN}(data: AuthInput!): FoodsOutput
     ${QUERIES.GET_COURIERS}(name: String, phone: Int): CouriersOutput
     ${QUERIES.GET_ORDERS}(statuses: String, ${paginationProps}): OrdersOutput
     ${QUERIES.GET_ALL_FOODS}(name: String, categories: [ID], ${paginationProps}): FoodsOutput
