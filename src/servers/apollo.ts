@@ -1,11 +1,11 @@
 import { ApolloServer } from 'apollo-server-express';
-import { schema } from 'src/graphql';
-import { createServer } from 'http';
-import express from 'express';
 import cors from 'cors';
-import { httpServer } from './httpServer';
+import express from 'express';
+import { createServer } from 'http';
 import { ROUTES } from 'src/constants/routes';
+import { schema } from 'src/graphql';
 import { httpContext } from 'src/graphql/context/http.context';
+import { httpServer } from './httpServer';
 
 const app = express();
 

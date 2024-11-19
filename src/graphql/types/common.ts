@@ -9,3 +9,5 @@ export const paginationType = `
   prevPage: Int
   nextPage: Int
 `;
+
+export const paginationProps = 'page: Int, limit: Int';

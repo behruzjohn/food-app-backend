@@ -11,15 +11,20 @@ import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryPr
 import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
 import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 import { CreateFoodProps } from 'src/modules/food/props/createFood.props';
+import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFood.props';
+import * as orderService from 'src/modules/order/order.service';
+import { CreateOrderProps } from 'src/modules/order/props/createOrder.props';
+import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
+import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
 import { UpdateUserDataByIdProps } from 'src/modules/user/props/changeUserValues.props';
-import * as userService from 'src/modules/user/user.service';
+import { Context } from 'src/types/context';
 import * as adminService from '../../modules/admin/admin.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
 import * as courierService from '../../modules/courier/courier.service';
 import * as foodService from '../../modules/food/food.service';
-import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
+import * as userService from '../../modules/user/user.service';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -75,5 +80,23 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   UPDATE_USER_BY_ID: (_, args: UpdateUserDataByIdProps) => {
     return userService.updateUserById(args);
+  },
+  UPDATE_ORDER_STATUS_BY_ID: (_, args: UpdateOrderStatusProps) => {
+    return orderService.updateOrderStatusById(args);
+  },
+  DELIVER_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {
+    return orderService.deliverOrderById(args);
+  },
+  RECEIVE_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {
+    return orderService.receiveOrderById(args);
+  },
+  START_COOKING_FOOD: (_, args: GetOrderByIdProps) => {
+    return orderService.startCookingOrder(args);
+  },
+  CREATE_ORDER: (_, args: CreateOrderProps, context: Context) => {
+    return orderService.createOrder(args, context);
+  },
+  ATTACH_ORDER: (_, args: GetOrderByIdProps, context: Context) => {
+    return courierService.attachOrder(args, context);
   },
 });

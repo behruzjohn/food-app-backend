@@ -1,4 +1,5 @@
 import { model, Schema, Types } from 'mongoose';
+import mongoosePaginateV2 from 'mongoose-paginate-v2';
 import { MODELS } from '../../constants/models';
 import { StatusEnum } from '../../enums/status.enum';
 
@@ -15,5 +16,7 @@ const orderSchema = new Schema({
   to: { type: [Number, Number] },
   attachedFor: { type: Types.ObjectId, ref: MODELS.USER },
 });
+
+orderSchema.plugin(mongoosePaginateV2);
 
 export const Order = model(MODELS.ORDER, orderSchema);
