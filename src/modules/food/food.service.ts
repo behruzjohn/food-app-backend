@@ -1,6 +1,7 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
 import { saveFile } from 'src/helpers/file';
+import { Paginated } from 'src/types/paginated';
 import Category from '../category/category.model';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
@@ -8,10 +9,10 @@ import { FoodsOutput } from './outputs/foods.output';
 import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
-import { GetFoodsByCategoryProps } from './props/getFoodsByCategory.props';
 import { UpdateFoodProps } from './props/updateFood.props';
 import { Context } from 'src/types/context';
 import { User } from '../user/user.model';
+import { PaginateProps } from 'src/props/paginate.props';
 
 export const createFood = async ({
   image,
@@ -74,18 +75,19 @@ export const deleteFoodById = async ({
   return { payload: deletedFood };
 };
 
-export const getFavoriteFoods = async ({
-  user,
-}: Context): Promise<FoodsOutput> => {
+export const getFavoriteFoods = async (
+  { limit, page }: PaginateProps,
+  { user }: Context,
+): Promise<Paginated<FoodsOutput>> => {
   const foundUser = await User.findById(user._id);
 
   const favoriteFoods = foundUser.favoriteFoods.map((_id) => ({ _id }));
 
-  const foundFoods = await Food.find({
+  const { docs: foundFoods, ...pagination } = await Food.find({
     $or: favoriteFoods,
-  });
+  }).paginate({ limit, page });
 
-  return { payload: foundFoods };
+  return { payload: foundFoods, ...pagination };
 };
 
 export const addFoodToFavorites = async (
@@ -137,6 +139,8 @@ export const removeFoodFromFavorites = async (
 export const getAllFoods = async ({
   name,
   categories,
+  limit,
+  page,
 }: GetAllFoodsProps): Promise<FoodsOutput> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
@@ -161,9 +165,11 @@ export const getAllFoods = async ({
     searchConditions.push({ category: { $in: categories } });
   }
 
-  const foundFoods = await Food.find(
+  const { docs: foundFoods, ...pagination } = await Food.find(
     searchConditions.length ? { $or: searchConditions } : {},
-  ).populate(POPULATIONS.food);
+  )
+    .populate(POPULATIONS.food)
+    .paginate({ limit, page });
 
-  return { payload: foundFoods };
+  return { payload: foundFoods, ...pagination };
 };
