@@ -1,17 +1,17 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
 import { EVENTS } from 'src/constants/events';
+import { POPULATIONS } from 'src/constants/populations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
 import { pubsub } from 'src/graphql';
+import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
+import { getCartItemsByUserId } from '../cartItem/cartItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
-import { getCartItemsByUserId } from '../cartItem/cartItem.service';
-import { POPULATIONS } from 'src/constants/populations';
-import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
