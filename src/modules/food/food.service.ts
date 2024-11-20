@@ -1,8 +1,11 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
 import { saveFile } from 'src/helpers/file';
+import { PaginateProps } from 'src/props/paginate.props';
+import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
 import Category from '../category/category.model';
+import { User } from '../user/user.model';
 import { Food } from './food.model';
 import { FoodOutput } from './outputs/food.output';
 import { FoodsOutput } from './outputs/foods.output';
@@ -10,9 +13,6 @@ import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
 import { UpdateFoodProps } from './props/updateFood.props';
-import { Context } from 'src/types/context';
-import { User } from '../user/user.model';
-import { PaginateProps } from 'src/props/paginate.props';
 
 export const createFood = async ({
   image,

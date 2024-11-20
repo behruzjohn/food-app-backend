@@ -1,9 +1,9 @@
+import { UserInputError } from 'apollo-server-core';
+import { Courier } from '../courier/courier.model';
 import { attachOrder } from '../courier/courier.service';
 import { CourierOutput } from '../courier/outputs/courier.output';
 import { GetCourierByIdProps } from '../courier/props/getCourierById.props';
 import { GetOrderByIdProps } from '../order/props/getOrder.props';
-import { UserInputError } from 'apollo-server-core';
-import { Courier } from '../courier/courier.model';
 import { CreateCourierProps } from './props/createCourier.props';
 
 export const attachOrderToCourier = async ({
