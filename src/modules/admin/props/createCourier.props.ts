@@ -1,5 +1,5 @@
-import { CourierInput } from '../inputs/courier.input';
+import { Types } from 'mongoose';
 
 export type CreateCourierProps = {
-  data: CourierInput;
+  userId: Types.ObjectId;
 };

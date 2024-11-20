@@ -36,7 +36,7 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {
     return orderService.getOrderById(args);
   },
-  GET_CART_ITEMS_BY_USER_ID: (_, args, context) => {
+  GET_CART_ITEMS_BY_USER_ID: (_, __, context) => {
     return cartItemService.getCartItemsByUserId(context);
   },
   GET_DASHBOARD: () => 1,

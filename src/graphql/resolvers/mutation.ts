@@ -23,7 +23,6 @@ import * as courierService from '../../modules/courier/courier.service';
 import * as adminService from '../../modules/admin/admin.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
 import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
-import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 import { SignUpProps } from 'src/modules/auth/props/signUp.props';
 import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
 
@@ -69,9 +68,6 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   CREATE_COURIER: (_, args: CreateCourierProps) => {
     return adminService.createCourier(args);
-  },
-  UPDATE_COURIER_BY_ID: (_, args: UpdateCourierByIdProps) => {
-    return courierService.updateCourierById(args);
   },
   ADD_FOOD_TO_FAVORITES: (_, args: GetFoodByIdProps, context) => {
     return foodService.addFoodToFavorites(args, context);

@@ -15,17 +15,6 @@ export const courierTypes = gql`
     password: String!
   }
 
-  input UpdateCourierInput {
-    name: String
-    phone: String
-    password: String
-  }
-
-  input SignInAsCourierInput {
-    phone: String!
-    password: String!
-  }
-
   type CourierOutput {
     payload: Courier
   }

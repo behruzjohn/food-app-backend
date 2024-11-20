@@ -17,7 +17,6 @@ export const MUTATIONS = {
   START_COOKING_FOOD: 'startCookingFood',
   CREATE_ORDER: 'createOrder',
   ATTACH_ORDER: 'attachOrder',
-  UPDATE_COURIER_BY_ID: 'updateCourierById',
   ADD_FOOD_TO_FAVORITES: 'addFoodToFavorites',
   REMOVE_FOOD_FROM_FAVORITES: 'removeFoodFromFavorites',
   SIGN_UP: 'signUp',
