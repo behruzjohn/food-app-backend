@@ -72,7 +72,7 @@ export const authMiddleware = async (
   return {
     user: {
       _id: foundUser?._id,
-      role: decodedToken.role,
+      role: decodedToken?.role,
     },
   };
 };
