@@ -16,7 +16,6 @@ import {
 } from 'src/constants/auth';
 import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
 import { compareBcryptHash } from 'src/utils/bcrypt';
-import { ContextUser } from 'src/types/context';
 import { SignUpOutput } from './outputs/signUp.output';
 import { ConfirmSignUpProps } from './props/confirmSignUp.props';
 
@@ -110,7 +109,7 @@ export const confirmSignUp = async ({
     password: decodedToken.password,
   });
 
-  const tokenPayload: ContextUser = {
+  const tokenPayload: JWTAuthPayload = {
     _id: createdUser._id,
     role: <RoleEnum>createdUser.role,
   };
@@ -143,7 +142,7 @@ export const signIn = async ({
     throw new UserInputError('Phone or password is not correct');
   }
 
-  const tokenPayload: ContextUser = {
+  const tokenPayload: JWTAuthPayload = {
     _id: foundUser._id,
     role: <RoleEnum>foundUser.role,
   };

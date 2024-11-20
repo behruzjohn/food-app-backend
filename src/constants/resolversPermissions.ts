@@ -42,5 +42,5 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_ORDERS',
     'ATTACH_ORDER_TO_COURIER',
   ),
-  courier: resolvers('DELIVER_ORDER_BY_ID'),
+  courier: resolvers('DELIVER_ORDER_BY_ID', 'ATTACH_ORDER'),
 };
