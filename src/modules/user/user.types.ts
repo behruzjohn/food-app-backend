@@ -16,7 +16,7 @@ export const userTypes = gql`
 
   input UserFilterInput {
     phone: String
-  };
+  }
 
   type UserOutput {
     payload: User
