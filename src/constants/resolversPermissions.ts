@@ -21,7 +21,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'CREATE_CART_ITEM',
     'CREATE_FOOD',
     'GET_DASHBOARD',
-    'GET_ALL_USERS',
+    'GET_USERS',
     'GET_ALL_FOODS',
     'CREATE_COURIER',
     'GET_USER_BY_ID',
