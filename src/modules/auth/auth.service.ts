@@ -16,7 +16,7 @@ import { AuthOutput } from './outputs/auth.output';
 import { SignUpOutput } from './outputs/signUp.output';
 import { ConfirmSignUpProps } from './props/confirmSignUp.props';
 import { SignInProps } from './props/signIn.props';
-import { SignUpProps } from './props/signUp.props';
+import { SignUpProps } from './props/SignUp.props';
 import { TelegramLoginProps } from './props/telegramLogin.props';
 import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
 
@@ -53,10 +53,8 @@ export const telegramUserLogin = async ({
   return { user, token };
 };
 
-export const SignUp = async ({
-  name,
-  password,
-  phone,
+export const signUp = async ({
+  data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
   const codeNumber = sendSms(phone);
   const foundUser = await User.findOne({ phone });
@@ -132,7 +130,7 @@ export const signIn = async ({
   const foundUser = await User.findOne({ phone });
 
   if (!foundUser) {
-    throw new UserInputError('Phone or password is not correct');
+    throw new Error('Phone or password is not correct');
   }
 
   const isPasswordCorrect = compareBcryptHash(
@@ -141,7 +139,7 @@ export const signIn = async ({
   );
 
   if (!isPasswordCorrect) {
-    throw new UserInputError('Phone or password is not correct');
+    throw new Error('Phone or password is not correct');
   }
 
   const tokenPayload: JWTAuthPayload = {

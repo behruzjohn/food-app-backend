@@ -14,6 +14,10 @@ export const userTypes = gql`
     telegramId: String
   }
 
+  input UserFilterInput {
+    phone: String
+  }
+
   type UserOutput {
     payload: User
   }
