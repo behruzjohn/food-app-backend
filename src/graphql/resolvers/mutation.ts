@@ -3,7 +3,7 @@ import { Resolver } from 'src/common/resolver/resolver.type';
 import { MUTATIONS } from 'src/constants/mutations';
 import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
 import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
-import { SignUpProps } from 'src/modules/auth/props/signUp.props';
+import { SignUpProps } from 'src/modules/auth/props/SignUp.props';
 import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
@@ -77,7 +77,7 @@ export const mutation = resolversHandlers(MUTATIONS)<
     return foodService.removeFoodFromFavorites(args, context);
   },
   SIGN_UP: (_, args: SignUpProps) => {
-    return authService.signUp(args);
+    return authService.SignUp(args);
   },
   CONFIRM_SIGN_UP: (_, args: ConfirmSignUpProps) => {
     return authService.confirmSignUp(args);

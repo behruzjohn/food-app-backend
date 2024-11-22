@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-export const sendSms = async (number: number) => {
-  const code = Math.floor(Math.random() * 100000);
+export const sendSms = async (number: string) => {
+  const code = Math.floor(Math.random() * 90000) + 10000;
 
   const data = {
     secret: '88e27bf9623f17c0efc3530b8fcce5ffef4f4e87',

@@ -19,7 +19,7 @@ export const MUTATIONS = {
   ATTACH_ORDER: 'attachOrder',
   ADD_FOOD_TO_FAVORITES: 'addFoodToFavorites',
   REMOVE_FOOD_FROM_FAVORITES: 'removeFoodFromFavorites',
-  SIGN_UP: 'signUp',
+  SIGN_UP: 'SignUp',
   CONFIRM_SIGN_UP: 'confirmSignUp',
   SEND_SMS: 'sendSms',
 };
