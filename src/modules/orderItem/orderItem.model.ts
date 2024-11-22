@@ -11,4 +11,4 @@ const orderItemSchema = new Schema(
   { timestamps: true },
 );
 
-export const OrderItem = model(MODELS., orderItemSchema);
+export const OrderItem = model(MODELS.ORDER_ITEM, orderItemSchema);
