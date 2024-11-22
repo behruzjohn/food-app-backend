@@ -83,8 +83,7 @@ export const signUp = async ({
 };
 
 export const confirmSignUp = async ({
-  code,
-  token,
+  data: { code, token },
 }: ConfirmSignUpProps): Promise<AuthOutput> => {
   const decodedToken = decodeToken<ConfirmPhoneTokenPayload>(token);
 
@@ -92,6 +91,7 @@ export const confirmSignUp = async ({
     decodedToken &&
     decodedToken.name &&
     decodedToken.password &&
+    decodedToken.code &&
     decodedToken.phone;
 
   if (!isTokenValid) {

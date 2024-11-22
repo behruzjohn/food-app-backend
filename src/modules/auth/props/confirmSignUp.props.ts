@@ -1,4 +1,5 @@
+import { ConfirmationInput } from '../inputs/confirmation.input';
+
 export type ConfirmSignUpProps = {
-  code: string;
-  token: string;
+  data: ConfirmationInput;
 };

@@ -11,7 +11,7 @@ export const authTypes = gql`
     hash: String
   }
 
-  input ConfirmInput {
+  input ConfirmationInput {
     code: String!
     token: String!
   }

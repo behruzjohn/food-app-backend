@@ -1,6 +1,6 @@
 export const QUERIES = {
   TELEGRAM_USER_LOGIN: 'telegramUserLogin',
-  SIGN_IN: 'SignIn',
+  SIGN_IN: 'signIn',
   GET_USERS: 'getUsers',
   GET_DASHBOARD: 'getDashboard',
   GET_CART_ITEMS_BY_USER_ID: 'getCartItemsByUserId',

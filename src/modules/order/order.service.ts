@@ -63,7 +63,6 @@ export const getOrderById = async ({
   if (!foundOrder) {
     throw new ApolloError('Order not found');
   }
-  console.log(foundOrder);
 
   return { payload: foundOrder };
 };
