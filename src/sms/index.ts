@@ -1,4 +1,5 @@
 const axios = require('axios');
+import bcrypt from 'bcrypt';
 
 export const sendSms = async (number: string) => {
   const code = Math.floor(Math.random() * 90000) + 10000;
@@ -22,5 +23,8 @@ export const sendSms = async (number: string) => {
     },
   });
 
-  return code;
+  return bcrypt.hash(
+    code + '',
+    "'fazliddino'ylabtopishimumkinbo'lganengyaxshigapshuyaxshimi?",
+  );
 };
