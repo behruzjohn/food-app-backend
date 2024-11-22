@@ -26,5 +26,7 @@ export const mutationType = gql`
     ${MUTATIONS.SIGN_UP}(data: SignUpInput!): AuthOutput
     ${MUTATIONS.CONFIRM_SIGN_UP}(data: ConfirmInput!): AuthOutput
     ${MUTATIONS.SEND_SMS}(number: Int): Int
+    ${MUTATIONS.SIGN_UP}(data: SignUpInput!): SignUpOutput
+    ${MUTATIONS.CONFIRM_SIGN_UP}(data: ConfirmationInput!): AuthOutput
   }
 `;

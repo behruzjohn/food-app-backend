@@ -33,7 +33,6 @@ export const authMiddleware = async (
 
     foundUser = await User.findOne(queryFilter);
   }
-  console.log(executeResolvers);
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {
     if (PUBLIC_RESOLVERS.has(resolver)) {
