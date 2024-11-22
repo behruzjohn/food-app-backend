@@ -1,5 +1,7 @@
 export type SignUpProps = {
-  name: string;
-  phone: string;
-  password: string;
+  data: {
+    name: string;
+    phone: string;
+    password: string;
+  };
 };

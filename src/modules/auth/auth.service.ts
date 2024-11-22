@@ -53,9 +53,7 @@ export const telegramUserLogin = async ({
 };
 
 export const signUp = async ({
-  name,
-  password,
-  phone,
+  data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
   const foundUser = await User.findOne({ phone });
 
