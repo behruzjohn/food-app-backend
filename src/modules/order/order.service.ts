@@ -8,7 +8,7 @@ import { pubsub } from 'src/graphql';
 import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
-import { getCartItemsByUserId } from '../cartItem/cartItem.service';
+import { addCartItemToOrderItem } from '../orderItem/orderItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { OrdersOutput } from './outputs/orders.output';
@@ -33,15 +33,11 @@ export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderOutput> => {
-  const { payload } = await getCartItemsByUserId({ user });
-
   const createdOrder = await Order.create({
     createdBy: user._id,
     to: order.to,
-    foods: payload.items.map((item) => item['_id']),
-    totalPrice: payload.totalPrice,
   });
-
+  await addCartItemToOrderItem({ createdOrder });
   await cartItemService.clearUserCart({ user });
 
   const populatedOrder = await createdOrder.populate(POPULATIONS.order);

@@ -1,6 +1,9 @@
 import { resolversHandlers } from 'src/common';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { MUTATIONS } from 'src/constants/mutations';
+import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
+import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
+import { SignUpProps } from 'src/modules/auth/props/signUp.props';
 import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
@@ -14,17 +17,15 @@ import * as orderService from 'src/modules/order/order.service';
 import { CreateOrderProps } from 'src/modules/order/props/createOrder.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
+import { sendSms } from 'src/sms';
 import { Context } from 'src/types/context';
+import * as adminService from '../../modules/admin/admin.service';
+import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
-import * as foodService from '../../modules/food/food.service';
-import * as authService from '../../modules/auth/auth.service';
 import * as courierService from '../../modules/courier/courier.service';
-import * as adminService from '../../modules/admin/admin.service';
+import * as foodService from '../../modules/food/food.service';
 import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
-import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
-import { SignUpProps } from 'src/modules/auth/props/signUp.props';
-import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -98,5 +99,8 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   ATTACH_ORDER: (_, args: GetOrderByIdProps, context: Context) => {
     return courierService.attachOrder(args, context);
+  },
+  SEND_SMS: (_, args: number) => {
+    return sendSms(args);
   },
 });

@@ -7,6 +7,7 @@ const orderItemSchema = new Schema(
     user: { type: Types.ObjectId, ref: MODELS.USER },
     price: { type: Number },
     quantity: { type: Number, default: 1, min: 1 },
+    order: { type: Types.ObjectId, ref: MODELS.ORDER },
   },
   { timestamps: true },
 );

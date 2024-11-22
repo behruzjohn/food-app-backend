@@ -21,4 +21,5 @@ export const MUTATIONS = {
   REMOVE_FOOD_FROM_FAVORITES: 'removeFoodFromFavorites',
   SIGN_UP: 'signUp',
   CONFIRM_SIGN_UP: 'confirmSignUp',
+  SEND_SMS: 'sendSms',
 };

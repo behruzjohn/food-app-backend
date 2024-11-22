@@ -25,5 +25,6 @@ export const mutationType = gql`
     ${MUTATIONS.REMOVE_FOOD_FROM_FAVORITES}(foodId: ID!): FoodOutput
     ${MUTATIONS.SIGN_UP}(data: SignUpInput!): AuthOutput
     ${MUTATIONS.CONFIRM_SIGN_UP}(data: ConfirmInput!): AuthOutput
+    ${MUTATIONS.SEND_SMS}(number: Int): Int
   }
 `;
