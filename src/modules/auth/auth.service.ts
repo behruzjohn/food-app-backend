@@ -71,6 +71,8 @@ export const signUp = async ({
 
   const code = generateRandomNumbers(PHONE_CONFIRMATION_CODE_LENGTH);
 
+  console.log('code', code);
+
   const tokenPayload = { name, phone, password, code };
 
   const createdToken = createToken(tokenPayload, {
