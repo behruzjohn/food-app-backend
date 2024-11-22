@@ -27,7 +27,6 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_USER_BY_ID',
     'GET_ORDER_BY_ID',
     'UPDATE_FOOD_BY_ID',
-    'GET_USERS_BY_PHONE',
     'CREATE_CATEGORY',
     'DELETE_COURIER_BY_ID',
     'GET_ALL_CATEGORIES',
