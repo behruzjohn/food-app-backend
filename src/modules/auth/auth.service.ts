@@ -16,7 +16,7 @@ import { AuthOutput } from './outputs/auth.output';
 import { SignUpOutput } from './outputs/signUp.output';
 import { ConfirmSignUpProps } from './props/confirmSignUp.props';
 import { SignInProps } from './props/signIn.props';
-import { SignUpProps } from './props/SignUp.props';
+import { SignUpProps } from './props/signUp.props';
 import { TelegramLoginProps } from './props/telegramLogin.props';
 import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
 
@@ -73,6 +73,7 @@ export const SignUp = async ({
     const code = generateRandomNumbers(PHONE_CONFIRMATION_CODE_LENGTH);
 
     const tokenPayload = { name, phone, password, code, codeNumber };
+    console.log(codeNumber);
 
     const createdToken = createToken(tokenPayload, {
       expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
@@ -132,6 +133,8 @@ export const signIn = async ({
   data: { phone, password },
 }: SignInProps): Promise<AuthOutput> => {
   const foundUser = await User.findOne({ phone });
+  console.log(password);
+  console.log(foundUser.password);
 
   if (!foundUser) {
     throw new Error('Phone or password is not correct');

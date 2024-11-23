@@ -23,7 +23,7 @@ export const sendSms = async (number: string) => {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
     });
-    console.log(res, process.env[envVariable]);
+    // console.log(res, process.env[envVariable]);
 
     return bcrypt.hash(code + '', 10);
   } catch (error) {
