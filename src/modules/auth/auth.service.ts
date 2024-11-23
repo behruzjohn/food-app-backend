@@ -1,4 +1,5 @@
 import { UserInputError } from 'apollo-server-core';
+import { BadRequestError } from 'src/common';
 import {
   AUTH_TOKEN_EXPIRATION,
   PASSWORD_MIN_LENGTH,
@@ -133,8 +134,10 @@ export const signIn = async ({
   data: { phone, password },
 }: SignInProps): Promise<AuthOutput> => {
   const foundUser = await User.findOne({ phone });
-  console.log(password);
-  console.log(foundUser.password);
+
+  if (password !== foundUser.password) {
+    throw new BadRequestError('Password is not match!');
+  }
 
   if (!foundUser) {
     throw new Error('Phone or password is not correct');
