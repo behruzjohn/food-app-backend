@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server-core';
 import { StatusEnum } from 'src/enums/status.enum';
+import { timestampsType } from 'src/graphql/types/common';
 import { createGraphQLEnum } from 'src/utils/schema';
 
 export const orderTypes = gql`
@@ -8,11 +9,11 @@ export const orderTypes = gql`
   type Order {
     _id: ID
     totalPrice: Int
-    createdAt: Date
     status: StatusEnum
     to: [Float]
     foods: [CartItem]
     createdBy: User
+    ${timestampsType}
   }
 
   type OrderOutput {
