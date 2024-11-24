@@ -37,7 +37,7 @@ export const createOrder = async (
 
   const createdOrder = await Order.create({
     createdBy: user._id,
-    to: order.to,
+    address: order.address,
     foods: payload.items.map((item) => item['_id']),
     totalPrice: payload.totalPrice,
   });
