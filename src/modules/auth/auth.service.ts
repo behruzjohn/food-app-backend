@@ -19,6 +19,7 @@ import { SignInProps } from './props/signIn.props';
 import { SignUpProps } from './props/signUp.props';
 import { TelegramLoginProps } from './props/telegramLogin.props';
 import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
+import bcrypt from 'bcrypt';
 
 export const telegramUserLogin = async ({
   auth,
@@ -53,7 +54,7 @@ export const telegramUserLogin = async ({
   return { user, token };
 };
 
-export const signUp = async ({
+export const SignUp = async ({
   data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
   try {
@@ -132,9 +133,10 @@ export const signIn = async ({
 }: SignInProps): Promise<AuthOutput> => {
   const foundUser = await User.findOne({ phone });
 
-  if (password !== foundUser.password) {
-    throw new BadRequestError('Password is not match!');
-  }
+  const isPasswordValid = await bcrypt.compare(
+    password,
+    <string>foundUser.password,
+  );
 
   if (!foundUser) {
     throw new Error('Phone or password is not correct');

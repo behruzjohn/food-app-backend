@@ -20,6 +20,7 @@ import * as courierService from '../../modules/courier/courier.service';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
+import { Context } from 'src/types/context';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   TELEGRAM_USER_LOGIN: (_, args: TelegramLoginProps) => {
@@ -28,7 +29,7 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_USERS: (_, args: GetUsersProps) => {
     return userService.getUsers(args);
   },
-  GET_USER_BY_ID: (_, args: GetUserByIdProps, context) => {
+  GET_USER_BY_ID: (_, args: GetUserByIdProps, context: Context) => {
     return userService.getUserById(args, context);
   },
   GET_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
@@ -62,7 +63,11 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   SIGN_IN: (_, args: SignInProps) => {
     return authService.signIn(args);
   },
-  GET_ORDERS_BY_USER_ID: (_, args: GetOrdersByUserIdProps, context) => {
+  GET_ORDERS_BY_USER_ID: (
+    _,
+    args: GetOrdersByUserIdProps,
+    context: Context,
+  ) => {
     return orderService.getOrdersByUserId(args, context);
   },
 });
