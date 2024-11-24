@@ -66,7 +66,9 @@ export const getFoodById = async ({
 export const deleteFoodById = async ({
   foodId,
 }: GetFoodByIdProps): Promise<FoodOutput> => {
-  const deletedFood = await Food.findByIdAndDelete(foodId);
+  const deletedFood = await Food.findByIdAndDelete(foodId).populate(
+    POPULATIONS.food,
+  );
 
   if (!deletedFood) {
     throw new BadUserInputError('Food not found');

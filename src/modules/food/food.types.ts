@@ -22,10 +22,6 @@ export const foodTypes = gql`
     payload: [Food]
   }
 
-  type FoodDeleteOutput {
-    payload: String
-  }
-
   input FoodInput {
     price: Int!
     name: String!

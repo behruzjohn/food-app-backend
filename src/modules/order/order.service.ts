@@ -8,7 +8,6 @@ import { pubsub } from 'src/graphql';
 import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
-import { addCartItemToOrderItem } from '../orderItem/orderItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { OrdersOutput } from './outputs/orders.output';
@@ -37,7 +36,6 @@ export const createOrder = async (
     createdBy: user._id,
     to: order.to,
   });
-  await addCartItemToOrderItem({ createdOrder });
   await cartItemService.clearUserCart({ user });
 
   const populatedOrder = await createdOrder.populate(POPULATIONS.order);
