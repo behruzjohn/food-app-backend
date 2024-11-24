@@ -159,3 +159,13 @@ export const getOrders = async ({
 
   return { payload: foundFoods, ...pagination };
 };
+
+export const getOrdersByUserId = async ({
+  user,
+}: Context): Promise<OrdersOutput> => {
+  const foundOrders = await Order.find({ createdBy: user._id }).populate(
+    POPULATIONS.order,
+  );
+
+  return { payload: foundOrders };
+};

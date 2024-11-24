@@ -8,4 +8,7 @@ export const orderItem = gql`
     quantity: Int
     order: ID
   }
+  type OrderItemOutput {
+    payload: [OrderItem]
+  }
 `;

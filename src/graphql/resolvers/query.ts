@@ -1,3 +1,8 @@
+import { resolversHandlers } from 'src/common';
+import { Resolver } from 'src/common/resolver/resolver.type';
+import { QUERIES } from 'src/constants/queries';
+import { SignInProps } from 'src/modules/auth/props/signIn.props';
+import { TelegramLoginProps } from 'src/modules/auth/props/telegramLogin.props';
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { GetCouriersProps } from 'src/modules/courier/props/getCourier.props';
 import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
@@ -5,11 +10,7 @@ import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetOrdersProps } from 'src/modules/order/props/getOrders.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
-import { resolversHandlers } from 'src/common';
-import { QUERIES } from 'src/constants/queries';
-import { Resolver } from 'src/common/resolver/resolver.type';
-import { TelegramLoginProps } from 'src/modules/auth/props/telegramLogin.props';
-import { SignInProps } from 'src/modules/auth/props/signIn.props';
+import { GetUsersProps } from 'src/modules/user/props/getUsers.props';
 import { PaginateProps } from 'src/props/paginate.props';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
@@ -18,7 +19,6 @@ import * as courierService from '../../modules/courier/courier.service';
 import * as foodService from '../../modules/food/food.service';
 import * as orderService from '../../modules/order/order.service';
 import * as userService from '../../modules/user/user.service';
-import { GetUsersProps } from 'src/modules/user/props/getUsers.props';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   TELEGRAM_USER_LOGIN: (_, args: TelegramLoginProps) => {
@@ -60,5 +60,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   },
   SIGN_IN: (_, args: SignInProps) => {
     return authService.signIn(args);
+  },
+  GET_ORDERS_BY_USER_ID: (_, __, context) => {
+    return orderService.getOrdersByUserId(context);
   },
 });

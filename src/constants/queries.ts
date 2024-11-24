@@ -13,4 +13,5 @@ export const QUERIES = {
   GET_COURIERS: 'getCouriers',
   GET_ORDERS: 'getOrders',
   GET_FAVORITE_FOODS: 'getFavoriteFoods',
+  GET_ORDERS_BY_USER_ID: 'getOrdersByUserId',
 };
