@@ -18,7 +18,7 @@ export const authMiddleware = async (
 ): Promise<Context> => {
   const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
-  const decodedToken = decodeToken<JWTAuthPayload>(token);
+  const decodedToken = token && decodeToken<JWTAuthPayload>(token);
 
   let isTokenValid = true;
 
