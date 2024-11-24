@@ -15,6 +15,8 @@ const orderSchema = new Schema({
   createdBy: { type: Types.ObjectId, ref: MODELS.USER },
   address: { type: [Number, Number] },
   attachedFor: { type: Types.ObjectId, ref: MODELS.USER },
+  cookedAt: { type: Date },
+  receivedAt: { type: Date },
 });
 
 orderSchema.plugin(mongoosePaginateV2);
