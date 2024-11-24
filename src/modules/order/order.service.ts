@@ -1,4 +1,5 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
+import { RootFilterQuery } from 'mongoose';
 import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { POPULATIONS } from 'src/constants/populations';
@@ -14,6 +15,7 @@ import { OrdersOutput } from './outputs/orders.output';
 import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
+import { GetOrdersByUserIdProps } from './props/getOrdersByuserId.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
@@ -160,12 +162,18 @@ export const getOrders = async ({
   return { payload: foundFoods, ...pagination };
 };
 
-export const getOrdersByUserId = async ({
-  user,
-}: Context): Promise<OrdersOutput> => {
-  const foundOrders = await Order.find({ createdBy: user._id }).populate(
-    POPULATIONS.order,
-  );
+export const getOrdersByUserId = async (
+  { status }: GetOrdersByUserIdProps,
+  { user }: Context,
+): Promise<OrdersOutput> => {
+  const statusCheck: RootFilterQuery<typeof Order> = {
+    createdBy: user._id,
+  };
+  if (status !== 'All') {
+    statusCheck.status = status;
+  }
+
+  const foundOrders = await Order.find(statusCheck).populate(POPULATIONS.order);
 
   return { payload: foundOrders };
 };
