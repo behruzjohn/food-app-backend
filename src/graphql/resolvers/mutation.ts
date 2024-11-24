@@ -20,7 +20,6 @@ import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
 import { UpdateUserDataByIdProps } from 'src/modules/user/props/changeUserValues.props';
 import { UpdateUserPasswordProps } from 'src/modules/user/props/updateUserPassword.props';
-import { Context } from 'src/types/context';
 import * as adminService from '../../modules/admin/admin.service';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
@@ -99,13 +98,13 @@ export const mutation = resolversHandlers(MUTATIONS)<
   START_COOKING_FOOD: (_, args: GetOrderByIdProps) => {
     return orderService.startCookingOrder(args);
   },
-  CREATE_ORDER: (_, args: CreateOrderProps, context: Context) => {
+  CREATE_ORDER: (_, args: CreateOrderProps, context) => {
     return orderService.createOrder(args, context);
   },
-  ATTACH_ORDER: (_, args: GetOrderByIdProps, context: Context) => {
+  ATTACH_ORDER: (_, args: GetOrderByIdProps, context) => {
     return courierService.attachOrder(args, context);
   },
-  UPDATE_USER_PASSWORD_BY_ID: (_, args: UpdateUserPasswordProps) => {
-    return userService.changeUserPasswordById(args);
+  UPDATE_USER_PASSWORD_BY_ID: (_, args: UpdateUserPasswordProps, context) => {
+    return userService.changeUserPasswordById(args, context);
   },
 });

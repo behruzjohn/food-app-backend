@@ -2,7 +2,6 @@ import { ApolloError } from 'apollo-server-core';
 import { BadRequestError } from 'src/common';
 import { Context } from 'src/types/context';
 import { compareBcryptHash } from 'src/utils/bcrypt';
-import { UpdateUserPasswordOutput } from './outputs/updateUserPassword.output';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { UpdateUserDataByIdProps } from './props/changeUserValues.props';
@@ -61,15 +60,12 @@ export const updateUserById = async ({
   return { payload: updatedUser };
 };
 
-export const changeUserPasswordById = async ({
-  data,
-}: UpdateUserPasswordProps): Promise<UpdateUserPasswordOutput> => {
-  console.log('userId', data.userId);
-
-  const foundUser = await User.findById(data.userId);
-
-  const isPasswordCorrect = compareBcryptHash(
-    foundUser.password.toString(),
+export const changeUserPasswordById = async (
+  { data }: UpdateUserPasswordProps,
+  { user }: Context,
+): Promise<UserOutput> => {
+  const isPasswordCorrect = await compareBcryptHash(
+    user.password.toString(),
     data.oldPassword,
   );
 
@@ -77,9 +73,9 @@ export const changeUserPasswordById = async ({
     throw new BadRequestError('Your old password is not correct!');
   }
 
-  foundUser.password = data.newPassword;
+  user.password = data.newPassword;
 
-  await foundUser.save();
+  await user['save']();
 
-  return { payload: foundUser };
+  return { payload: user };
 };
