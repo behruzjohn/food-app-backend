@@ -5,5 +5,5 @@ export const MODELS = {
   CART_ITEM: 'CartItem',
   CATEGORIES: 'Category',
   COURIERS: 'Couriers',
-  ORDER_ITEM: 'orderItem',
+  ORDER_ITEM: 'OrderItem',
 };
