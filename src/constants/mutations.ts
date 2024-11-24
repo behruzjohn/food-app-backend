@@ -22,4 +22,5 @@ export const MUTATIONS = {
   UPDATE_USER_BY_ID: 'updateUserById',
   SIGN_UP: 'signUp',
   CONFIRM_SIGN_UP: 'confirmSignUp',
+  UPDATE_USER_PASSWORD_BY_ID: 'changeUserPasswordById',
 };

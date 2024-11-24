@@ -29,7 +29,9 @@ export const sendSms = async (number: string) => {
     // });
     // console.log(res, process.env[envVariable]);
 
-    return bcrypt.hash(code + '', 10);
+    const hash = await bcrypt.hash(code + '', 10);
+
+    return hash;
   } catch (error) {
     console.log(error);
   }

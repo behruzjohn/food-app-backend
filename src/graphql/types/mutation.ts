@@ -26,5 +26,6 @@ export const mutationType = gql`
     ${MUTATIONS.UPDATE_USER_BY_ID}(userId: ID!, data: UpdateUserDataByIdPropsInput): UserOutput 
     ${MUTATIONS.SIGN_UP}(data: SignUpInput!): SignUpOutput
     ${MUTATIONS.CONFIRM_SIGN_UP}(data: ConfirmationInput!): AuthOutput
+    ${MUTATIONS.UPDATE_USER_PASSWORD_BY_ID}(data: UpdateUserPasswordInput): UserOutput
   }
 `;

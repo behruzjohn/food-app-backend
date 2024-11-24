@@ -19,6 +19,7 @@ import { CreateOrderProps } from 'src/modules/order/props/createOrder.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
 import { UpdateUserDataByIdProps } from 'src/modules/user/props/changeUserValues.props';
+import { UpdateUserPasswordProps } from 'src/modules/user/props/updateUserPassword.props';
 import { Context } from 'src/types/context';
 import * as adminService from '../../modules/admin/admin.service';
 import * as authService from '../../modules/auth/auth.service';
@@ -103,5 +104,8 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   ATTACH_ORDER: (_, args: GetOrderByIdProps, context: Context) => {
     return courierService.attachOrder(args, context);
+  },
+  UPDATE_USER_PASSWORD_BY_ID: (_, args: UpdateUserPasswordProps) => {
+    return userService.changeUserPasswordById(args);
   },
 });

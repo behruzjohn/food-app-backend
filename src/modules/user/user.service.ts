@@ -1,12 +1,15 @@
 import { ApolloError } from 'apollo-server-core';
 import { BadRequestError } from 'src/common';
 import { Context } from 'src/types/context';
+import { compareBcryptHash } from 'src/utils/bcrypt';
+import { UpdateUserPasswordOutput } from './outputs/updateUserPassword.output';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
 import { UpdateUserDataByIdProps } from './props/changeUserValues.props';
 import { GetUserByIdProps } from './props/getUserById.props';
-import { User } from './user.model';
 import { GetUsersProps } from './props/getUsers.props';
+import { UpdateUserPasswordProps } from './props/updateUserPassword.props';
+import { User } from './user.model';
 
 export const getUsers = async ({
   filter: { phone } = {},
@@ -49,11 +52,34 @@ export const updateUserById = async ({
   userId,
   data,
 }: UpdateUserDataByIdProps): Promise<UserOutput> => {
-  const foundUser = await User.findByIdAndUpdate(userId, data, { new: true });
+  const updatedUser = await User.findByIdAndUpdate(userId, data, { new: true });
 
-  if (!foundUser) {
+  if (!updatedUser) {
     throw new BadRequestError('Error during changing properties!');
   }
+
+  return { payload: updatedUser };
+};
+
+export const changeUserPasswordById = async ({
+  data,
+}: UpdateUserPasswordProps): Promise<UpdateUserPasswordOutput> => {
+  console.log('userId', data.userId);
+
+  const foundUser = await User.findById(data.userId);
+
+  const isPasswordCorrect = compareBcryptHash(
+    foundUser.password.toString(),
+    data.oldPassword,
+  );
+
+  if (!isPasswordCorrect) {
+    throw new BadRequestError('Your old password is not correct!');
+  }
+
+  foundUser.password = data.newPassword;
+
+  await foundUser.save();
 
   return { payload: foundUser };
 };

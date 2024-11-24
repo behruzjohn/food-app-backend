@@ -1,3 +1,4 @@
+import { UserInputError } from 'apollo-server-core';
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
 import { saveFile } from 'src/helpers/file';
@@ -22,6 +23,12 @@ export const createFood = async ({
 
   if (image) {
     imagePath = await saveFile(image);
+  }
+
+  const foundCategory = await Category.findById(food.category);
+
+  if (!foundCategory) {
+    throw new UserInputError('Category is not found');
   }
 
   const createdFood = await Food.create({
