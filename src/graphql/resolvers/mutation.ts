@@ -2,6 +2,8 @@ import { resolversHandlers } from 'src/common';
 import { Resolver } from 'src/common/resolver/resolver.type';
 import { MUTATIONS } from 'src/constants/mutations';
 import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
+import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
+import { SignUpProps } from 'src/modules/auth/props/signUp.props';
 import { CreateCartItemProps } from 'src/modules/cartItem/props/createCartItem.props';
 import { MutateCartItemFoodProps } from 'src/modules/cartItem/props/mutateCartItemFood.props';
 import { UpdateCartFoodQuantityProps } from 'src/modules/cartItem/props/updateCartFoodQuantity.props';
@@ -9,7 +11,6 @@ import { CreateCategoryProps } from 'src/modules/category/props/createCategoryPr
 import { GetCategoryByIdProps } from 'src/modules/category/props/getCategoryProps';
 import { UpdateCategoryProps } from 'src/modules/category/props/updateCategoryProps';
 import { GetCourierByIdProps } from 'src/modules/courier/props/getCourierById.props';
-import { UpdateCourierByIdProps } from 'src/modules/courier/props/updateCourierById.props';
 import { CreateFoodProps } from 'src/modules/food/props/createFood.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
 import { UpdateFoodProps } from 'src/modules/food/props/updateFood.props';
@@ -20,17 +21,12 @@ import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.prop
 import { UpdateUserDataByIdProps } from 'src/modules/user/props/changeUserValues.props';
 import { Context } from 'src/types/context';
 import * as adminService from '../../modules/admin/admin.service';
+import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
+import * as courierService from '../../modules/courier/courier.service';
 import * as foodService from '../../modules/food/food.service';
 import * as userService from '../../modules/user/user.service';
-import * as authService from '../../modules/auth/auth.service';
-import * as courierService from '../../modules/courier/courier.service';
-import * as adminService from '../../modules/admin/admin.service';
-import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
-import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
-import { SignUpProps } from 'src/modules/auth/props/signUp.props';
-import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -85,7 +81,7 @@ export const mutation = resolversHandlers(MUTATIONS)<
     return userService.updateUserById(args);
   },
   SIGN_UP: (_, args: SignUpProps) => {
-    return authService.signUp(args);
+    return authService.SignUp(args);
   },
   CONFIRM_SIGN_UP: (_, args: ConfirmSignUpProps) => {
     return authService.confirmSignUp(args);

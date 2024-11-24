@@ -1,25 +1,24 @@
 import { UserInputError } from 'apollo-server-core';
-import { generateRandomNumbers, matchSha256Hash } from '../../utils/crypto';
-import { TelegramLoginProps } from './props/telegramLogin.props';
-import { User } from '../user/user.model';
-import { AuthOutput } from './outputs/auth.output';
-import { createToken, decodeToken } from 'src/utils/jwt';
-import { JWTAuthPayload } from 'src/types/auth';
-import { RoleEnum } from 'src/enums/role.enum';
-import { SignInProps } from './props/signIn.props';
-import { SignUpProps } from './props/signUp.props';
+import { BadRequestError } from 'src/common';
 import {
   AUTH_TOKEN_EXPIRATION,
   PASSWORD_MIN_LENGTH,
-  PHONE_CONFIRMATION_CODE_LENGTH,
   PHONE_CONFIRMATION_TOKEN_EXPIRATION,
 } from 'src/constants/auth';
-import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
+import { RoleEnum } from 'src/enums/role.enum';
+import { sendSms } from 'src/sms';
+import { JWTAuthPayload } from 'src/types/auth';
 import { compareBcryptHash } from 'src/utils/bcrypt';
+import { createToken, decodeToken } from 'src/utils/jwt';
+import { matchSha256Hash } from '../../utils/crypto';
+import { User } from '../user/user.model';
+import { AuthOutput } from './outputs/auth.output';
 import { SignUpOutput } from './outputs/signUp.output';
 import { ConfirmSignUpProps } from './props/confirmSignUp.props';
-import { GraphQLError } from 'src/common';
-import { GraphQLErrorCode } from 'src/enums/graphQLErrorCode.enum';
+import { SignInProps } from './props/signIn.props';
+import { SignUpProps } from './props/signUp.props';
+import { TelegramLoginProps } from './props/telegramLogin.props';
+import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
 
 export const telegramUserLogin = async ({
   auth,
@@ -54,32 +53,35 @@ export const telegramUserLogin = async ({
   return { user, token };
 };
 
-export const signUp = async ({
+export const SignUp = async ({
   data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
-  const foundUser = await User.findOne({ phone });
+  try {
+    const foundUser = await User.findOne({ phone });
 
-  if (foundUser) {
-    throw new UserInputError(`User with phone '${phone}' is already exist`);
+    if (foundUser) {
+      throw new UserInputError(`User with phone '${phone}' is already exist`);
+    }
+
+    const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
+
+    if (!isValidPassword) {
+      throw new UserInputError('Password is not strong enough');
+    }
+
+    const code = sendSms(phone);
+    console.log(code);
+
+    const tokenPayload = { name, phone, password, code };
+
+    const createdToken = createToken(tokenPayload, {
+      expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
+    });
+
+    return { token: createdToken };
+  } catch (error) {
+    console.log(error, 'Haliyam yozmabdi');
   }
-
-  const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
-
-  if (!isValidPassword) {
-    throw new UserInputError('Password is not strong enough');
-  }
-
-  const code = generateRandomNumbers(PHONE_CONFIRMATION_CODE_LENGTH);
-
-  console.log('code', code);
-
-  const tokenPayload = { name, phone, password, code };
-
-  const createdToken = createToken(tokenPayload, {
-    expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
-  });
-
-  return { token: createdToken };
 };
 
 export const confirmSignUp = async ({
@@ -98,7 +100,7 @@ export const confirmSignUp = async ({
     throw new UserInputError('Invalid token');
   }
 
-  const isCodeCorrect = code === decodedToken.code;
+  const isCodeCorrect = compareBcryptHash(code, decodedToken.code);
 
   if (!isCodeCorrect) {
     throw new UserInputError('Code is not correct');
@@ -130,6 +132,10 @@ export const signIn = async ({
   data: { phone, password },
 }: SignInProps): Promise<AuthOutput> => {
   const foundUser = await User.findOne({ phone });
+
+  if (password !== foundUser.password) {
+    throw new BadRequestError('Password is not match!');
+  }
 
   if (!foundUser) {
     throw new Error('Phone or password is not correct');
