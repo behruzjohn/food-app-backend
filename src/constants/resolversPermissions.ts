@@ -11,6 +11,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_ALL_FOODS',
     'GET_CART_ITEMS_BY_USER_ID',
     'ADD_FOOD_TO_FAVORITES',
+    'GET_ORDERS_BY_USER_ID',
   ),
   admin: resolvers(
     'CREATE_ORDER',
