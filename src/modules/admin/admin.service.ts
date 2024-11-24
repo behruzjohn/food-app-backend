@@ -54,5 +54,4 @@ export const getTotalSoldProducts = async () => {
       },
     },
   ]);
-  // console.log(calculateTotalProducts);
 };
