@@ -3,7 +3,6 @@ import { BadRequestError } from 'src/common';
 import {
   AUTH_TOKEN_EXPIRATION,
   PASSWORD_MIN_LENGTH,
-  PHONE_CONFIRMATION_CODE_LENGTH,
   PHONE_CONFIRMATION_TOKEN_EXPIRATION,
 } from 'src/constants/auth';
 import { RoleEnum } from 'src/enums/role.enum';
@@ -11,7 +10,7 @@ import { sendSms } from 'src/sms';
 import { JWTAuthPayload } from 'src/types/auth';
 import { compareBcryptHash } from 'src/utils/bcrypt';
 import { createToken, decodeToken } from 'src/utils/jwt';
-import { generateRandomNumbers, matchSha256Hash } from '../../utils/crypto';
+import { matchSha256Hash } from '../../utils/crypto';
 import { User } from '../user/user.model';
 import { AuthOutput } from './outputs/auth.output';
 import { SignUpOutput } from './outputs/signUp.output';
@@ -58,7 +57,6 @@ export const SignUp = async ({
   data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
   try {
-    const codeNumber = sendSms(phone);
     const foundUser = await User.findOne({ phone });
 
     if (foundUser) {
@@ -71,10 +69,10 @@ export const SignUp = async ({
       throw new UserInputError('Password is not strong enough');
     }
 
-    const code = generateRandomNumbers(PHONE_CONFIRMATION_CODE_LENGTH);
+    const code = sendSms(phone);
+    console.log(code);
 
-    const tokenPayload = { name, phone, password, code, codeNumber };
-    console.log(codeNumber);
+    const tokenPayload = { name, phone, password, code };
 
     const createdToken = createToken(tokenPayload, {
       expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
@@ -102,7 +100,7 @@ export const confirmSignUp = async ({
     throw new UserInputError('Invalid token');
   }
 
-  const isCodeCorrect = code === decodedToken.code;
+  const isCodeCorrect = compareBcryptHash(code, decodedToken.code);
 
   if (!isCodeCorrect) {
     throw new UserInputError('Code is not correct');

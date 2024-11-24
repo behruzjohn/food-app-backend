@@ -15,7 +15,7 @@ import { OrdersOutput } from './outputs/orders.output';
 import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
-import { GetOrdersByUserIdProps } from './props/getOrdersByuserId.props';
+import { GetOrdersByUserIdProps } from './props/getOrdersByUserId.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
@@ -34,9 +34,12 @@ export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderOutput> => {
+  const { payload } = await cartItemService.getCartItemsByUserId({ user });
   const createdOrder = await Order.create({
     createdBy: user._id,
-    to: order.to,
+    address: order.address,
+    foods: payload.items.map((item) => item['_id']),
+    totalPrice: payload.totalPrice,
   });
   await cartItemService.clearUserCart({ user });
 

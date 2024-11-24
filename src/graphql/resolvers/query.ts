@@ -9,7 +9,7 @@ import { GetAllFoodsProps } from 'src/modules/food/props/getAllFoods.props';
 import { GetFoodByIdProps } from 'src/modules/food/props/getFood.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { GetOrdersProps } from 'src/modules/order/props/getOrders.props';
-import { GetOrdersByUserIdProps } from 'src/modules/order/props/getOrdersByuserId.props';
+import { GetOrdersByUserIdProps } from 'src/modules/order/props/getOrdersByUserId.props';
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersProps } from 'src/modules/user/props/getUsers.props';
 import { PaginateProps } from 'src/props/paginate.props';
