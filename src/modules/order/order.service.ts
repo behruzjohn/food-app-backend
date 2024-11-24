@@ -39,10 +39,9 @@ export const createOrder = async (
   const createdOrder = await Order.create({
     createdBy: user._id,
     address: order.address,
-    foods: payload.items.map((item) => item['_id']),
     totalPrice: payload.totalPrice,
   });
-  await addCartItemToOrderItem({ id: createdOrder.id });
+  await addCartItemToOrderItem({ userId: user._id, orderId: createdOrder._id });
   await cartItemService.clearUserCart({ user });
 
   const populatedOrder = await createdOrder.populate(POPULATIONS.order);
@@ -154,7 +153,7 @@ export const getOrders = async ({
   limit,
   page,
 }: GetOrdersProps): Promise<Paginated<OrdersOutput>> => {
-  const filter: any = {};
+  const filter: unknown = {};
 
   if (Array.isArray(statuses) && statuses.length) {
     filter['$or'] = statuses.map((status) => ({ status }));

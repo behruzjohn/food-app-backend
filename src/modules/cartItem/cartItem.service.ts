@@ -59,7 +59,7 @@ export const updateCartFoodQuantity = async (
 ): Promise<CartItemOutput> => {
   const updatedCartItem = await CartItem.findOneAndUpdate(
     {
-      cartItemId,
+      _id: cartItemId,
       user: user._id,
     },
     { quantity },
