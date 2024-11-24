@@ -82,7 +82,7 @@ export const mutation = resolversHandlers(MUTATIONS)<
     return userService.updateUserById(args, context);
   },
   SIGN_UP: (_, args: SignUpProps) => {
-    return authService.SignUp(args);
+    return authService.signUp(args);
   },
   CONFIRM_SIGN_UP: (_, args: ConfirmSignUpProps) => {
     return authService.confirmSignUp(args);
