@@ -53,7 +53,7 @@ export const telegramUserLogin = async ({
   return { user, token };
 };
 
-export const SignUp = async ({
+export const signUp = async ({
   data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
   try {
