@@ -4,4 +4,5 @@ export interface FoodInput {
   description?: string;
   price: number;
   discount: number;
+  category: string;
 }

@@ -69,8 +69,7 @@ export const SignUp = async ({
       throw new UserInputError('Password is not strong enough');
     }
 
-    const code = sendSms(phone);
-    console.log(code);
+    const code = await sendSms(phone);
 
     const tokenPayload = { name, phone, password, code };
 
