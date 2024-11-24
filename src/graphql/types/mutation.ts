@@ -23,6 +23,7 @@ export const mutationType = gql`
     ${MUTATIONS.ATTACH_ORDER}(orderId: ID): CourierOutput
     ${MUTATIONS.ADD_FOOD_TO_FAVORITES}(foodId: ID!): FoodOutput
     ${MUTATIONS.REMOVE_FOOD_FROM_FAVORITES}(foodId: ID!): FoodOutput
+    ${MUTATIONS.UPDATE_USER_BY_ID}(userId: ID!, data: UpdateUserDataByIdPropsInput): UserOutput 
     ${MUTATIONS.SIGN_UP}(data: SignUpInput!): SignUpOutput
     ${MUTATIONS.CONFIRM_SIGN_UP}(data: ConfirmationInput!): AuthOutput
   }

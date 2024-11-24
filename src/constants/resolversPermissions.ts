@@ -11,6 +11,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_ALL_FOODS',
     'GET_CART_ITEMS_BY_USER_ID',
     'ADD_FOOD_TO_FAVORITES',
+    'GET_FAVORITE_FOODS',
   ),
   admin: resolvers(
     'CREATE_ORDER',
@@ -40,6 +41,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_CART_ITEMS_BY_USER_ID',
     'GET_ORDERS',
     'ATTACH_ORDER_TO_COURIER',
+    'UPDATE_USER_BY_ID',
   ),
   courier: resolvers('DELIVER_ORDER_BY_ID', 'ATTACH_ORDER'),
 };

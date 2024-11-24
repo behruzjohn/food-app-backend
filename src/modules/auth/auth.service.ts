@@ -135,7 +135,7 @@ export const signIn = async ({
     throw new Error('Phone or password is not correct');
   }
 
-  const isPasswordCorrect = compareBcryptHash(
+  const isPasswordCorrect = await compareBcryptHash(
     <string>foundUser.password,
     password,
   );

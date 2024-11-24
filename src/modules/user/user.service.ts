@@ -3,6 +3,7 @@ import { BadRequestError } from 'src/common';
 import { Context } from 'src/types/context';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
+import { UpdateUserDataByIdProps } from './props/changeUserValues.props';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { User } from './user.model';
 import { GetUsersProps } from './props/getUsers.props';
@@ -42,4 +43,17 @@ export const getUserById = async (
   }
 
   return { payload: user };
+};
+
+export const updateUserById = async ({
+  userId,
+  data,
+}: UpdateUserDataByIdProps): Promise<UserOutput> => {
+  const foundUser = await User.findByIdAndUpdate(userId, data, { new: true });
+
+  if (!foundUser) {
+    throw new BadRequestError('Error during changing properties!');
+  }
+
+  return { payload: foundUser };
 };
