@@ -16,6 +16,10 @@ export const userTypes = gql`
     ${timestampsType}
   }
 
+  input UserFilterInput {
+    phone: String
+  }
+
   type UserOutput {
     payload: User
   }

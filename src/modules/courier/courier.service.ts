@@ -9,7 +9,6 @@ import { CourierOutput } from './outputs/courier.output';
 import { CouriersOutput } from './outputs/couriers.output';
 import { GetCouriersProps } from './props/getCourier.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
-import { UpdateCourierByIdProps } from './props/updateCourierById.props';
 
 export const getCouriers = async ({
   name,
@@ -73,17 +72,4 @@ export const attachOrder = async (
   await pubsub.publish(EVENTS.ATTACH_ORDER, { payload: foundCourier });
 
   return { payload: foundCourier };
-};
-
-export const updateCourierById = async ({
-  courierId,
-  data,
-}: UpdateCourierByIdProps): Promise<CourierOutput> => {
-  const updatedCourier = await Courier.findByIdAndUpdate(courierId, data);
-
-  if (!updatedCourier) {
-    throw new UserInputError('Courier not found');
-  }
-
-  return { payload: updatedCourier };
 };

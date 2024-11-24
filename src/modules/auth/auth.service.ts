@@ -1,14 +1,25 @@
 import { UserInputError } from 'apollo-server-core';
-import { matchSha256Hash } from '../../utils/crypto';
+import { generateRandomNumbers, matchSha256Hash } from '../../utils/crypto';
 import { TelegramLoginProps } from './props/telegramLogin.props';
 import { User } from '../user/user.model';
 import { AuthOutput } from './outputs/auth.output';
-import { createToken } from 'src/utils/jwt';
+import { createToken, decodeToken } from 'src/utils/jwt';
 import { JWTAuthPayload } from 'src/types/auth';
 import { RoleEnum } from 'src/enums/role.enum';
-import { CourierLoginProps } from './props/courierLogin.props';
-import { Courier } from '../courier/courier.model';
-import bcrypt from 'bcrypt';
+import { SignInProps } from './props/signIn.props';
+import { SignUpProps } from './props/signUp.props';
+import {
+  AUTH_TOKEN_EXPIRATION,
+  PASSWORD_MIN_LENGTH,
+  PHONE_CONFIRMATION_CODE_LENGTH,
+  PHONE_CONFIRMATION_TOKEN_EXPIRATION,
+} from 'src/constants/auth';
+import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
+import { compareBcryptHash } from 'src/utils/bcrypt';
+import { SignUpOutput } from './outputs/signUp.output';
+import { ConfirmSignUpProps } from './props/confirmSignUp.props';
+import { GraphQLError } from 'src/common';
+import { GraphQLErrorCode } from 'src/enums/graphQLErrorCode.enum';
 
 export const telegramUserLogin = async ({
   auth,
@@ -38,31 +49,112 @@ export const telegramUserLogin = async ({
     role: <RoleEnum>user.role,
   };
 
-  const token = createToken(jwtPayload, { expiresIn: '7d' });
+  const token = createToken(jwtPayload, { expiresIn: AUTH_TOKEN_EXPIRATION });
 
   return { user, token };
 };
 
-export const signInAsCourier = async ({ data }: CourierLoginProps) => {
-  const foundCourier = await Courier.findOne({ phone: data.phone });
+export const signUp = async ({
+  data: { name, password, phone },
+}: SignUpProps): Promise<SignUpOutput> => {
+  const foundUser = await User.findOne({ phone });
 
-  if (!foundCourier) {
-    throw new UserInputError('Phone or password not correct');
+  if (foundUser) {
+    throw new UserInputError(`User with phone '${phone}' is already exist`);
   }
 
-  const isPasswordCorrect = bcrypt.compare(
-    foundCourier.password.toString(),
-    data.password,
+  const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
+
+  if (!isValidPassword) {
+    throw new UserInputError('Password is not strong enough');
+  }
+
+  const code = generateRandomNumbers(PHONE_CONFIRMATION_CODE_LENGTH);
+
+  console.log('code', code);
+
+  const tokenPayload = { name, phone, password, code };
+
+  const createdToken = createToken(tokenPayload, {
+    expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
+  });
+
+  return { token: createdToken };
+};
+
+export const confirmSignUp = async ({
+  data: { code, token },
+}: ConfirmSignUpProps): Promise<AuthOutput> => {
+  const decodedToken = decodeToken<ConfirmPhoneTokenPayload>(token);
+
+  const isTokenValid =
+    decodedToken &&
+    decodedToken.name &&
+    decodedToken.password &&
+    decodedToken.code &&
+    decodedToken.phone;
+
+  if (!isTokenValid) {
+    throw new UserInputError('Invalid token');
+  }
+
+  const isCodeCorrect = code === decodedToken.code;
+
+  if (!isCodeCorrect) {
+    throw new UserInputError('Code is not correct');
+  }
+
+  const createdUser = await User.create({
+    name: decodedToken.name,
+    phone: decodedToken.phone,
+    role: RoleEnum.user,
+    password: decodedToken.password,
+  });
+
+  const tokenPayload: JWTAuthPayload = {
+    _id: createdUser._id,
+    role: <RoleEnum>createdUser.role,
+  };
+
+  const createdToken = createToken(tokenPayload, {
+    expiresIn: AUTH_TOKEN_EXPIRATION,
+  });
+
+  return {
+    token: createdToken,
+    user: createdUser,
+  };
+};
+
+export const signIn = async ({
+  data: { phone, password },
+}: SignInProps): Promise<AuthOutput> => {
+  const foundUser = await User.findOne({ phone });
+
+  if (!foundUser) {
+    throw new Error('Phone or password is not correct');
+  }
+
+  const isPasswordCorrect = await compareBcryptHash(
+    <string>foundUser.password,
+    password,
   );
 
   if (!isPasswordCorrect) {
-    throw new UserInputError('Phone or password not correct');
+    throw new Error('Phone or password is not correct');
   }
 
-  const token = createToken(
-    { courierId: foundCourier._id },
-    { expiresIn: '7d' },
-  );
+  const tokenPayload: JWTAuthPayload = {
+    _id: foundUser._id,
+    role: <RoleEnum>foundUser.role,
+  };
 
-  return { token };
+  const createdToken = createToken(tokenPayload, {
+    expiresIn: AUTH_TOKEN_EXPIRATION,
+  });
+
+  return {
+    token: createdToken,
+    user: foundUser,
+  };
 };

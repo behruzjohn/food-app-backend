@@ -20,6 +20,13 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await hash(this.password, PASSWORD_HASH_ROUNDS);
+  }
+  next();
+});
+
 userSchema.plugin(mongoosePaginate);
 
 export const User = model(MODELS.USER, userSchema);

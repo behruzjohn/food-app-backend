@@ -1,11 +1,6 @@
 import { Types } from 'mongoose';
-import { RoleEnum } from 'src/enums/role.enum';
-
-export type ContextUser = {
-  _id: Types.ObjectId;
-  role?: RoleEnum;
-};
+import { User } from 'src/modules/user/user.model';
 
 export type Context = {
-  user: ContextUser;
+  user: typeof User.schema.obj & { _id: Types.ObjectId };
 };

@@ -1,16 +1,15 @@
 import { AuthenticationError, UserInputError } from 'apollo-server-core';
 import { AUTH_TYPE } from '../../../constants/auth';
 import { decodeToken, isTokenExpired } from '../../../utils/jwt';
-import { Context, ContextUser } from '../../../types/context';
+import { Context } from '../../../types/context';
 import { User } from '../../../modules/user/user.model';
 import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
 import { BadUserInputError } from 'src/common';
 import { RESOLVERS_PERMISSIONS } from 'src/constants/resolversPermissions';
 import e from 'express';
-import { Courier } from 'src/modules/courier/courier.model';
-import { Types } from 'mongoose';
-import { UserRoleEnum } from 'src/enums/userRole.enum';
 import { ENDPOINTS_PERMISSIONS } from 'src/constants/endpointsPermissions';
+import { JWTAuthPayload } from 'src/types/auth';
+import { RoleEnum } from 'src/enums/role.enum';
 
 export const authMiddleware = async (
   req: e.Request,
@@ -19,22 +18,20 @@ export const authMiddleware = async (
 ): Promise<Context> => {
   const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
-  const decodedToken = decodeToken<ContextUser>(token);
+  const decodedToken = decodeToken<JWTAuthPayload>(token);
 
   let isTokenValid = true;
 
-  if (!decodedToken?._id || !decodedToken?.role) {
+  if (!decodedToken?._id) {
     isTokenValid = false;
   }
 
-  let foundUser: { _id: Types.ObjectId };
+  let foundUser: Context['user'];
 
   if (isTokenValid) {
     const queryFilter = { _id: decodedToken._id };
 
-    foundUser = await (UserRoleEnum[decodedToken.role]
-      ? User.exists(queryFilter)
-      : Courier.exists(queryFilter));
+    foundUser = await User.findOne(queryFilter);
   }
 
   const isAccessibleRequest = executeResolvers.every((resolver) => {
@@ -57,9 +54,9 @@ export const authMiddleware = async (
     }
 
     if (lang === 'graphql') {
-      return RESOLVERS_PERMISSIONS[decodedToken.role]?.has(resolver);
+      return RESOLVERS_PERMISSIONS[<RoleEnum>foundUser.role]?.has(resolver);
     } else {
-      return ENDPOINTS_PERMISSIONS[decodedToken.role]?.has(
+      return ENDPOINTS_PERMISSIONS[<RoleEnum>foundUser.role]?.has(
         `${req.method}-${req.route}`,
       );
     }
@@ -70,9 +67,6 @@ export const authMiddleware = async (
   }
 
   return {
-    user: {
-      _id: foundUser?._id,
-      role: decodedToken.role,
-    },
+    user: foundUser,
   };
 };

@@ -22,9 +22,15 @@ import { Context } from 'src/types/context';
 import * as adminService from '../../modules/admin/admin.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
 import * as categoryService from '../../modules/category/category.service';
-import * as courierService from '../../modules/courier/courier.service';
 import * as foodService from '../../modules/food/food.service';
 import * as userService from '../../modules/user/user.service';
+import * as authService from '../../modules/auth/auth.service';
+import * as courierService from '../../modules/courier/courier.service';
+import * as adminService from '../../modules/admin/admin.service';
+import { GetFoodByIdProps } from '../../modules/food/props/getFood.props';
+import { CreateCourierProps } from 'src/modules/admin/props/createCourier.props';
+import { SignUpProps } from 'src/modules/auth/props/signUp.props';
+import { ConfirmSignUpProps } from 'src/modules/auth/props/confirmSignUp.props';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>
@@ -69,9 +75,6 @@ export const mutation = resolversHandlers(MUTATIONS)<
   CREATE_COURIER: (_, args: CreateCourierProps) => {
     return adminService.createCourier(args);
   },
-  UPDATE_COURIER_BY_ID: (_, args: UpdateCourierByIdProps) => {
-    return courierService.updateCourierById(args);
-  },
   ADD_FOOD_TO_FAVORITES: (_, args: GetFoodByIdProps, context) => {
     return foodService.addFoodToFavorites(args, context);
   },
@@ -80,6 +83,12 @@ export const mutation = resolversHandlers(MUTATIONS)<
   },
   UPDATE_USER_BY_ID: (_, args: UpdateUserDataByIdProps) => {
     return userService.updateUserById(args);
+  },
+  SIGN_UP: (_, args: SignUpProps) => {
+    return authService.signUp(args);
+  },
+  CONFIRM_SIGN_UP: (_, args: ConfirmSignUpProps) => {
+    return authService.confirmSignUp(args);
   },
   UPDATE_ORDER_STATUS_BY_ID: (_, args: UpdateOrderStatusProps) => {
     return orderService.updateOrderStatusById(args);
