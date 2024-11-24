@@ -14,6 +14,5 @@
 //   const createdOrderItem = await OrderItem.insertMany(
 //     foundCartItem.map(({ _id, ...cartProduct }) => cartProduct),
 //   );
-//   console.log(foundCartItem);
 //   return { payload: createdOrderItem };
 // };

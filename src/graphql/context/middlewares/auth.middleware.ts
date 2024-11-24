@@ -1,15 +1,15 @@
 import { AuthenticationError, UserInputError } from 'apollo-server-core';
-import { AUTH_TYPE } from '../../../constants/auth';
-import { decodeToken, isTokenExpired } from '../../../utils/jwt';
-import { Context } from '../../../types/context';
-import { User } from '../../../modules/user/user.model';
-import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
-import { BadUserInputError } from 'src/common';
-import { RESOLVERS_PERMISSIONS } from 'src/constants/resolversPermissions';
 import e from 'express';
+import { BadUserInputError } from 'src/common';
 import { ENDPOINTS_PERMISSIONS } from 'src/constants/endpointsPermissions';
-import { JWTAuthPayload } from 'src/types/auth';
+import { RESOLVERS_PERMISSIONS } from 'src/constants/resolversPermissions';
 import { RoleEnum } from 'src/enums/role.enum';
+import { JWTAuthPayload } from 'src/types/auth';
+import { AUTH_TYPE } from '../../../constants/auth';
+import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
+import { User } from '../../../modules/user/user.model';
+import { Context } from '../../../types/context';
+import { decodeToken, isTokenExpired } from '../../../utils/jwt';
 
 export const authMiddleware = async (
   req: e.Request,
