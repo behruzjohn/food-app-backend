@@ -18,8 +18,9 @@ import * as orderService from 'src/modules/order/order.service';
 import { CreateOrderProps } from 'src/modules/order/props/createOrder.props';
 import { GetOrderByIdProps } from 'src/modules/order/props/getOrder.props';
 import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.props';
-import { UpdateUserDataByIdProps } from 'src/modules/user/props/changeUserValues.props';
+import { UpdateUserProps } from 'src/modules/user/props/updateUser.props';
 import { UpdateUserPasswordProps } from 'src/modules/user/props/updateUserPassword.props';
+import { Context } from 'src/types/context';
 import * as adminService from '../../modules/admin/admin.service';
 import * as authService from '../../modules/auth/auth.service';
 import * as cartItemService from '../../modules/cartItem/cartItem.service';
@@ -77,8 +78,8 @@ export const mutation = resolversHandlers(MUTATIONS)<
   REMOVE_FOOD_FROM_FAVORITES: (_, args: GetFoodByIdProps, context) => {
     return foodService.removeFoodFromFavorites(args, context);
   },
-  UPDATE_USER_BY_ID: (_, args: UpdateUserDataByIdProps) => {
-    return userService.updateUserById(args);
+  UPDATE_USER_BY_ID: (_, args: UpdateUserProps, context: Context) => {
+    return userService.updateUserById(args, context);
   },
   SIGN_UP: (_, args: SignUpProps) => {
     return authService.SignUp(args);

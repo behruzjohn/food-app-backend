@@ -27,9 +27,8 @@ export const userTypes = gql`
   type UsersOutput {
     payload: [User]
   }
-  input UpdateUserDataByIdPropsInput {
+  input UpdateUserInput {
     name: String
-    phone: String
   }
   input UpdateUserPasswordInput {
     userId: ID!

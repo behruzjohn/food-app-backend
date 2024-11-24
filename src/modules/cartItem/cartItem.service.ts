@@ -54,12 +54,12 @@ export const createCartItem = async (
 };
 
 export const updateCartFoodQuantity = async (
-  { food, quantity }: UpdateCartFoodQuantityProps,
+  { cartItemId, quantity }: UpdateCartFoodQuantityProps,
   { user }: Context,
 ): Promise<CartItemOutput> => {
   const updatedCartItem = await CartItem.findOneAndUpdate(
     {
-      food,
+      cartItemId,
       user: user._id,
     },
     { quantity },

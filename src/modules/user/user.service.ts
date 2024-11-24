@@ -4,9 +4,9 @@ import { Context } from 'src/types/context';
 import { compareBcryptHash } from 'src/utils/bcrypt';
 import { UserOutput } from './outputs/user.output';
 import { UsersOutput } from './outputs/users.output';
-import { UpdateUserDataByIdProps } from './props/changeUserValues.props';
 import { GetUserByIdProps } from './props/getUserById.props';
 import { GetUsersProps } from './props/getUsers.props';
+import { UpdateUserProps } from './props/updateUser.props';
 import { UpdateUserPasswordProps } from './props/updateUserPassword.props';
 import { User } from './user.model';
 
@@ -47,11 +47,18 @@ export const getUserById = async (
   return { payload: user };
 };
 
-export const updateUserById = async ({
-  userId,
-  data,
-}: UpdateUserDataByIdProps): Promise<UserOutput> => {
-  const updatedUser = await User.findByIdAndUpdate(userId, data, { new: true });
+export const updateUserById = async (
+  { data: { name } }: UpdateUserProps,
+  { user }: Context,
+): Promise<UserOutput> => {
+  const updatedUser = await User.findByIdAndUpdate(
+    user._id,
+    { name },
+    {
+      new: true,
+    },
+  );
+  console.log(updatedUser.name);
 
   if (!updatedUser) {
     throw new BadRequestError('Error during changing properties!');
