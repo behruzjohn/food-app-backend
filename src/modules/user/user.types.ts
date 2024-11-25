@@ -1,5 +1,6 @@
 import { gql } from 'apollo-server-core';
 import { RoleEnum } from 'src/enums/role.enum';
+import { timestampsType } from 'src/graphql/types/common';
 import { createGraphQLEnum } from 'src/utils/schema';
 
 export const userTypes = gql`
@@ -12,6 +13,7 @@ export const userTypes = gql`
     role: RoleEnum
     photo: String
     telegramId: String
+    ${timestampsType}
   }
 
   input UserFilterInput {
@@ -24,5 +26,12 @@ export const userTypes = gql`
 
   type UsersOutput {
     payload: [User]
+  }
+  input UpdateUserInput {
+    name: String
+  }
+  input UpdateUserPasswordInput {
+    oldPassword: String!
+    newPassword: String!
   }
 `;
