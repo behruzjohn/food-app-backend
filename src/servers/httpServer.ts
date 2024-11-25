@@ -5,12 +5,14 @@ import { httpContext } from 'src/graphql/context/http.context';
 import { upload } from 'src/multer';
 import { FILE_CATEGORIES } from 'src/constants/fileCategories';
 import { ROUTES } from 'src/constants/routes';
+import path from 'path';
 
 export const httpServer = express();
 
 httpServer.use(cors());
 httpServer.use(express.json());
 httpServer.use(express.urlencoded({ extended: true }));
+httpServer.use(express.static('public'));
 
 httpServer.post(
   ROUTES.UPLOAD,

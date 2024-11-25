@@ -1,30 +1,26 @@
 import { model, Schema, Types } from 'mongoose';
-import { UserRoleEnum } from 'src/enums/userRole.enum';
 import { MODELS } from '../../constants/models';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import { hash } from 'src/utils/bcrypt';
 import { PASSWORD_HASH_ROUNDS } from 'src/constants/auth';
+import { RoleEnum } from 'src/enums/role.enum';
+import { hash } from 'src/utils/bcrypt';
 
-const userSchema = new Schema({
-  photo: { type: String },
-  name: { type: String, required: true },
-  role: {
-    type: String,
-    enum: Object.keys(UserRoleEnum),
-    default: MODELS.USER,
-    required: true,
+const userSchema = new Schema(
+  {
+    photo: { type: String },
+    name: { type: String, required: true },
+    role: {
+      type: String,
+      enum: Object.keys(RoleEnum),
+      default: MODELS.USER,
+    },
+    telegramId: { type: String },
+    phone: { type: String, validator: (v: string) => v.startsWith('+998') },
+    favoriteFoods: [{ type: Types.ObjectId, ref: MODELS.FOOD }],
+    password: { type: String },
   },
-  telegramId: { type: String },
-  phone: {
-    type: String,
-    validator: (v: string) => v.startsWith('+998'),
-  },
-  favoriteFoods: {
-    type: [{ type: Types.ObjectId, ref: MODELS.FOOD }],
-    default: [],
-  },
-  password: { type: String },
-});
+  { timestamps: true },
+);
 
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {

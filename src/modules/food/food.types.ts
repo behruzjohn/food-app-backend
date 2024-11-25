@@ -10,7 +10,7 @@ export const foodTypes = gql`
     description: String
     price: Int
     discount: Int
-    category: Category
+    categories: [Category]
     likes: Int
   }
 
@@ -18,12 +18,13 @@ export const foodTypes = gql`
     payload: Food
   }
 
-  type FoodsOutput {
+  type PaginatedFoodsOutput {
     payload: [Food]
+    ${paginationType}
   }
 
-  type FoodDeleteOutput {
-    payload: String
+  type FoodsOutput {
+    payload: [Food]
   }
 
   input FoodInput {
@@ -32,7 +33,7 @@ export const foodTypes = gql`
     discount: Int
     shortName: String
     description: String!
-    category: ID!
+    categories: [ID]
   }
 
   input FoodUpdateInput {
@@ -41,9 +42,10 @@ export const foodTypes = gql`
     discount: Int
     description: String
     shortName: String
-    category: ID
+    categories: [ID]
   }
-  type PagenatedFoodOutput{
+  
+  type PaginatedFoodsOutput {
     payload: [Food]
     ${paginationType}
   }

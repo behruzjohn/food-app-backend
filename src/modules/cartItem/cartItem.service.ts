@@ -54,12 +54,12 @@ export const createCartItem = async (
 };
 
 export const updateCartFoodQuantity = async (
-  { food, quantity }: UpdateCartFoodQuantityProps,
+  { cartItemId, quantity }: UpdateCartFoodQuantityProps,
   { user }: Context,
 ): Promise<CartItemOutput> => {
   const updatedCartItem = await CartItem.findOneAndUpdate(
     {
-      food,
+      _id: cartItemId,
       user: user._id,
     },
     { quantity },
@@ -77,18 +77,12 @@ export const deleteCartItem = async (
   { food }: MutateCartItemFoodProps,
   { user }: Context,
 ): Promise<CartItemOutput> => {
-  const foundFood = await Food.findById(food);
-
-  if (!foundFood) {
-    throw new BadUserInputError('Food is not found');
-  }
-
-  const removedFood = await CartItem.findOneAndDelete({
-    food,
+  const deletedCartItem = await CartItem.findOneAndDelete({
+    _id: food,
     user: user._id,
   });
 
-  return { payload: removedFood };
+  return { payload: deletedCartItem };
 };
 
 export const clearUserCart = async ({

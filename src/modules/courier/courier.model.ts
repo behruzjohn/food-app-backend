@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { model, Schema, Types } from 'mongoose';
 import { MODELS } from 'src/constants/models';
 
@@ -6,4 +7,4 @@ const courierSchema = new Schema({
   orders: [{ type: Types.ObjectId, ref: MODELS.ORDER, default: [] }],
 });
 
-export const Courier = model(MODELS.COURIERS, courierSchema);
+export const Courier = model(MODELS.COURIER, courierSchema);

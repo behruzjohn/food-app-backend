@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
 import mongoosePaginateV2 from 'mongoose-paginate-v2';
 import { MODELS } from '../../constants/models';
 
@@ -9,7 +9,7 @@ const foodSchema = new Schema({
   description: { type: String },
   price: { type: Number, required: true },
   discount: { type: Number },
-  category: { type: String, ref: MODELS.CATEGORIES, required: true },
+  categories: [{ type: Types.ObjectId, ref: MODELS.CATEGORY, required: true }],
   likes: { type: Number, default: 0, min: 0 },
 });
 

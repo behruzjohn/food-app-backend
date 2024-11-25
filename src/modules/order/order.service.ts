@@ -1,4 +1,5 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
+import { RootFilterQuery } from 'mongoose';
 import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { POPULATIONS } from 'src/constants/populations';
@@ -8,13 +9,14 @@ import { pubsub } from 'src/graphql';
 import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
-import { getCartItemsByUserId } from '../cartItem/cartItem.service';
+import { addCartItemToOrderItem } from '../orderItem/orderItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { OrdersOutput } from './outputs/orders.output';
 import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
+import { GetOrdersByUserIdProps } from './props/getOrdersByUserId.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
@@ -34,15 +36,13 @@ export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderOutput> => {
-  const { payload } = await getCartItemsByUserId({ user });
-
+  const { payload } = await cartItemService.getCartItemsByUserId({ user });
   const createdOrder = await Order.create({
     createdBy: user._id,
     address: order.address,
-    foods: payload.items.map((item) => item['_id']),
     totalPrice: payload.totalPrice,
   });
-
+  await addCartItemToOrderItem({ userId: user._id, orderId: createdOrder._id });
   await cartItemService.clearUserCart({ user });
 
   const populatedOrder = await createdOrder.populate(POPULATIONS.order);
@@ -165,7 +165,7 @@ export const getOrders = async ({
   limit,
   page,
 }: GetOrdersProps): Promise<Paginated<OrdersOutput>> => {
-  const filter: any = {};
+  const filter: unknown = {};
 
   if (Array.isArray(statuses) && statuses.length) {
     filter['$or'] = statuses.map((status) => ({ status }));
@@ -176,4 +176,20 @@ export const getOrders = async ({
     .paginate({ limit, page });
 
   return { payload: foundFoods, ...pagination };
+};
+
+export const getOrdersByUserId = async (
+  { status }: GetOrdersByUserIdProps,
+  { user }: Context,
+): Promise<OrdersOutput> => {
+  const statusCheck: RootFilterQuery<typeof Order> = {
+    createdBy: user._id,
+  };
+  if (status !== 'All') {
+    statusCheck.status = status;
+  }
+
+  const foundOrders = await Order.find(statusCheck).populate(POPULATIONS.order);
+
+  return { payload: foundOrders };
 };

@@ -17,6 +17,7 @@
     "apollo-server": "^3.13.0",
     "apollo-server-core": "^3.13.0",
     "apollo-server-express": "^3.13.0",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -33,6 +34,7 @@
     "mongoose": "^8.7.1",
     "mongoose-paginate-v2": "^1.8.5",
     "multer": "^1.4.5-lts.1",
+    "telegraf": "^4.16.3",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3",
     "ws": "^8.18.0"
