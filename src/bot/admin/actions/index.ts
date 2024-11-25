@@ -129,6 +129,16 @@ export const adminActions = actions(ADMIN_ACTIONS)({
     },
   },
 
+  STATISTICS: {
+    title: '📊 Statistika',
+    getCallbackData: () => `_statistics`,
+    matcher: /_statistics/,
+    async handler(ctx) {
+      const foodsStatisticsImageUrl = ``;
+      // ctx.replyWithPhoto({url: })
+    },
+  },
+
   BACK: {
     title: '🔙 Orqaga',
     getCallbackData: () => '_back',
