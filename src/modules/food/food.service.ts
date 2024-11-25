@@ -171,7 +171,7 @@ export const getAllFoods = async ({
   }
 
   if (categories?.length) {
-    searchConditions.push({ category: { $in: categories } });
+    searchConditions.push({ category: { $in: { $in: categories } } });
   }
 
   const { docs: foundFoods, ...pagination } = await Food.find(

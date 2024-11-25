@@ -9,7 +9,7 @@ const foodSchema = new Schema({
   description: { type: String },
   price: { type: Number, required: true },
   discount: { type: Number },
-  category: { type: String, ref: MODELS.CATEGORIES, required: true },
+  categories: [{ type: String, ref: MODELS.CATEGORIES, required: true }],
   likes: { type: Number, default: 0, min: 0 },
 });
 
