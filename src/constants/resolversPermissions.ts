@@ -17,6 +17,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
     'GET_ALL_CATEGORIES',
     'GET_USER_BY_ID',
     'GET_ORDERS_BY_USER_ID',
+    'DELETE_CART_ITEM',
   ),
   admin: resolvers(
     'CREATE_ORDER',
