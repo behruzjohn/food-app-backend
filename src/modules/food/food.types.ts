@@ -37,12 +37,14 @@ export const foodTypes = gql`
     discount: Int
     description: String
     shortName: String
-    category: ID
+    categories: [ID]
   }
+  
   type PagenatedFoodOutput{
     payload: [Food]
     ${paginationType}
   }
+
   type PaginatedFoodsOutput {
     payload: [Food]
     ${paginationType}
