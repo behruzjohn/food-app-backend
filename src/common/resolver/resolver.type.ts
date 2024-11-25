@@ -7,5 +7,5 @@ export type Resolver<TArgs, TResult> = (
 ) => TResult;
 
 export type Subscription = {
-  subscribe: () => AsyncIterator<unknown, any, any>;
+  subscribe: () => AsyncIterator<unknown, unknown, unknown>;
 };
