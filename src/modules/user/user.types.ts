@@ -31,7 +31,6 @@ export const userTypes = gql`
     name: String
   }
   input UpdateUserPasswordInput {
-    userId: ID!
     oldPassword: String!
     newPassword: String!
   }
