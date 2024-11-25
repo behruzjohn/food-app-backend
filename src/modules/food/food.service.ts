@@ -18,15 +18,9 @@ export const createFood = async ({
   image,
   food,
 }: CreateFoodProps): Promise<FoodOutput> => {
-  let imagePath: string;
-
-  if (image) {
-    imagePath = await saveFile(image);
-  }
-
   const createdFood = await Food.create({
     ...food,
-    image: imagePath,
+    image,
   });
 
   if (!createdFood) {
@@ -162,7 +156,7 @@ export const getAllFoods = async ({
   }
 
   if (categories?.length) {
-    searchConditions.push({ category: { $in: categories } });
+    searchConditions.push({ categories: { $in: { $in: categories } } });
   }
 
   const { docs: foundFoods, ...pagination } = await Food.find(

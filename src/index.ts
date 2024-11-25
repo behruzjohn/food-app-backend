@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { apolloServer } from './servers/apollo';
 import { startWsServer } from './servers/ws';
+import { bot } from './bot';
 
 dotenv.config();
 
@@ -16,6 +17,12 @@ async function bootstrap() {
     });
 
     startWsServer();
+
+    await bot
+      .launch(() => {
+        console.log(`Bot started`);
+      })
+      .catch(console.log);
   } catch (error) {
     console.log(error);
   }

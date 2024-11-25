@@ -1,16 +1,16 @@
 import { model, Schema, Types } from 'mongoose';
-import { UserRoleEnum } from 'src/enums/userRole.enum';
 import { MODELS } from '../../constants/models';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { hash } from 'src/utils/bcrypt';
 import { PASSWORD_HASH_ROUNDS } from 'src/constants/auth';
+import { RoleEnum } from 'src/enums/role.enum';
 
 const userSchema = new Schema({
   photo: { type: String },
   name: { type: String, required: true },
   role: {
     type: String,
-    enum: Object.keys(UserRoleEnum),
+    enum: Object.keys(RoleEnum),
     default: MODELS.USER,
     required: true,
   },
