@@ -22,6 +22,7 @@ import { UpdateOrderStatusProps } from './props/updateOrder.props';
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.cooking,
+    cookedAt: new Date(),
   }).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
@@ -71,11 +72,20 @@ export const updateOrderStatusById = async ({
   orderId,
   status,
 }: UpdateOrderStatusProps): Promise<OrderOutput> => {
-  const updatedOrder = await Order.findByIdAndUpdate(
-    orderId,
-    { status },
-    { new: true },
-  ).populate(POPULATIONS.order);
+  const orderStatus = {
+    [StatusEnum.delivering]: 'cookedAt',
+    [StatusEnum.received]: 'receivedAt',
+  };
+
+  const updateData = { status };
+
+  if (orderStatus[status]) {
+    updateData[orderStatus[status]] = new Date();
+  }
+
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, updateData, {
+    new: true,
+  }).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
     throw new ApolloError('Order not found!');
@@ -97,6 +107,7 @@ export const deliverOrderById = async ({
     orderId,
     {
       status: StatusEnum.delivering,
+      cookedAt: new Date(),
     },
     { new: true },
   ).populate(POPULATIONS.order);
@@ -118,6 +129,7 @@ export const receiveOrderById = async ({
 }: GetOrderByIdProps): Promise<OrderOutput> => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
+    receivedAt: new Date(),
   }).populate(POPULATIONS.order);
 
   const message = { payload: updatedOrder };

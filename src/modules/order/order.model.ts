@@ -15,6 +15,8 @@ const orderSchema = new Schema(
     createdBy: { type: Types.ObjectId, ref: MODELS.USER },
     to: { type: [Number, Number] },
     attachedFor: { type: Types.ObjectId, ref: MODELS.USER },
+    cookedAt: { type: Date },
+    receivedAt: { type: Date },
   },
   { timestamps: true },
 );
