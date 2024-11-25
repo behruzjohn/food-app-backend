@@ -7,4 +7,4 @@ const courierSchema = new Schema({
   orders: [{ type: Types.ObjectId, ref: MODELS.ORDER, default: [] }],
 });
 
-export const Courier = model(MODELS.COURIERS, courierSchema);
+export const Courier = model(MODELS.COURIER, courierSchema);

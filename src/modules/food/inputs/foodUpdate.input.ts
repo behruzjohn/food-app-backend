@@ -4,4 +4,5 @@ export interface FoodUpdateInput {
   description?: string;
   price?: number;
   discount?: number;
+  categories: [string];
 }

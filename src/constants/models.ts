@@ -3,7 +3,7 @@ export const MODELS = {
   ORDER: 'Order',
   FOOD: 'Food',
   CART_ITEM: 'CartItem',
-  CATEGORIES: 'Category',
-  COURIERS: 'Couriers',
+  CATEGORY: 'Category',
+  COURIER: 'Courier',
   ORDER_ITEM: 'OrderItem',
 };

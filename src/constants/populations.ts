@@ -2,7 +2,7 @@ import { MODELS } from './models';
 
 export const POPULATIONS = {
   cartItem: [{ path: 'food', model: MODELS.FOOD }],
-  food: [{ path: 'category', model: MODELS.CATEGORIES }],
+  food: [{ path: 'categories', model: MODELS.CATEGORY }],
   order: [
     { path: 'createdBy', model: MODELS.USER, select: '_id name phone photo' },
   ],

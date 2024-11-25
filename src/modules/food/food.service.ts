@@ -14,14 +14,20 @@ import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
 import { UpdateFoodProps } from './props/updateFood.props';
+import { Types } from 'mongoose';
 
 export const createFood = async ({
   image,
   food,
 }: CreateFoodProps): Promise<FoodOutput> => {
-  const foundCategory = await Category.findById(food.category);
+  const foundCategories = await Category.find({
+    categories: { $in: food.categories || [] },
+  });
 
-  if (!foundCategory) {
+  if (
+    !foundCategories.length ||
+    foundCategories.length !== food.categories.length
+  ) {
     throw new UserInputError('Category is not found');
   }
 
@@ -147,16 +153,7 @@ export const getAllFoods = async ({
 }: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
-  if (name && !categories?.length) {
-    const matchedCategory = await Category.find({
-      name: { $regex: new RegExp(name, 'i') },
-    });
-
-    categories = matchedCategory.map((category) => category._id);
-  }
-
-  const searchConditions = [];
-
+  const searchConditions: any[] = [];
   if (nameRegex) {
     searchConditions.push(
       { shortName: { $regex: nameRegex } },
@@ -165,14 +162,64 @@ export const getAllFoods = async ({
   }
 
   if (categories?.length) {
-    searchConditions.push({ categories: { $in: { $in: categories } } });
+    searchConditions.push({
+      categories: { $in: categories },
+    });
   }
 
-  const { docs: foundFoods, ...pagination } = await Food.find(
-    searchConditions.length ? { $or: searchConditions } : {},
-  )
-    .populate(POPULATIONS.food)
-    .paginate({ limit, page });
+  const aggregationPipeline = [
+    ...(searchConditions.length ? [{ $match: { $or: searchConditions } }] : []),
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'categories',
+        foreignField: '_id',
+        as: 'categoriesInfo',
+      },
+    },
+    {
+      $facet: {
+        docs: [
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $project: {
+              _id: 1,
+              shortName: 1,
+              name: 1,
+              image: 1,
+              description: 1,
+              price: 1,
+              discount: 1,
+              likes: 1,
+              categories: 1,
+            },
+          },
+        ],
+        total: [{ $count: 'count' }],
+      },
+    },
+  ];
 
-  return { payload: foundFoods, ...pagination };
+  const [result] = await Food.aggregate(aggregationPipeline);
+
+  const docs = result?.docs || [];
+  const totalDocs = result?.total[0]?.count || 0;
+  const totalPages = Math.ceil(totalDocs / limit);
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < totalPages;
+  const offset = (page - 1) * limit;
+
+  return {
+    payload: docs,
+    totalDocs,
+    limit,
+    page,
+    totalPages,
+    hasPrevPage,
+    hasNextPage,
+    offset,
+    prevPage: hasPrevPage ? page - 1 : null,
+    nextPage: hasNextPage ? page + 1 : null,
+  };
 };

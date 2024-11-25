@@ -22,7 +22,7 @@ export const RESOLVERS_PERMISSIONS: ResolversPermissions = {
   admin: resolvers(
     'CREATE_ORDER',
     'ATTACH_ORDER',
-    'GET_COURIERS',
+    'GET_COURIER',
     'GET_FOOD_BY_ID',
     'CREATE_ORDER',
     'CREATE_CART_ITEM',
