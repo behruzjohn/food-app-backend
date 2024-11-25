@@ -10,7 +10,7 @@ export const foodTypes = gql`
     description: String
     price: Int
     discount: Int
-    categories: [Category]
+    category: Category
     likes: Int
   }
 
@@ -33,7 +33,7 @@ export const foodTypes = gql`
     discount: Int
     shortName: String
     description: String!
-    categories: [ID]
+    category: ID!
   }
 
   input FoodUpdateInput {
@@ -42,7 +42,7 @@ export const foodTypes = gql`
     discount: Int
     description: String
     shortName: String
-    categories: [ID]
+    category: ID
   }
   
   type PaginatedFoodsOutput {

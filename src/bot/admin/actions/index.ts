@@ -134,8 +134,7 @@ export const adminActions = actions(ADMIN_ACTIONS)({
     getCallbackData: () => `_statistics`,
     matcher: /_statistics/,
     async handler(ctx) {
-      const foodsStatisticsImageUrl = ``;
-      // ctx.replyWithPhoto({url: })
+      const foodsStatisticsImageUrl = {};
     },
   },
 
