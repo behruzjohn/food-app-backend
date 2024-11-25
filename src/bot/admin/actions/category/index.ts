@@ -177,7 +177,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
       >ctx.scene['state'];
 
       await createFood({
-        food: { ...foodData, categories: selectedCategories },
+        food: { ...foodData, category: selectedCategories[0] },
         image: filePath,
       });
 
