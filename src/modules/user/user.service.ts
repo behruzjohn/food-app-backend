@@ -58,7 +58,6 @@ export const updateUserById = async (
       new: true,
     },
   );
-  console.log(updatedUser.name);
 
   if (!updatedUser) {
     throw new BadRequestError('Error during changing properties!');

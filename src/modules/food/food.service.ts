@@ -61,7 +61,7 @@ export const updateFoodById = async ({
 export const getFoodById = async ({
   foodId,
 }: GetFoodByIdProps): Promise<FoodOutput> => {
-  const foundFood = await Food.findById(foodId);
+  const foundFood = await Food.findById(foodId).populate(POPULATIONS.food);
 
   if (!foundFood) {
     throw new BadRequestError('Food not found');
@@ -150,7 +150,7 @@ export const getAllFoods = async ({
   categories,
   limit,
   page,
-}: GetAllFoodsProps): Promise<FoodsOutput> => {
+}: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
   if (name && !categories?.length) {

@@ -43,4 +43,8 @@ export const foodTypes = gql`
     payload: [Food]
     ${paginationType}
   }
+  type PaginatedFoodsOutput {
+    payload: [Food]
+    ${paginationType}
+  }
 `;
