@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { apolloServer } from './servers/apollo';
 import { startWsServer } from './servers/ws';
 import { bot } from './bot';
+import { log } from './service/logger.service';
 
 dotenv.config();
 
@@ -13,16 +14,18 @@ async function bootstrap() {
     await mongoose.connect(<string>process.env.DATABASE_URL);
 
     apolloServer.listen(PORT, () => {
-      console.log(`Server started on port: ${PORT}`);
+      log('SUCCESS', 'APOLLO', `Server started on port: ${PORT}`);
     });
 
     startWsServer();
 
-    await bot
-      .launch(() => {
-        console.log(`Bot started`);
-      })
-      .catch(console.log);
+    bot.catch((error) => {
+      log('ERROR', 'BOT', error.toString());
+    });
+
+    await bot.launch(() => {
+      log('SUCCESS', 'TELEGRAF', `Bot started successfully`);
+    });
   } catch (error) {
     console.log(error);
   }

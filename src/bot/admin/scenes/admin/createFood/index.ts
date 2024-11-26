@@ -3,7 +3,6 @@ import { Composer, Markup, Scenes } from 'telegraf';
 import { foodActions } from '../../../actions/food';
 import { FOOD_ACTIONS } from '../../../actions/food/food.actions';
 import { initActions, savePhotoFile } from 'src/utils/telegram';
-import { createFood } from 'src/modules/food/food.service';
 import { FoodInput } from 'src/modules/food/inputs/foodCreate.input';
 import { categoryActions } from 'src/bot/admin/actions/category';
 import { getAllCategories } from 'src/modules/category/category.service';
@@ -74,7 +73,7 @@ getImageComposer.on('photo', async (ctx) => {
         price: state.price,
         discount: 0,
         shortName: state.name,
-        categories: [],
+        category: <any>'',
       };
 
       const { payload: foundCategories } = await getAllCategories();

@@ -9,10 +9,14 @@ import { CategoriesOutput } from './outputs/categories.output';
 export const createCategory = async ({
   category,
 }: CreateCategoryProps): Promise<CategoryOutput> => {
+  console.log('category', category);
+
   const createdCategory = await Category.create(category);
+
   if (!createdCategory) {
     throw new BadRequestError('Error during creating category!');
   }
+
   return { payload: createdCategory };
 };
 

@@ -1,10 +1,11 @@
 import { SCENES } from 'src/constants/scenes';
 import { Composer, Scenes } from 'telegraf';
-import { foodActions } from '../../../actions/food';
-import { FOOD_ACTIONS } from '../../../actions/food/food.actions';
 import { savePhotoFile } from 'src/utils/telegram';
 import { CategoryInput } from 'src/modules/category/inputs/category.input';
 import { createCategory } from 'src/modules/category/category.service';
+import { CATEGORY_ACTIONS } from 'src/bot/admin/actions/category/category.actions';
+import { categoryActions } from 'src/bot/admin/actions/category';
+import { log } from 'src/service/logger.service';
 
 const indexComposer = new Composer();
 
@@ -15,9 +16,9 @@ indexComposer.on('text', async (ctx) => {
 });
 
 indexComposer.action(
-  foodActions[FOOD_ACTIONS.CREATE_FOOD]['matcher'],
+  categoryActions[CATEGORY_ACTIONS.CREATE_CATEGORY]['matcher'],
   async (ctx) => {
-    await ctx.reply('Yangi mahsulotni nomini kiriting');
+    await ctx.reply('Yangi kategoriyani nomini kiriting');
 
     await ctx['wizard'].next();
   },
@@ -28,7 +29,7 @@ const getNameComposer = new Composer();
 getNameComposer.on('text', async (ctx) => {
   ctx['scene'].state = { name: ctx.text };
 
-  await ctx.reply('📥 Toifani rasmini yuklang');
+  await ctx.reply('📥 Kategoriyani rasmini yuklang');
 
   await ctx['wizard'].next();
 });
@@ -60,7 +61,7 @@ getImageComposer.on('photo', async (ctx) => {
         "Rasmni yuklashda hatolik yuz berdi iltimos boshqa rasm yuklab ko'ring",
       );
 
-      console.error(error);
+      log('ERROR', 'CATEGORY_SCENE', error.toString());
     },
   });
 });

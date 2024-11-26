@@ -62,14 +62,14 @@ export const foodActions = actions(FOOD_ACTIONS)({
         ...adminActions,
       })(keyboardActions, { foodId });
 
-      const foodInfo = `🍔 Mahsulot: ${foundFood.name}\n\n💲Narxi: ${foundFood.price}\n\n❤️ Layklar: ${foundFood.likes}\n\n`;
+      const foodInfo = `🍔 Mahsulot: ${foundFood.name}\n\n 📂 Kategoriya: ${foundFood.category['name']}\n\n💲Narxi: ${foundFood.price}\n\n❤️ Layklar: ${foundFood.likes}\n\n`;
 
       await ctx.editMessageMedia(
         {
           type: 'photo',
           media: {
             url:
-              <string>foundFood.image ||
+              // <string>foundFood.image ||
               'https://th.bing.com/th/id/OIP.kTvs-fiEdCw7rldk41rhKwHaEo?w=2560&h=1600&rs=1&pid=ImgDetMain',
           },
           caption: foodInfo,
