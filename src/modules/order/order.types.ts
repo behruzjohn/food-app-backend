@@ -8,7 +8,7 @@ export const orderTypes = gql`
 
   type Order {
     _id: ID
-    totalPrice: Int
+    totalPrice: Float
     status: StatusEnum
     address: [Float]
     foods: [CartItem]

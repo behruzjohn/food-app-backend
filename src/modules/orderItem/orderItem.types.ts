@@ -4,7 +4,7 @@ export const orderItem = gql`
   type OrderItem {
     _id: ID
     food: ID
-    price: Int
+    price: Float
     quantity: Int
     order: ID
   }
