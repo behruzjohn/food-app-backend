@@ -40,7 +40,7 @@ export const foodActions = actions(FOOD_ACTIONS)({
         { foodId },
       );
 
-      ctx.editMessageText(
+      ctx.reply(
         `Mahsulot "${deletedFood.name}" muvaffaqiyatli o'chirildi`,
         Markup.inlineKeyboard(controlKeyboard, { columns: 2 }),
       );
@@ -69,7 +69,7 @@ export const foodActions = actions(FOOD_ACTIONS)({
           type: 'photo',
           media: {
             url:
-              // <string>foundFood.image ||
+              <string>foundFood.image ||
               'https://th.bing.com/th/id/OIP.kTvs-fiEdCw7rldk41rhKwHaEo?w=2560&h=1600&rs=1&pid=ImgDetMain',
           },
           caption: foodInfo,

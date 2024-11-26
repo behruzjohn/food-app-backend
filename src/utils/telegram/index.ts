@@ -40,7 +40,15 @@ export const savePhotoFile = async (
   response.data.pipe(writer);
 
   writer.on('finish', () => {
-    onSuccess(ctx, savePath);
+    const appUrl = `http://${process.env.HOST || `localhost:${process.env.PORT}`}`;
+
+    const fileUrl = path.join(
+      appUrl,
+      'uploads',
+      `${fileId}.${path.basename(file_path).split('.')[1]}`,
+    );
+
+    onSuccess(ctx, fileUrl);
   });
 
   writer.on('error', (error) => {

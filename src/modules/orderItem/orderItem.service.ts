@@ -1,3 +1,4 @@
+import { UserInputError } from 'apollo-server-core';
 import { CartItem } from '../cartItem/cartItem.model';
 import { OrderItem } from './orderItem.model';
 import { OrderItemOutput } from './outputs/orderItem.output';
@@ -7,15 +8,20 @@ export const addCartItemToOrderItem = async ({
   userId,
   orderId,
 }: OrderItemProps): Promise<OrderItemOutput> => {
-  const foundCartItem = await CartItem.find({ user: userId });
-  const createdOrderItem = <(typeof OrderItem.schema.obj)[]>(
+  const foundCartItems = await CartItem.find({ user: userId });
+
+  if (!foundCartItems.length) {
+    throw new UserInputError('There are no items in cart');
+  }
+
+  const createdOrderItems = <(typeof OrderItem.schema.obj)[]>(
     await OrderItem.insertMany(
-      foundCartItem.map(({ _id, ...cartProduct }) => ({
-        ...cartProduct,
+      foundCartItems.map(({ _id, ...cartItem }) => ({
+        ...cartItem,
         order: orderId,
       })),
     )
   );
 
-  return { payload: createdOrderItem };
+  return { payload: createdOrderItems };
 };

@@ -2,6 +2,6 @@ export const ADMIN_ACTIONS = {
   COURIERS: 'couriers',
   FOODS: 'foods',
   CATEGORIES: 'categories',
-  STATISTICS: 'statistics',
+  DASHBOARD: 'dashboard',
   BACK: 'back',
 };

@@ -73,7 +73,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
       const keyboard = Markup.inlineKeyboard(controlKeyboard, { columns: 2 });
 
       const fileUrl =
-        // <string>foundCategory.image ||
+        <string>foundCategory.image ||
         'https://th.bing.com/th/id/OIP.kTvs-fiEdCw7rldk41rhKwHaEo?w=2560&h=1600&rs=1&pid=ImgDetMain';
 
       const isUrlExists =

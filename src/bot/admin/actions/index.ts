@@ -135,13 +135,11 @@ export const adminActions = actions(ADMIN_ACTIONS)({
     },
   },
 
-  STATISTICS: {
+  DASHBOARD: {
     title: '📊 Statistika',
-    getCallbackData: () => `_statistics`,
-    matcher: /_statistics/,
-    async handler(ctx) {
-      const foodsStatisticsImageUrl = {};
-    },
+    getCallbackData: () => `_dashboard`,
+    matcher: /_dashboard/,
+    async handler(ctx) {},
   },
 
   BACK: {
