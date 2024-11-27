@@ -36,24 +36,34 @@ export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderOutput> => {
-  const { payload } = await cartItemService.getCartItemsByUserId({ user });
-  const createdOrder = await Order.create({
-    createdBy: user._id,
-    address: order.address,
-    totalPrice: payload.totalPrice,
-  });
-  await addCartItemToOrderItem({ userId: user._id, orderId: createdOrder._id });
-  await cartItemService.clearUserCart({ user });
+  try {
+    const { payload } = await cartItemService.getCartItemsByUserId({ user });
 
-  const populatedOrder = await createdOrder.populate(POPULATIONS.order);
+    const createdOrder = await Order.create({
+      createdBy: user._id,
+      address: order.address,
+      totalPrice: payload.totalPrice,
+    });
 
-  const message = { payload: populatedOrder };
+    await addCartItemToOrderItem({
+      userId: user._id,
+      orderId: createdOrder._id,
+    });
 
-  pubsub.publish(EVENTS.CREATE_ORDER, {
-    [SUBSCRIPTIONS.CREATE_ORDER]: message,
-  });
+    await cartItemService.clearUserCart({ user });
 
-  return { payload: createdOrder };
+    const populatedOrder = await createdOrder.populate(POPULATIONS.order);
+
+    const message = { payload: populatedOrder };
+
+    pubsub.publish(EVENTS.CREATE_ORDER, {
+      [SUBSCRIPTIONS.CREATE_ORDER]: message,
+    });
+
+    return { payload: createdOrder };
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getOrderById = async ({

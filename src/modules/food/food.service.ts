@@ -15,6 +15,7 @@ import { UpdateFoodProps } from './props/updateFood.props';
 import { Types } from 'mongoose';
 import { FilterQuery } from 'mongoose';
 import { UserInputError } from 'apollo-server-core';
+import { DEFAULT_PAGINATION_LIMIT } from 'src/constants/pagination';
 
 export const createFood = async ({
   image,
@@ -143,12 +144,13 @@ export const removeFoodFromFavorites = async (
 export const getAllFoods = async ({
   name,
   categories,
-  limit,
-  page,
+  limit = DEFAULT_PAGINATION_LIMIT,
+  page = 1,
 }: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
   const searchConditions: FilterQuery<any>[] = [];
+
   if (nameRegex) {
     searchConditions.push(
       { shortName: { $regex: nameRegex } },
