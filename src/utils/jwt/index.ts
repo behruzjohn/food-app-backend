@@ -1,7 +1,13 @@
 import * as jwt from 'jsonwebtoken';
+import { BadUserInputError } from 'src/common';
 
 export function decodeToken<T extends Record<string, unknown>>(token: string) {
-  return jwt.decode(token) as Partial<T> & jwt.JwtPayload;
+  try {
+    return jwt.verify(token || '', process.env.SECRET_KEY) as Partial<T> &
+      jwt.JwtPayload;
+  } catch (error) {
+    throw new BadUserInputError('Token is invalid!');
+  }
 }
 
 export function isTokenExpired({ exp = 0 }: jwt.JwtPayload) {

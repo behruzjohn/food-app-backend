@@ -9,12 +9,26 @@ import { CourierOutput } from './outputs/courier.output';
 import { CouriersOutput } from './outputs/couriers.output';
 import { GetCouriersProps } from './props/getCourier.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
+import { PipelineStage } from 'mongoose';
+import { POPULATIONS } from 'src/constants/populations';
+
+export const getCourierById = async ({ courierId }: GetCourierByIdProps) => {
+  const foundCourier = await Courier.findById(courierId).populate(
+    POPULATIONS.courier,
+  );
+
+  if (!foundCourier) {
+    throw new UserInputError('Courier is not found');
+  }
+
+  return { payload: foundCourier };
+};
 
 export const getCouriers = async ({
   name,
   phone,
 }: GetCouriersProps): Promise<CouriersOutput> => {
-  const couriers = await Courier.aggregate([
+  const aggregationPipeline: PipelineStage[] = [
     {
       $lookup: {
         from: 'users',
@@ -26,14 +40,29 @@ export const getCouriers = async ({
     {
       $unwind: '$user',
     },
-    {
-      $match: {
-        $or: [{ 'user.name': name }, { 'user.phone': phone }],
-      },
-    },
-  ]);
+  ];
 
-  return { payload: couriers };
+  if (name || phone) {
+    const userFilter = [];
+
+    if (name) {
+      userFilter.push({ 'user.name': name });
+    }
+
+    if (phone) {
+      userFilter.push({ 'user.phone': phone });
+    }
+
+    aggregationPipeline.push({
+      $match: {
+        $or: userFilter,
+      },
+    });
+  }
+
+  const foundCouriers = await Courier.aggregate(aggregationPipeline);
+
+  return { payload: foundCouriers };
 };
 
 export const deleteCourierById = async ({

@@ -1,6 +1,6 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
 export type UpdateCartFoodQuantityProps = {
-  food: Types.ObjectId;
+  cartItemId: Types.ObjectId;
   quantity: number;
 };

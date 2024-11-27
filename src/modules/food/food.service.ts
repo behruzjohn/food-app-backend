@@ -1,6 +1,5 @@
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
-import { saveFile } from 'src/helpers/file';
 import { PaginateProps } from 'src/props/paginate.props';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
@@ -13,20 +12,24 @@ import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
 import { UpdateFoodProps } from './props/updateFood.props';
+import { Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
+import { UserInputError } from 'apollo-server-core';
+import { DEFAULT_PAGINATION_LIMIT } from 'src/constants/pagination';
 
 export const createFood = async ({
   image,
   food,
 }: CreateFoodProps): Promise<FoodOutput> => {
-  let imagePath: string;
+  const foundCategory = await Category.findById(food.category);
 
-  if (image) {
-    imagePath = await saveFile(image);
+  if (!foundCategory) {
+    throw new UserInputError('Category is not found');
   }
 
   const createdFood = await Food.create({
     ...food,
-    image: imagePath,
+    image,
   });
 
   if (!createdFood) {
@@ -54,7 +57,7 @@ export const updateFoodById = async ({
 export const getFoodById = async ({
   foodId,
 }: GetFoodByIdProps): Promise<FoodOutput> => {
-  const foundFood = await Food.findById(foodId);
+  const foundFood = await Food.findById(foodId).populate(POPULATIONS.food);
 
   if (!foundFood) {
     throw new BadRequestError('Food not found');
@@ -66,7 +69,9 @@ export const getFoodById = async ({
 export const deleteFoodById = async ({
   foodId,
 }: GetFoodByIdProps): Promise<FoodOutput> => {
-  const deletedFood = await Food.findByIdAndDelete(foodId);
+  const deletedFood = await Food.findByIdAndDelete(foodId).populate(
+    POPULATIONS.food,
+  );
 
   if (!deletedFood) {
     throw new BadUserInputError('Food not found');
@@ -139,20 +144,12 @@ export const removeFoodFromFavorites = async (
 export const getAllFoods = async ({
   name,
   categories,
-  limit,
-  page,
-}: GetAllFoodsProps): Promise<FoodsOutput> => {
+  limit = DEFAULT_PAGINATION_LIMIT,
+  page = 1,
+}: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
-  if (name && !categories?.length) {
-    const matchedCategory = await Category.find({
-      name: { $regex: new RegExp(name, 'i') },
-    });
-
-    categories = matchedCategory.map((category) => category._id);
-  }
-
-  const searchConditions = [];
+  const searchConditions: FilterQuery<any>[] = [];
 
   if (nameRegex) {
     searchConditions.push(
@@ -162,14 +159,65 @@ export const getAllFoods = async ({
   }
 
   if (categories?.length) {
-    searchConditions.push({ category: { $in: categories } });
+    searchConditions.push({
+      category: { $in: categories.map((id) => new Types.ObjectId(id)) },
+    });
   }
 
-  const { docs: foundFoods, ...pagination } = await Food.find(
-    searchConditions.length ? { $or: searchConditions } : {},
-  )
-    .populate(POPULATIONS.food)
-    .paginate({ limit, page });
+  const aggregationPipeline: Parameters<typeof Food.aggregate>['0'] = [
+    ...(searchConditions.length ? [{ $match: { $or: searchConditions } }] : []),
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        as: 'categoryInfo',
+      },
+    },
+    { $unwind: '$categoryInfo' },
+    {
+      $facet: {
+        docs: [
+          { $skip: (page - 1) * limit },
+          { $limit: limit },
+          {
+            $project: {
+              _id: 1,
+              shortName: 1,
+              name: 1,
+              image: 1,
+              description: 1,
+              price: 1,
+              discount: 1,
+              likes: 1,
+              category: '$categoryInfo',
+            },
+          },
+        ],
+        total: [{ $count: 'count' }],
+      },
+    },
+  ];
 
-  return { payload: foundFoods, ...pagination };
+  const [result] = await Food.aggregate(aggregationPipeline);
+
+  const docs = result?.docs || [];
+  const totalDocs = result?.total[0]?.count || 0;
+  const totalPages = Math.ceil(totalDocs / limit);
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < totalPages;
+  const offset = (page - 1) * limit;
+
+  return {
+    payload: docs,
+    totalDocs,
+    limit,
+    page,
+    totalPages,
+    hasPrevPage,
+    hasNextPage,
+    offset,
+    prevPage: hasPrevPage ? page - 1 : null,
+    nextPage: hasNextPage ? page + 1 : null,
+  };
 };

@@ -10,4 +10,9 @@ export const paginationType = `
   nextPage: Int
 `;
 
+export const timestampsType = `
+  createdAt: Date
+  updatedAt: Date
+`;
+
 export const paginationProps = 'page: Int, limit: Int';

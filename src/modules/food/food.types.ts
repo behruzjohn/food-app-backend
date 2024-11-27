@@ -18,12 +18,13 @@ export const foodTypes = gql`
     payload: Food
   }
 
-  type FoodsOutput {
+  type PaginatedFoodsOutput {
     payload: [Food]
+    ${paginationType}
   }
 
-  type FoodDeleteOutput {
-    payload: String
+  type FoodsOutput {
+    payload: [Food]
   }
 
   input FoodInput {
@@ -43,7 +44,8 @@ export const foodTypes = gql`
     shortName: String
     category: ID
   }
-  type PagenatedFoodOutput{
+  
+  type PaginatedFoodsOutput {
     payload: [Food]
     ${paginationType}
   }

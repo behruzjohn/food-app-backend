@@ -10,9 +10,11 @@ export const createCategory = async ({
   category,
 }: CreateCategoryProps): Promise<CategoryOutput> => {
   const createdCategory = await Category.create(category);
+
   if (!createdCategory) {
     throw new BadRequestError('Error during creating category!');
   }
+
   return { payload: createdCategory };
 };
 

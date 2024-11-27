@@ -6,5 +6,5 @@ const categorySchema = new Schema({
   image: { type: String, required: true },
 });
 
-const Category = model(MODELS.CATEGORIES, categorySchema);
+const Category = model(MODELS.CATEGORY, categorySchema);
 export default Category;

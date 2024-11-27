@@ -3,5 +3,5 @@ import { PaginateProps } from 'src/props/paginate.props';
 
 export type GetAllFoodsProps = {
   name?: string;
-  categories: Types.ObjectId[];
+  categories?: Types.ObjectId[];
 } & PaginateProps;

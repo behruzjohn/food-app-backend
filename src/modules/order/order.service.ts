@@ -1,4 +1,5 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
+import { RootFilterQuery } from 'mongoose';
 import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { POPULATIONS } from 'src/constants/populations';
@@ -8,18 +9,20 @@ import { pubsub } from 'src/graphql';
 import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
-import { getCartItemsByUserId } from '../cartItem/cartItem.service';
+import { addCartItemToOrderItem } from '../orderItem/orderItem.service';
 import { Order } from './order.model';
 import { OrderOutput } from './outputs/order.output';
 import { OrdersOutput } from './outputs/orders.output';
 import { CreateOrderProps } from './props/createOrder.props';
 import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
+import { GetOrdersByUserIdProps } from './props/getOrdersByUserId.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.cooking,
+    cookedAt: new Date(),
   }).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
@@ -33,26 +36,34 @@ export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderOutput> => {
-  const { payload } = await getCartItemsByUserId({ user });
+  try {
+    const { payload } = await cartItemService.getCartItemsByUserId({ user });
 
-  const createdOrder = await Order.create({
-    createdBy: user._id,
-    to: order.to,
-    foods: payload.items.map((item) => item['_id']),
-    totalPrice: payload.totalPrice,
-  });
+    const createdOrder = await Order.create({
+      createdBy: user._id,
+      address: order.address,
+      totalPrice: payload.totalPrice,
+    });
 
-  await cartItemService.clearUserCart({ user });
+    await addCartItemToOrderItem({
+      userId: user._id,
+      orderId: createdOrder._id,
+    });
 
-  const populatedOrder = await createdOrder.populate(POPULATIONS.order);
+    await cartItemService.clearUserCart({ user });
 
-  const message = { payload: populatedOrder };
+    const populatedOrder = await createdOrder.populate(POPULATIONS.order);
 
-  pubsub.publish(EVENTS.CREATE_ORDER, {
-    [SUBSCRIPTIONS.CREATE_ORDER]: message,
-  });
+    const message = { payload: populatedOrder };
 
-  return { payload: createdOrder };
+    pubsub.publish(EVENTS.CREATE_ORDER, {
+      [SUBSCRIPTIONS.CREATE_ORDER]: message,
+    });
+
+    return { payload: createdOrder };
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getOrderById = async ({
@@ -71,11 +82,20 @@ export const updateOrderStatusById = async ({
   orderId,
   status,
 }: UpdateOrderStatusProps): Promise<OrderOutput> => {
-  const updatedOrder = await Order.findByIdAndUpdate(
-    orderId,
-    { status },
-    { new: true },
-  ).populate(POPULATIONS.order);
+  const orderStatus = {
+    [StatusEnum.delivering]: 'cookedAt',
+    [StatusEnum.received]: 'receivedAt',
+  };
+
+  const updateData = { status };
+
+  if (orderStatus[status]) {
+    updateData[orderStatus[status]] = new Date();
+  }
+
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, updateData, {
+    new: true,
+  }).populate(POPULATIONS.order);
 
   if (!updatedOrder) {
     throw new ApolloError('Order not found!');
@@ -97,6 +117,7 @@ export const deliverOrderById = async ({
     orderId,
     {
       status: StatusEnum.delivering,
+      cookedAt: new Date(),
     },
     { new: true },
   ).populate(POPULATIONS.order);
@@ -118,6 +139,7 @@ export const receiveOrderById = async ({
 }: GetOrderByIdProps): Promise<OrderOutput> => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
     status: StatusEnum.received,
+    receivedAt: new Date(),
   }).populate(POPULATIONS.order);
 
   const message = { payload: updatedOrder };
@@ -153,7 +175,7 @@ export const getOrders = async ({
   limit,
   page,
 }: GetOrdersProps): Promise<Paginated<OrdersOutput>> => {
-  const filter: any = {};
+  const filter: unknown = {};
 
   if (Array.isArray(statuses) && statuses.length) {
     filter['$or'] = statuses.map((status) => ({ status }));
@@ -164,4 +186,20 @@ export const getOrders = async ({
     .paginate({ limit, page });
 
   return { payload: foundFoods, ...pagination };
+};
+
+export const getOrdersByUserId = async (
+  { status }: GetOrdersByUserIdProps,
+  { user }: Context,
+): Promise<OrdersOutput> => {
+  const statusCheck: RootFilterQuery<typeof Order> = {
+    createdBy: user._id,
+  };
+  if (status !== 'All') {
+    statusCheck.status = status;
+  }
+
+  const foundOrders = await Order.find(statusCheck).populate(POPULATIONS.order);
+
+  return { payload: foundOrders };
 };
