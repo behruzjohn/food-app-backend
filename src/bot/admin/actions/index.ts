@@ -135,13 +135,6 @@ export const adminActions = actions(ADMIN_ACTIONS)({
     },
   },
 
-  DASHBOARD: {
-    title: '📊 Statistika',
-    getCallbackData: () => `_dashboard`,
-    matcher: /_dashboard/,
-    async handler(ctx) {},
-  },
-
   BACK: {
     title: '🔙 Orqaga',
     getCallbackData: () => '_back',
