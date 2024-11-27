@@ -54,7 +54,7 @@ export const courierActions = actions(COURIER_ACTIONS)({
         ...adminActions,
       })(keyboardActions, { courierId });
 
-      const courierInfo = `🛵 Kurer: ${foundCourier.user['name']}\n\nTelefon raqami: ${foundCourier.user['phone']}\n\n ${isDelivering ? '🟢 Holati: buyurtmani yetkazib bermoqda' : "⚪ Holati: bo'sh"}`;
+      const courierInfo = `🛵 Kurer: ${foundCourier.user['name']}\n\n📞 Telefon raqami: ${foundCourier.user['phone']}\n\n ${isDelivering ? '🟢 Holati: buyurtmani yetkazib bermoqda' : "⚪ Holati: bo'sh"}`;
 
       await ctx.editMessageText(
         courierInfo,

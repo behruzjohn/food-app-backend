@@ -6,5 +6,5 @@ export interface FoodInput {
   description?: string;
   price: number;
   discount: number;
-  categories: Types.ObjectId[];
+  category: Types.ObjectId;
 }

@@ -40,7 +40,7 @@ export const foodActions = actions(FOOD_ACTIONS)({
         { foodId },
       );
 
-      ctx.editMessageText(
+      ctx.reply(
         `Mahsulot "${deletedFood.name}" muvaffaqiyatli o'chirildi`,
         Markup.inlineKeyboard(controlKeyboard, { columns: 2 }),
       );
@@ -62,7 +62,7 @@ export const foodActions = actions(FOOD_ACTIONS)({
         ...adminActions,
       })(keyboardActions, { foodId });
 
-      const foodInfo = `🍔 Mahsulot: ${foundFood.name}\n\n💲Narxi: ${foundFood.price}\n\n❤️ Layklar: ${foundFood.likes}\n\n`;
+      const foodInfo = `🍔 Mahsulot: ${foundFood.name}\n\n 📂 Kategoriya: ${foundFood.category['name']}\n\n💲Narxi: ${foundFood.price}\n\n❤️ Layklar: ${foundFood.likes}\n\n`;
 
       await ctx.editMessageMedia(
         {

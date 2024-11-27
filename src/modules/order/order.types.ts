@@ -11,7 +11,7 @@ export const orderTypes = gql`
     totalPrice: Float
     status: StatusEnum
     address: [Float]
-    foods: [CartItem]
+    orderItems: [CartItem]
     createdBy: User
     ${timestampsType}
   }

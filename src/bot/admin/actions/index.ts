@@ -103,15 +103,21 @@ export const adminActions = actions(ADMIN_ACTIONS)({
   },
 
   CATEGORIES: {
-    title: '📂 Toifalar',
+    title: '📂 Kategoriyalar',
     getCallbackData: () => '_categories',
     matcher: /_categories/,
     async handler(ctx) {
       const { payload: foundCategories } = await getAllCategories();
 
-      const keyboardActions = [ADMIN_ACTIONS.BACK];
+      const keyboardActions = [
+        ADMIN_ACTIONS.BACK,
+        CATEGORY_ACTIONS.CREATE_CATEGORY,
+      ];
 
-      const controlKeyboard = makeActionsKeyboards.bind(this)(keyboardActions);
+      const controlKeyboard = makeActionsKeyboards.bind({
+        ...this,
+        ...categoryActions,
+      })(keyboardActions);
 
       const categoriesKeyboard = foundCategories.map((category) => ({
         text: category.name,
@@ -121,21 +127,11 @@ export const adminActions = actions(ADMIN_ACTIONS)({
       }));
 
       ctx.editMessageText(
-        `Toifalar`,
+        `Kategoriyalar`,
         Markup.inlineKeyboard([...controlKeyboard, ...categoriesKeyboard], {
           columns: 2,
         }),
       );
-    },
-  },
-
-  STATISTICS: {
-    title: '📊 Statistika',
-    getCallbackData: () => `_statistics`,
-    matcher: /_statistics/,
-    async handler(ctx) {
-      const foodsStatisticsImageUrl = ``;
-      // ctx.replyWithPhoto({url: })
     },
   },
 

@@ -1,7 +1,5 @@
-import { UserInputError } from 'apollo-server-core';
 import { BadRequestError, BadUserInputError, GraphQLError } from 'src/common';
 import { POPULATIONS } from 'src/constants/populations';
-import { saveFile } from 'src/helpers/file';
 import { PaginateProps } from 'src/props/paginate.props';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';
@@ -15,19 +13,17 @@ import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
 import { UpdateFoodProps } from './props/updateFood.props';
 import { Types } from 'mongoose';
+import { FilterQuery } from 'mongoose';
+import { UserInputError } from 'apollo-server-core';
+import { DEFAULT_PAGINATION_LIMIT } from 'src/constants/pagination';
 
 export const createFood = async ({
   image,
   food,
 }: CreateFoodProps): Promise<FoodOutput> => {
-  const foundCategories = await Category.find({
-    categories: { $in: food.categories || [] },
-  });
+  const foundCategory = await Category.findById(food.category);
 
-  if (
-    !foundCategories.length ||
-    foundCategories.length !== food.categories.length
-  ) {
+  if (!foundCategory) {
     throw new UserInputError('Category is not found');
   }
 
@@ -148,12 +144,13 @@ export const removeFoodFromFavorites = async (
 export const getAllFoods = async ({
   name,
   categories,
-  limit,
-  page,
+  limit = DEFAULT_PAGINATION_LIMIT,
+  page = 1,
 }: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
-  const searchConditions: any[] = [];
+  const searchConditions: FilterQuery<any>[] = [];
+
   if (nameRegex) {
     searchConditions.push(
       { shortName: { $regex: nameRegex } },
@@ -163,20 +160,21 @@ export const getAllFoods = async ({
 
   if (categories?.length) {
     searchConditions.push({
-      categories: { $in: categories },
+      category: { $in: categories.map((id) => new Types.ObjectId(id)) },
     });
   }
 
-  const aggregationPipeline = [
+  const aggregationPipeline: Parameters<typeof Food.aggregate>['0'] = [
     ...(searchConditions.length ? [{ $match: { $or: searchConditions } }] : []),
     {
       $lookup: {
         from: 'categories',
-        localField: 'categories',
+        localField: 'category',
         foreignField: '_id',
-        as: 'categoriesInfo',
+        as: 'categoryInfo',
       },
     },
+    { $unwind: '$categoryInfo' },
     {
       $facet: {
         docs: [
@@ -192,7 +190,7 @@ export const getAllFoods = async ({
               price: 1,
               discount: 1,
               likes: 1,
-              categories: 1,
+              category: '$categoryInfo',
             },
           },
         ],

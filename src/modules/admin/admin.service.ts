@@ -9,6 +9,7 @@ import { GetOrderByIdProps } from '../order/props/getOrder.props';
 import { UserOutput } from '../user/outputs/user.output';
 import { User } from '../user/user.model';
 import { CreateCourierProps } from './props/createCourier.props';
+import { OrderItem } from '../orderItem/orderItem.model';
 
 export const attachOrderToCourier = async ({
   orderId,
@@ -32,6 +33,36 @@ export const createCourier = async ({
 
   return { payload: updatedUser };
 };
+
+export async function getReceivedOrdersDashboard() {
+  const pipeline: Parameters<typeof OrderItem.aggregate>['0'] = [
+    {
+      $lookup: {
+        from: 'foods',
+        localField: 'food',
+        foreignField: '_id',
+        as: 'foodDetails',
+      },
+    },
+
+    { $unwind: '$foodDetails' },
+
+    {
+      $group: {
+        _id: '$food',
+        name: { $first: '$foodDetails.name' },
+        totalSold: { $sum: '$quantity' },
+        totalRevenue: { $sum: { $multiply: ['$quantity', '$price'] } },
+      },
+    },
+
+    { $sort: { totalSold: -1 } },
+  ];
+
+  const receivedOrders = await OrderItem.aggregate(pipeline);
+
+  return { payload: receivedOrders };
+}
 
 const getLastMonth = (month = new Date()) => {
   const lastMonthDate = new Date(month);

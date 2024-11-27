@@ -11,14 +11,12 @@ import { ADMIN_ACTIONS } from '../actions';
 import { adminActions } from '..';
 import axios, { HttpStatusCode } from 'axios';
 import { Types } from 'mongoose';
-import Category from 'src/modules/category/category.model';
-import { Food } from 'src/modules/food/food.model';
 import { FoodInput } from 'src/modules/food/inputs/foodCreate.input';
 import { createFood } from 'src/modules/food/food.service';
 
 export const categoryActions = actions(CATEGORY_ACTIONS)({
   CREATE_CATEGORY: {
-    title: "➕ Toifa qo'shish",
+    title: "➕ Kategoriya qo'shish",
     getCallbackData: () => '_createcategory',
     matcher: /_createcategory/,
     handler(ctx) {
@@ -27,7 +25,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
   },
 
   UPDATE_CATEGORY: {
-    title: '✏️ Toifa yangilash',
+    title: '✏️ Kategoriya yangilash',
     getCallbackData: ({ categoryId }) => `_updatecategory-${categoryId}`,
     matcher: /_updatecategory-(.+)/,
     handler(ctx) {
@@ -46,7 +44,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
         categoryId,
       });
 
-      ctx.editMessageText(`Toifa ${deletedCategory.name} o'chirildi`);
+      ctx.editMessageText(`Kategoriya ${deletedCategory.name} o'chirildi`);
     },
   },
 
@@ -58,7 +56,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
 
       const { payload: foundCategory } = await getCategoryById({ categoryId });
 
-      const categoryInfo = `Toifa: ${foundCategory.name}`;
+      const categoryInfo = `Kategoriya: ${foundCategory.name}`;
 
       const keyboardActions = [
         ADMIN_ACTIONS.BACK,
@@ -87,9 +85,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
           {
             type: 'photo',
             media: {
-              url:
-                <string>foundCategory.image ||
-                'https://th.bing.com/th/id/OIP.kTvs-fiEdCw7rldk41rhKwHaEo?w=2560&h=1600&rs=1&pid=ImgDetMain',
+              url: fileUrl,
             },
             caption: categoryInfo,
           },
@@ -177,7 +173,7 @@ export const categoryActions = actions(CATEGORY_ACTIONS)({
       >ctx.scene['state'];
 
       await createFood({
-        food: { ...foodData, categories: selectedCategories },
+        food: { ...foodData, category: selectedCategories[0] },
         image: filePath,
       });
 
