@@ -5,7 +5,7 @@ import { EVENTS } from 'src/constants/events';
 import { POPULATIONS } from 'src/constants/populations';
 import { SUBSCRIPTIONS } from 'src/constants/subscriptions';
 import { StatusEnum } from 'src/enums/status.enum';
-import { pubsub } from 'src/graphql';
+import { pubsub } from 'src/configs/graphql';
 import * as cartItemService from 'src/modules/cartItem/cartItem.service';
 import { Context } from 'src/types/context';
 import { Paginated } from 'src/types/paginated';

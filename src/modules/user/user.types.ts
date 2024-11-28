@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-core';
 import { RoleEnum } from 'src/enums/role.enum';
-import { timestampsType } from 'src/graphql/types/common';
+import { timestampsType } from 'src/configs/graphql/types/common';
 import { createGraphQLEnum } from 'src/utils/schema';
 
 export const userTypes = gql`

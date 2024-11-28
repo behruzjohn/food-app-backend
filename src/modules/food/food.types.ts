@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-core';
-import { paginationType } from 'src/graphql/types/common';
+import { paginationType } from 'src/configs/graphql/types/common';
 
 export const foodTypes = gql`
   type Food {

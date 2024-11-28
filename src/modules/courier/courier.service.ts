@@ -1,6 +1,6 @@
 import { UserInputError } from 'apollo-server-core';
 import { EVENTS } from 'src/constants/events';
-import { pubsub } from 'src/graphql';
+import { pubsub } from 'src/configs/graphql';
 import { Context } from 'src/types/context';
 import { Order } from '../order/order.model';
 import { GetOrderByIdProps } from '../order/props/getOrder.props';

@@ -5,7 +5,7 @@ import { CategoryInput } from 'src/modules/category/inputs/category.input';
 import { createCategory } from 'src/modules/category/category.service';
 import { CATEGORY_ACTIONS } from 'src/bot/admin/actions/category/category.actions';
 import { categoryActions } from 'src/bot/admin/actions/category';
-import { log } from 'src/service/logger.service';
+import { logger } from 'src/services/logger.service';
 
 const indexComposer = new Composer();
 
@@ -61,7 +61,7 @@ getImageComposer.on('photo', async (ctx) => {
         "Rasmni yuklashda hatolik yuz berdi iltimos boshqa rasm yuklab ko'ring",
       );
 
-      log('ERROR', 'CATEGORY_SCENE', error.toString());
+      logger.error('CATEGORY_SCENE', error.toString());
     },
   });
 });

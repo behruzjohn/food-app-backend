@@ -1,19 +1,19 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { apolloServer } from './servers/apollo';
-import { startWsServer } from './servers/ws';
+import { apolloServer } from './configs/servers/apollo';
+import { startWsServer } from './configs/servers/ws';
 import { bot } from './bot';
-import { log } from './service/logger.service';
+import { logger } from './services/logger.service';
 
 dotenv.config();
 
 process.on('uncaughtException', (err) => {
-  log('ERROR', 'Uncaught Exception', err.message);
-  log('ERROR', 'Error stack', err.stack);
+  logger.error('Uncaught Exception', err.message);
+  logger.error('Error stack', err.stack);
 });
 
 process.on('unhandledRejection', (reason) => {
-  log('ERROR', 'Unhandled Rejection', reason.toString());
+  logger.error('Unhandled Rejection', reason.toString());
 });
 
 async function bootstrap() {
@@ -24,24 +24,24 @@ async function bootstrap() {
     await mongoose.connect(<string>process.env.DATABASE_URL);
 
     const startedServer = apolloServer.listen(PORT, () => {
-      log('SUCCESS', 'Apollo', `Server started on http://${HOST}`);
+      logger.success('Apollo', `Server started on http://${HOST}`);
     });
 
     startedServer.on('error', (error) => {
-      log('ERROR', 'Apollo', error.message);
+      logger.error('Apollo', error.message);
     });
 
     startWsServer();
 
     bot.catch((error) => {
-      log('ERROR', 'BOT', error.toString());
+      logger.error('Bot', error.toString());
     });
 
     await bot.launch(() => {
-      log('SUCCESS', 'Telegraf', `Bot started successfully`);
+      logger.success('Telegraf', `Bot started successfully`);
     });
   } catch (error) {
-    log('ERROR', 'EXECUTION', error);
+    logger.error('Execution', error);
   }
 }
 
