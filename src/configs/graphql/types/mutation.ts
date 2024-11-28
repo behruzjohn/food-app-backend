@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-core';
-import { MUTATIONS } from '../../constants/mutations';
+import { MUTATIONS } from '../../../constants/mutations';
 
 export const mutationType = gql`
   type Mutation {

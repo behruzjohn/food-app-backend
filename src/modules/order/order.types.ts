@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-core';
 import { StatusEnum } from 'src/enums/status.enum';
-import { timestampsType } from 'src/graphql/types/common';
+import { timestampsType } from 'src/configs/graphql/types/common';
 import { createGraphQLEnum } from 'src/utils/schema';
 
 export const orderTypes = gql`

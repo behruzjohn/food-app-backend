@@ -12,7 +12,7 @@ export function matchSha256Hash<
   }
 
   const content = Object.keys(data)
-    .filter((key) => key !== 'hash')
+    .filter((key) => data[key] && key !== 'hash')
     .sort()
     .map((key) => `${key}=${data[key]}`)
     .join('\n');

@@ -1,11 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import e from 'express';
-import { httpContext } from 'src/graphql/context/http.context';
-import { upload } from 'src/multer';
+import { httpContext } from 'src/configs/graphql/context/http.context';
+import { upload } from 'src/configs/multer';
 import { FILE_CATEGORIES } from 'src/constants/fileCategories';
 import { ROUTES } from 'src/constants/routes';
-import path from 'path';
 
 export const httpServer = express();
 

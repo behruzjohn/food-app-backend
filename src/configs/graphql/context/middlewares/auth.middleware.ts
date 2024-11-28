@@ -5,11 +5,11 @@ import { ENDPOINTS_PERMISSIONS } from 'src/constants/endpointsPermissions';
 import { RESOLVERS_PERMISSIONS } from 'src/constants/resolversPermissions';
 import { RoleEnum } from 'src/enums/role.enum';
 import { JWTAuthPayload } from 'src/types/auth';
-import { AUTH_TYPE } from '../../../constants/auth';
-import { PUBLIC_RESOLVERS } from '../../../constants/publicResolvers';
-import { User } from '../../../modules/user/user.model';
-import { Context } from '../../../types/context';
-import { decodeToken, isTokenExpired } from '../../../utils/jwt';
+import { AUTH_TYPE } from '../../../../constants/auth';
+import { PUBLIC_RESOLVERS } from '../../../../constants/publicResolvers';
+import { User } from '../../../../modules/user/user.model';
+import { Context } from '../../../../types/context';
+import { decodeToken, isTokenExpired } from '../../../../utils/jwt';
 
 export const authMiddleware = async (
   req: e.Request,

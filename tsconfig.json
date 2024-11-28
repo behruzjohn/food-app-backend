@@ -6,8 +6,8 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
-    "baseUrl": ".",
-    "rootDir": "."
+    "rootDir": ".",
+    "baseUrl": "."
   },
   "include": ["src/**/*.*"],
   "exclude": ["node_modules"]
