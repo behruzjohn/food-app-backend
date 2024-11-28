@@ -8,8 +8,8 @@ export const foodTypes = gql`
     name: String
     image: String
     description: String
-    price: Int
-    discount: Int
+    price: Float
+    discount: Float
     category: Category
     likes: Int
   }
@@ -28,18 +28,18 @@ export const foodTypes = gql`
   }
 
   input FoodInput {
-    price: Int!
+    price: Float!
     name: String!
-    discount: Int
+    discount: Float
     shortName: String
     description: String!
     category: ID!
   }
 
   input FoodUpdateInput {
-    price: Int
+    price: Float
     name: String
-    discount: Int
+    discount: Float
     description: String
     shortName: String
     category: ID

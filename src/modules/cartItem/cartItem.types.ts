@@ -5,14 +5,14 @@ export const cartItemTypes = gql`
     _id: ID
     food: Food
     quantity: Int
-    price: Int
-    discount: Int
+    price: Float
+    discount: Float
     user: ID
   }
 
   type Cart {
     items: [CartItem]
-    totalPrice: Int
+    totalPrice: Float
   }
 
   type CartOutput {
