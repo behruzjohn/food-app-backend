@@ -1,20 +1,22 @@
 import { AuthenticationError, UserInputError } from 'apollo-server-core';
-import e from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { BadUserInputError } from 'src/common';
-import { ENDPOINTS_PERMISSIONS } from 'src/constants/endpointsPermissions';
-import { RESOLVERS_PERMISSIONS } from 'src/constants/resolversPermissions';
-import { RoleEnum } from 'src/enums/role.enum';
 import { JWTAuthPayload } from 'src/types/auth';
-import { AUTH_TYPE } from '../../../../constants/auth';
-import { PUBLIC_RESOLVERS } from '../../../../constants/publicResolvers';
-import { User } from '../../../../modules/user/user.model';
-import { Context } from '../../../../types/context';
-import { decodeToken, isTokenExpired } from '../../../../utils/jwt';
+import { AUTH_TYPE } from 'src/constants/auth';
+import { PUBLIC_OPERATIONS } from 'src/constants/publicOperations';
+import { User } from 'src/modules/user/user.model';
+import { Context } from 'src/types/context';
+import { decodeToken, isTokenExpired } from 'src/utils/jwt';
+import { RoleEnum } from 'src/enums/role.enum';
+import { EXTRACTORS } from 'src/common/operation';
+import { PERMISSIONS } from 'src/constants/permissions';
 
 export const authMiddleware = async (
-  req: e.Request,
-  executeResolvers: string[],
-  lang: 'http' | 'graphql' = 'http',
+  permissions: typeof PERMISSIONS,
+  lang: 'http' | 'graphql' = 'graphql',
+  req: Request,
+  res?: Response,
+  next?: NextFunction,
 ): Promise<Context> => {
   const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
@@ -34,10 +36,14 @@ export const authMiddleware = async (
     foundUser = await User.findOne(queryFilter);
   }
 
-  const isAccessibleRequest = executeResolvers.every((resolver) => {
-    if (PUBLIC_RESOLVERS.has(resolver)) {
+  const executeOperations = EXTRACTORS[lang](req, res, next);
+
+  const isAccessibleRequest = executeOperations.every((operation) => {
+    if (PUBLIC_OPERATIONS[lang]?.permissions.has(operation)) {
       return true;
-    } else if (!foundUser) {
+    }
+
+    if (!foundUser) {
       throw new AuthenticationError('User is not found');
     }
 
@@ -53,11 +59,9 @@ export const authMiddleware = async (
       throw new AuthenticationError('Token expired');
     }
 
-    if (lang === 'graphql') {
-      return RESOLVERS_PERMISSIONS[<RoleEnum>foundUser.role]?.has(resolver);
-    } else {
-      return ENDPOINTS_PERMISSIONS[<RoleEnum>foundUser.role]?.has(
-        `${req.method}-${req.route}`,
+    if (permissions[<RoleEnum>foundUser.role]) {
+      return permissions[<RoleEnum>foundUser.role][lang].permissions.has(
+        operation,
       );
     }
   });

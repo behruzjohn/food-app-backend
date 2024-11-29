@@ -21,13 +21,13 @@ import { UpdateOrderStatusProps } from 'src/modules/order/props/updateOrder.prop
 import { UpdateUserProps } from 'src/modules/user/props/updateUser.props';
 import { UpdateUserPasswordProps } from 'src/modules/user/props/updateUserPassword.props';
 import { Context } from 'src/types/context';
-import * as adminService from '../../../modules/admin/admin.service';
-import * as authService from '../../../modules/auth/auth.service';
-import * as cartItemService from '../../../modules/cartItem/cartItem.service';
-import * as categoryService from '../../../modules/category/category.service';
-import * as courierService from '../../../modules/courier/courier.service';
-import * as foodService from '../../../modules/food/food.service';
-import * as userService from '../../../modules/user/user.service';
+import * as adminService from 'src/modules/admin/admin.service';
+import * as authService from 'src/modules/auth/auth.service';
+import * as cartItemService from 'src/modules/cartItem/cartItem.service';
+import * as categoryService from 'src/modules/category/category.service';
+import * as courierService from 'src/modules/courier/courier.service';
+import * as foodService from 'src/modules/food/food.service';
+import * as userService from 'src/modules/user/user.service';
 
 export const mutation = resolversHandlers(MUTATIONS)<
   Resolver<unknown, unknown>

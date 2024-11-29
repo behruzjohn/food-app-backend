@@ -1,5 +1,5 @@
 import { gql } from 'apollo-server-core';
-import { QUERIES } from '../../../constants/queries';
+import { QUERIES } from 'src/constants/queries';
 import { paginationProps } from './common';
 
 export const queryType = gql`

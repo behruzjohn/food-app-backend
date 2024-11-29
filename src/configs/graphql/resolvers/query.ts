@@ -13,13 +13,13 @@ import { GetOrdersByUserIdProps } from 'src/modules/order/props/getOrdersByUserI
 import { GetUserByIdProps } from 'src/modules/user/props/getUserById.props';
 import { GetUsersProps } from 'src/modules/user/props/getUsers.props';
 import { PaginateProps } from 'src/props/paginate.props';
-import * as authService from '../../../modules/auth/auth.service';
-import * as cartItemService from '../../../modules/cartItem/cartItem.service';
-import * as categoryService from '../../../modules/category/category.service';
-import * as courierService from '../../../modules/courier/courier.service';
-import * as foodService from '../../../modules/food/food.service';
-import * as orderService from '../../../modules/order/order.service';
-import * as userService from '../../../modules/user/user.service';
+import * as authService from 'src/modules/auth/auth.service';
+import * as cartItemService from 'src/modules/cartItem/cartItem.service';
+import * as categoryService from 'src/modules/category/category.service';
+import * as courierService from 'src/modules/courier/courier.service';
+import * as foodService from 'src/modules/food/food.service';
+import * as orderService from 'src/modules/order/order.service';
+import * as userService from 'src/modules/user/user.service';
 import { Context } from 'src/types/context';
 
 export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({

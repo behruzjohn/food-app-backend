@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { extractExecuteResolvers } from 'src/common';
 import { authMiddleware } from './middlewares/auth.middleware';
+import { PERMISSIONS } from 'src/constants/permissions';
 
 export async function subscriptionContext({
   connectionParams,
@@ -22,8 +23,9 @@ export async function subscriptionContext({
     const executeResolvers = extractExecuteResolvers(query);
 
     const authContext = await authMiddleware(
+      PERMISSIONS,
+      'graphql',
       mockRequest,
-      executeResolvers,
     ).catch((err) => {
       throw err;
     });

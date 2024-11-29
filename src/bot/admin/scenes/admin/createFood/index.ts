@@ -1,7 +1,7 @@
 import { SCENES } from 'src/constants/scenes';
 import { Composer, Markup, Scenes } from 'telegraf';
-import { foodActions } from '../../../actions/food';
-import { FOOD_ACTIONS } from '../../../actions/food/food.actions';
+import { foodActions } from 'src/bot/admin/actions/food';
+import { FOOD_ACTIONS } from 'src/bot/admin/actions/food/food.actions';
 import { initActions, savePhotoFile } from 'src/utils/telegram';
 import { FoodInput } from 'src/modules/food/inputs/foodCreate.input';
 import { categoryActions } from 'src/bot/admin/actions/category';

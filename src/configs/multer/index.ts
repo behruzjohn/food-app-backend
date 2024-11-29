@@ -3,7 +3,7 @@ import path from 'path';
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    cb(null, 'uploads/');
+    cb(null, 'public/uploads');
   },
   filename: (_, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -16,5 +16,5 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
   storage: storage,
-  limits: { fileSize: 10000000, files: 10 },
+  limits: { fileSize: 10000000 },
 });

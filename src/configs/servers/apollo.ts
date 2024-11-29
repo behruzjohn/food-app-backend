@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const server = new ApolloServer({
   schema,
-  context: httpContext,
+  context: ({ req }) => httpContext('graphql', req),
 });
 
 server

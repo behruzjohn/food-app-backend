@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import e from 'express';
-import { httpContext } from 'src/configs/graphql/context/http.context';
 import { upload } from 'src/configs/multer';
 import { FILE_CATEGORIES } from 'src/constants/fileCategories';
 import { ROUTES } from 'src/constants/routes';
+import { httpServerAuthMiddleware } from '../graphql/context/middlewares/httpServerAuth.middleware';
 
 export const httpServer = express();
 
@@ -15,31 +15,20 @@ httpServer.use(express.static('public'));
 
 httpServer.post(
   ROUTES.UPLOAD,
-  (req) => httpContext({ req }, 'http'),
-  (req: e.Request, res: e.Response) => {
-    const { category } = req.params;
+  httpServerAuthMiddleware,
+  (req: e.Request, res: e.Response, next) => {
+    const { category } = req.query;
 
-    if (!category || !FILE_CATEGORIES[category]) {
+    if (!category || !FILE_CATEGORIES[category + '']) {
       res.status(400).json({
         message: 'Please set file category',
       });
+
+      return;
     }
 
-    if (req.file) {
-      req.file.filename = FILE_CATEGORIES[category];
+    req.file = { ...req.file, filename: FILE_CATEGORIES[category + ''] };
 
-      upload.single('file')(req, res, () => {});
-
-      res.status(200).json({
-        message: 'File has uploaded successfully',
-        file: {
-          filename: req.file.filename,
-          mimetype: req.file.mimetype,
-          size: req.file.size,
-        },
-      });
-    } else {
-      res.status(400).json({ message: 'There are not any files found' });
-    }
+    upload.single('file')(req, res, next);
   },
 );

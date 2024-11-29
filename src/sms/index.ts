@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 import { PHONE_CONFIRMATION_CODE_LENGTH } from 'src/constants/auth';
+import { logger } from 'src/services/logger.service';
 import { generateRandomNumbers } from 'src/utils/crypto';
 
-export const sendSms = async (number: string) => {
+export const sendSms = async (phone: string) => {
   try {
     const code = generateRandomNumbers(PHONE_CONFIRMATION_CODE_LENGTH);
 
@@ -32,6 +33,6 @@ export const sendSms = async (number: string) => {
 
     return hash;
   } catch (error) {
-    console.log(error);
+    logger.error('SMS Sender', error);
   }
 };

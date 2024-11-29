@@ -12,8 +12,8 @@ process.on('uncaughtException', (err) => {
   logger.error('Error stack', err.stack);
 });
 
-process.on('unhandledRejection', (reason) => {
-  logger.error('Unhandled Rejection', reason.toString());
+process.on('unhandledRejection', (reason: string) => {
+  logger.error('Unhandled Rejection', reason);
 });
 
 async function bootstrap() {

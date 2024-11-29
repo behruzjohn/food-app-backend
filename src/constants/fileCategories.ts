@@ -1,4 +1,4 @@
 export const FILE_CATEGORIES = {
-  FOOD: 'food',
-  CATEGORY: 'category',
+  food: 'food',
+  category: 'category',
 };
