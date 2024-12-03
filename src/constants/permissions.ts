@@ -23,7 +23,7 @@ export const PERMISSIONS: Permissions = {
     ...resolvers(
       'CREATE_ORDER',
       'ATTACH_ORDER',
-      'GET_COURIER',
+      'GET_COURIERS',
       'GET_FOOD_BY_ID',
       'CREATE_ORDER',
       'CREATE_CART_ITEM',

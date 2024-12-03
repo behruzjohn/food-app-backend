@@ -51,7 +51,7 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_ALL_CATEGORIES: () => {
     return categoryService.getAllCategories();
   },
-  GET_COURIER: (_, args: GetCouriersProps) => {
+  GET_COURIERS: (_, args: GetCouriersProps) => {
     return courierService.getCouriers(args);
   },
   GET_ORDERS: (_, args: GetOrdersProps) => {

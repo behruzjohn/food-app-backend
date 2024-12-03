@@ -10,6 +10,7 @@ import { UserOutput } from '../user/outputs/user.output';
 import { User } from '../user/user.model';
 import { CreateCourierProps } from './props/createCourier.props';
 import { OrderItem } from '../orderItem/orderItem.model';
+import { CourierOutput } from '../courier/outputs/courier.output';
 
 export const attachOrderToCourier = async ({
   orderId,
@@ -20,7 +21,7 @@ export const attachOrderToCourier = async ({
 
 export const createCourier = async ({
   userId,
-}: CreateCourierProps): Promise<UserOutput> => {
+}: CreateCourierProps): Promise<CourierOutput> => {
   const updatedUser = await User.findByIdAndUpdate(userId, {
     role: RoleEnum.courier,
   });
@@ -29,9 +30,11 @@ export const createCourier = async ({
     throw new UserInputError('User not found');
   }
 
-  await Courier.create({ user: updatedUser._id });
+  const createdCourier = await Courier.create({ user: updatedUser._id });
 
-  return { payload: updatedUser };
+  return {
+    payload: { ...createdCourier, user: <any>updatedUser },
+  };
 };
 
 export async function getReceivedOrdersDashboard() {

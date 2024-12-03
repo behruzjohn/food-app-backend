@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { model, Schema, Types } from 'mongoose';
 import { MODELS } from 'src/constants/models';
 

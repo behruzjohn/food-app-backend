@@ -11,6 +11,7 @@ import { GetCouriersProps } from './props/getCourier.props';
 import { GetCourierByIdProps } from './props/getCourierById.props';
 import { PipelineStage } from 'mongoose';
 import { POPULATIONS } from 'src/constants/populations';
+import { BadUserInputError } from 'src/common';
 
 export const getCourierById = async ({ courierId }: GetCourierByIdProps) => {
   const foundCourier = await Courier.findById(courierId).populate(
@@ -69,6 +70,10 @@ export const deleteCourierById = async ({
   courierId,
 }: GetCourierByIdProps): Promise<CourierOutput> => {
   const deletedCourier = await Courier.findByIdAndDelete(courierId);
+
+  if (!deletedCourier) {
+    throw new BadUserInputError('Courier is not found');
+  }
 
   return { payload: deletedCourier };
 };
