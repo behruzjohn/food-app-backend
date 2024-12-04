@@ -16,9 +16,13 @@ import { Types } from 'mongoose';
 import { FilterQuery } from 'mongoose';
 import { UserInputError } from 'apollo-server-core';
 import { DEFAULT_PAGINATION_LIMIT } from 'src/constants/pagination';
+import { UPLOADS_PATH } from 'src/constants/staticFoldersPaths';
+import { FILE_CATEGORIES } from 'src/constants/fileCategories';
+import fs from 'fs';
+import path from 'path';
+import { createPublicFileUrl } from 'src/utils/file';
 
 export const createFood = async ({
-  image,
   food,
 }: CreateFoodProps): Promise<FoodOutput> => {
   const foundCategory = await Category.findById(food.category);
@@ -29,8 +33,28 @@ export const createFood = async ({
 
   const createdFood = await Food.create({
     ...food,
-    image,
   });
+
+  const foodsImages = fs.readdirSync(UPLOADS_PATH);
+
+  const uploadedFoodImage = foodsImages.find(
+    (name) => name.split('.')['0'] === FILE_CATEGORIES.food,
+  );
+
+  if (uploadedFoodImage) {
+    const foodImage = `food-${createdFood._id}.${path.extname(uploadedFoodImage)}`;
+
+    const foodImageFile = path.join(UPLOADS_PATH, uploadedFoodImage);
+    const foodImageNewFile = path.join(UPLOADS_PATH, foodImage);
+
+    fs.renameSync(foodImageFile, foodImageNewFile);
+
+    const foodImagePublicUrl = createPublicFileUrl(foodImage);
+
+    createdFood.image = foodImagePublicUrl;
+
+    await createdFood.save();
+  }
 
   if (!createdFood) {
     throw new BadRequestError('Something went wrong!');

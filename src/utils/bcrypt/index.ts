@@ -5,5 +5,5 @@ export const hash = (data: string, rounds: number = 10) => {
 };
 
 export const compareBcryptHash = (hash: string, data: string) => {
-  return bcrypt.compare(data, hash);
+  return bcrypt.compare(hash, data);
 };

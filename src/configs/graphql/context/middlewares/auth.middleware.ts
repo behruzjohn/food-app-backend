@@ -59,7 +59,10 @@ export const authMiddleware = async (
       throw new AuthenticationError('Token expired');
     }
 
-    if (permissions[<RoleEnum>foundUser.role]) {
+    if (
+      permissions[<RoleEnum>foundUser.role] &&
+      permissions[<RoleEnum>foundUser.role][lang]
+    ) {
       return permissions[<RoleEnum>foundUser.role][lang].permissions.has(
         operation,
       );

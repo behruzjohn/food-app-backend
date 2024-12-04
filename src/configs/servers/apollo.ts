@@ -5,7 +5,7 @@ import { createServer } from 'http';
 import { ROUTES } from 'src/constants/routes';
 import { schema } from 'src/configs/graphql';
 import { httpContext } from 'src/configs/graphql/context/http.context';
-import { httpServer } from './httpServer';
+import { httpServer } from './http';
 
 const app = express();
 

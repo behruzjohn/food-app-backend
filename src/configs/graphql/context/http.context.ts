@@ -10,5 +10,13 @@ export async function httpContext(
 ) {
   const authContext = await authMiddleware(PERMISSIONS, lang, req, res, next);
 
-  return { ...authContext };
+  const context = { ...authContext };
+
+  if (!next) {
+    return context;
+  }
+
+  req = <any>{ ...req, ...context };
+
+  next();
 }

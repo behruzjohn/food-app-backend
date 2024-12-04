@@ -19,7 +19,6 @@ import { SignInProps } from './props/signIn.props';
 import { SignUpProps } from './props/signUp.props';
 import { TelegramLoginProps } from './props/telegramLogin.props';
 import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
-import bcrypt from 'bcrypt';
 
 export const telegramUserLogin = async ({
   auth,
@@ -61,7 +60,7 @@ export const signUp = async ({
     const foundUser = await User.findOne({ phone });
 
     if (foundUser) {
-      throw new UserInputError(`User with phone '${phone}' is already exist`);
+      throw new Error(`User with phone '${phone}' is already exist`);
     }
 
     const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
@@ -100,7 +99,7 @@ export const confirmSignUp = async ({
     throw new UserInputError('Invalid token');
   }
 
-  const isCodeCorrect = compareBcryptHash(code, decodedToken.code);
+  const isCodeCorrect = await compareBcryptHash(code, decodedToken.code);
 
   if (!isCodeCorrect) {
     throw new UserInputError('Code is not correct');
@@ -132,11 +131,6 @@ export const signIn = async ({
   data: { phone, password },
 }: SignInProps): Promise<AuthOutput> => {
   const foundUser = await User.findOne({ phone });
-
-  const isPasswordValid = await bcrypt.compare(
-    password,
-    <string>foundUser.password,
-  );
 
   if (!foundUser) {
     throw new Error('Phone or password is not correct');
