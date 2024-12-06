@@ -56,31 +56,32 @@ export const telegramUserLogin = async ({
 export const signUp = async ({
   data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
-  try {
-    const foundUser = await User.findOne({ phone });
+  // try {
+  const foundUser = await User.findOne({ phone });
 
-    if (foundUser) {
-      throw new Error(`User with phone '${phone}' is already exist`);
-    }
-
-    const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
-
-    if (!isValidPassword) {
-      throw new UserInputError('Password is not strong enough');
-    }
-
-    const code = await sendSms(phone);
-
-    const tokenPayload = { name, phone, password, code };
-
-    const createdToken = createToken(tokenPayload, {
-      expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
-    });
-
-    return { token: createdToken };
-  } catch (error) {
-    console.log(error, 'Haliyam yozmabdi');
+  if (foundUser) {
+    throw new Error(`User with phone '${phone}' is already exist`);
   }
+
+  const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
+
+  if (!isValidPassword) {
+    throw new UserInputError('Password is not strong enough');
+  }
+
+  const code = await sendSms(phone);
+
+  const tokenPayload = { name, phone, password, code };
+
+  const createdToken = createToken(tokenPayload, {
+    expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
+  });
+
+  return { token: createdToken };
+  // } catch (error) {
+  //   console.log(error, 'Haliyam yozmabdi');
+  //   throw new Error('Already exist');
+  // }
 };
 
 export const confirmSignUp = async ({
