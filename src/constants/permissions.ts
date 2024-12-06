@@ -41,6 +41,7 @@ export const PERMISSIONS: Permissions = {
       'RECEIVE_ORDER_BY_ID',
       'START_COOKING_FOOD',
       'UPDATE_CATEGORY_BY_ID',
+      'DELETE_FOOD_BY_ID',
       'UPDATE_USER_BY_ID',
       'UPDATE_USER_PASSWORD_BY_ID',
       'DELETE_CATEGORY_BY_ID',
