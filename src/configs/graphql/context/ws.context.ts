@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { extractExecuteResolvers } from 'src/common';
 import { authMiddleware } from './middlewares/auth.middleware';
 import { PERMISSIONS } from 'src/constants/permissions';
 
@@ -18,10 +17,6 @@ export async function subscriptionContext({
   } as Request;
 
   if (payload && payload.query) {
-    const { query } = payload;
-
-    const executeResolvers = extractExecuteResolvers(query);
-
     const authContext = await authMiddleware(
       PERMISSIONS,
       'graphql',

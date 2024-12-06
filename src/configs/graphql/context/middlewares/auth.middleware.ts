@@ -18,62 +18,68 @@ export const authMiddleware = async (
   res?: Response,
   next?: NextFunction,
 ): Promise<Context> => {
-  const [tokenType, token] = req.headers.authorization?.split(' ') || [];
+  try {
+    const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
-  const decodedToken = token && decodeToken<JWTAuthPayload>(token);
+    const decodedToken = token && decodeToken<JWTAuthPayload>(token);
 
-  let isTokenValid = true;
+    let isTokenValid = true;
 
-  if (!decodedToken?._id) {
-    isTokenValid = false;
-  }
-
-  let foundUser: Context['user'];
-
-  if (isTokenValid) {
-    const queryFilter = { _id: decodedToken._id };
-
-    foundUser = await User.findOne(queryFilter);
-  }
-
-  const executeOperations = EXTRACTORS[lang](req, res, next);
-
-  const isAccessibleRequest = executeOperations.every((operation) => {
-    if (PUBLIC_OPERATIONS[lang]?.permissions.has(operation)) {
-      return true;
+    if (!decodedToken?._id) {
+      isTokenValid = false;
     }
 
-    if (!foundUser) {
-      throw new AuthenticationError('User is not found');
+    let foundUser: Context['user'];
+
+    if (isTokenValid) {
+      const queryFilter = { _id: decodedToken._id };
+
+      foundUser = await User.findOne(queryFilter);
     }
 
-    if (!isTokenValid) {
-      throw new UserInputError('Invalid token');
-    }
+    const executeOperations = EXTRACTORS[lang](req, res, next);
 
-    if (tokenType !== AUTH_TYPE || !token) {
-      throw new BadUserInputError('Token is not provided');
-    }
+    const isAccessibleRequest = executeOperations.every((operation) => {
+      if (PUBLIC_OPERATIONS[lang]?.permissions.has(operation)) {
+        return true;
+      }
 
-    if (isTokenExpired(decodedToken)) {
-      throw new AuthenticationError('Token expired');
-    }
+      if (!foundUser) {
+        throw new AuthenticationError('User is not found');
+      }
 
-    if (
-      permissions[<RoleEnum>foundUser.role] &&
-      permissions[<RoleEnum>foundUser.role][lang]
-    ) {
-      return permissions[<RoleEnum>foundUser.role][lang].permissions.has(
-        operation,
+      if (!isTokenValid) {
+        throw new UserInputError('Invalid token');
+      }
+
+      if (tokenType !== AUTH_TYPE || !token) {
+        throw new BadUserInputError('Token is not provided');
+      }
+
+      if (isTokenExpired(decodedToken)) {
+        throw new AuthenticationError('Token expired');
+      }
+
+      if (
+        permissions[<RoleEnum>foundUser.role] &&
+        permissions[<RoleEnum>foundUser.role][lang]
+      ) {
+        return permissions[<RoleEnum>foundUser.role][lang].permissions.has(
+          operation,
+        );
+      }
+    });
+
+    if (!isAccessibleRequest) {
+      throw new AuthenticationError(
+        'You have not permission for this operation',
       );
     }
-  });
 
-  if (!isAccessibleRequest) {
-    throw new AuthenticationError('You have not permission for this operation');
+    return {
+      user: foundUser,
+    };
+  } catch (error) {
+    throw error;
   }
-
-  return {
-    user: foundUser,
-  };
 };

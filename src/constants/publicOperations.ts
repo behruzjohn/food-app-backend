@@ -10,5 +10,6 @@ export const PUBLIC_OPERATIONS: RequestPermission = {
     'SIGN_IN',
     'SIGN_UP',
     'CONFIRM_SIGN_UP',
+    <any>'INTROSPECTION_QUERY',
   ),
 };

@@ -1,3 +1,7 @@
+const COMMON_QUERIES: object = {
+  INTROSPECTION_QUERY: 'IntrospectionQuery',
+};
+
 export const QUERIES = {
   TELEGRAM_USER_LOGIN: 'telegramUserLogin',
   SIGN_IN: 'signIn',
@@ -14,4 +18,5 @@ export const QUERIES = {
   GET_ORDERS: 'getOrders',
   GET_FAVORITE_FOODS: 'getFavoriteFoods',
   GET_ORDERS_BY_USER_ID: 'getOrdersByUserId',
+  ...COMMON_QUERIES,
 };

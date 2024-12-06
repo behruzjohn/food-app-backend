@@ -13,7 +13,11 @@ type QueryKeys = keyof typeof QUERIES;
 
 type SubscriptionKeys = keyof typeof SUBSCRIPTIONS;
 
-type ResolversKeys = MutationKeys | QueryKeys | SubscriptionKeys;
+type ResolversKeys =
+  | MutationKeys
+  | QueryKeys
+  | SubscriptionKeys
+  | 'INTROSPECTION';
 
 export type Method = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH';
 

@@ -6,7 +6,7 @@ export function decodeToken<T extends Record<string, unknown>>(token: string) {
     return jwt.verify(token || '', process.env.SECRET_KEY) as Partial<T> &
       jwt.JwtPayload;
   } catch (error) {
-    throw new BadUserInputError('Token is invalid!');
+    return null;
   }
 }
 

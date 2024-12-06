@@ -98,8 +98,6 @@ getImageComposer.on('photo', async (ctx) => {
       await ctx.reply(
         "Rasmni yuklashda hatolik yuz berdi iltimos boshqa rasm yuklab ko'ring",
       );
-
-      console.error(error);
     },
   });
 });
