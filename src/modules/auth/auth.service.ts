@@ -56,7 +56,6 @@ export const telegramUserLogin = async ({
 export const signUp = async ({
   data: { name, password, phone },
 }: SignUpProps): Promise<SignUpOutput> => {
-  // try {
   const foundUser = await User.findOne({ phone });
 
   if (foundUser) {
@@ -78,10 +77,6 @@ export const signUp = async ({
   });
 
   return { token: createdToken };
-  // } catch (error) {
-  //   console.log(error, 'Haliyam yozmabdi');
-  //   throw new Error('Already exist');
-  // }
 };
 
 export const confirmSignUp = async ({
