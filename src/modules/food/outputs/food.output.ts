@@ -1,5 +1,5 @@
-import { Food } from '../food.model';
+import { FoodSchema } from '../types/foodSchema.type';
 
 export type FoodOutput = {
-  payload: typeof Food.schema.obj;
+  payload: FoodSchema;
 };

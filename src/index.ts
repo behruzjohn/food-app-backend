@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { apolloServer } from './configs/servers/apollo';
 import { startWsServer } from './configs/servers/ws';
 import { bot } from './bot';
-import { logger } from './services/logger.service';
+import { logger } from './services/logger';
 
 dotenv.config();
 

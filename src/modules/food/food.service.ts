@@ -12,7 +12,7 @@ import { CreateFoodProps } from './props/createFood.props';
 import { GetAllFoodsProps } from './props/getAllFoods.props';
 import { GetFoodByIdProps } from './props/getFood.props';
 import { UpdateFoodProps } from './props/updateFood.props';
-import { Types } from 'mongoose';
+import { RootFilterQuery, Types } from 'mongoose';
 import { FilterQuery } from 'mongoose';
 import { UserInputError } from 'apollo-server-core';
 import { DEFAULT_PAGINATION_LIMIT } from 'src/constants/pagination';
@@ -21,9 +21,11 @@ import { FILE_CATEGORIES } from 'src/constants/fileCategories';
 import fs from 'fs';
 import path from 'path';
 import { createPublicFileUrl } from 'src/utils/file';
+import { FoodSchema } from './types/foodSchema.type';
 
 export const createFood = async ({
   food,
+  image,
 }: CreateFoodProps): Promise<FoodOutput> => {
   const foundCategory = await Category.findById(food.category);
 
@@ -35,23 +37,29 @@ export const createFood = async ({
     ...food,
   });
 
-  const foodsImages = fs.readdirSync(UPLOADS_PATH);
+  if (!image) {
+    const foodsImages = fs.readdirSync(UPLOADS_PATH);
 
-  const uploadedFoodImage = foodsImages.find(
-    (name) => name.split('.')['0'] === FILE_CATEGORIES.food,
-  );
+    const uploadedFoodImage = foodsImages.find(
+      (name) => name.split('.')['0'] === FILE_CATEGORIES.food,
+    );
 
-  if (uploadedFoodImage) {
-    const foodImage = `food-${createdFood._id}.${path.extname(uploadedFoodImage)}`;
+    if (uploadedFoodImage) {
+      const foodImage = `food-${createdFood._id}.${path.extname(uploadedFoodImage)}`;
 
-    const foodImageFile = path.join(UPLOADS_PATH, uploadedFoodImage);
-    const foodImageNewFile = path.join(UPLOADS_PATH, foodImage);
+      const foodImageFile = path.join(UPLOADS_PATH, uploadedFoodImage);
+      const foodImageNewFile = path.join(UPLOADS_PATH, foodImage);
 
-    fs.renameSync(foodImageFile, foodImageNewFile);
+      fs.renameSync(foodImageFile, foodImageNewFile);
 
-    const foodImagePublicUrl = createPublicFileUrl(foodImage);
+      const foodImagePublicUrl = createPublicFileUrl(foodImage);
 
-    createdFood.image = foodImagePublicUrl;
+      createdFood.image = foodImagePublicUrl;
+
+      await createdFood.save();
+    }
+  } else {
+    createdFood.image = image;
 
     await createdFood.save();
   }
@@ -75,17 +83,24 @@ export const updateFoodById = async ({
     throw new GraphQLError('Food not found', 'BAD_REQUEST');
   }
 
-  return { payload: updatedFood };
+  return { payload: { ...updatedFood } };
 };
 
-export const getFoodById = async ({
-  foodId,
-}: GetFoodByIdProps): Promise<FoodOutput> => {
+export const getFoodById = async (
+  { foodId }: GetFoodByIdProps,
+  { user }: Context,
+): Promise<FoodOutput> => {
   const foundFood = await Food.findById(foodId).populate(POPULATIONS.food);
 
   if (!foundFood) {
     throw new BadRequestError('Food not found');
   }
+
+  const isFavorite = !!user.favoriteFoods.find(
+    (id) => id.toString() === foodId.toString(),
+  );
+
+  foundFood.isFavorite = isFavorite;
 
   return { payload: foundFood };
 };
@@ -108,13 +123,31 @@ export const getFavoriteFoods = async (
   { limit, page }: PaginateProps,
   { user }: Context,
 ): Promise<Paginated<FoodsOutput>> => {
-  const foundUser = await User.findById(user._id);
+  let query: RootFilterQuery<FoodSchema> = {
+    $or: user.favoriteFoods.map((_id) => ({
+      _id,
+    })),
+  };
 
-  const favoriteFoods = foundUser.favoriteFoods.map((_id) => ({ _id }));
+  if (!user.favoriteFoods.length) {
+    query = { _id: user._id };
+  }
 
-  const { docs: foundFoods, ...pagination } = await Food.find({
-    $or: favoriteFoods,
-  }).paginate({ limit, page });
+  const { docs: foundFoods, ...pagination } = await Food.find(query).paginate({
+    limit,
+    page,
+  });
+
+  let i = 0;
+  while (i < foundFoods.length) {
+    const isFavorite = !!user.favoriteFoods.find(
+      (id) => id.toString() === foundFoods[i]._id.toString(),
+    );
+
+    foundFoods[i].isFavorite = isFavorite;
+
+    i++;
+  }
 
   return { payload: foundFoods, ...pagination };
 };
@@ -123,6 +156,14 @@ export const addFoodToFavorites = async (
   { foodId }: GetFoodByIdProps,
   { user }: Context,
 ): Promise<FoodOutput> => {
+  const isInFavorites = !!user.favoriteFoods.find(
+    (id) => foodId.toString() === id.toString(),
+  );
+
+  if (isInFavorites) {
+    throw new UserInputError('Food is already in favorites');
+  }
+
   const updatedFood = await Food.findByIdAndUpdate(
     foodId,
     {
@@ -146,6 +187,14 @@ export const removeFoodFromFavorites = async (
   { foodId }: GetFoodByIdProps,
   { user }: Context,
 ): Promise<FoodOutput> => {
+  const isInFavorites = !!user.favoriteFoods.find(
+    (id) => foodId.toString() === id.toString(),
+  );
+
+  if (!isInFavorites) {
+    throw new UserInputError('Food had not added to favorites');
+  }
+
   const updatedFood = await Food.findByIdAndUpdate(
     foodId,
     {
@@ -158,19 +207,24 @@ export const removeFoodFromFavorites = async (
     throw new BadUserInputError('Food not found');
   }
 
-  await User.findByIdAndUpdate(user._id, {
-    $pull: { favoriteFoods: foodId },
-  });
+  user.favoriteFoods = user.favoriteFoods.filter(
+    (id) => id.toString() !== foodId.toString(),
+  );
+
+  await user.save();
 
   return { payload: updatedFood };
 };
 
-export const getAllFoods = async ({
-  name,
-  categories,
-  limit = DEFAULT_PAGINATION_LIMIT,
-  page = 1,
-}: GetAllFoodsProps): Promise<Paginated<FoodsOutput>> => {
+export const getAllFoods = async (
+  {
+    name,
+    categories,
+    limit = DEFAULT_PAGINATION_LIMIT,
+    page = 1,
+  }: GetAllFoodsProps,
+  { user }: Context,
+): Promise<Paginated<FoodsOutput>> => {
   const nameRegex = name ? new RegExp(name, 'i') : null;
 
   const searchConditions: FilterQuery<any>[] = [];
@@ -189,7 +243,6 @@ export const getAllFoods = async ({
   }
 
   const aggregationPipeline: Parameters<typeof Food.aggregate>['0'] = [
-    ...(searchConditions.length ? [{ $match: { $or: searchConditions } }] : []),
     {
       $lookup: {
         from: 'categories',
@@ -223,6 +276,10 @@ export const getAllFoods = async ({
     },
   ];
 
+  if (searchConditions.length) {
+    aggregationPipeline.unshift({ $match: { $or: searchConditions } });
+  }
+
   const [result] = await Food.aggregate(aggregationPipeline);
 
   const docs = result?.docs || [];
@@ -231,6 +288,19 @@ export const getAllFoods = async ({
   const hasPrevPage = page > 1;
   const hasNextPage = page < totalPages;
   const offset = (page - 1) * limit;
+
+  if (user && user.favoriteFoods) {
+    let i = 0;
+    while (i < docs.length) {
+      const isFavorite = !!user.favoriteFoods.find(
+        (id) => id.toString() === docs[i]._id.toString(),
+      );
+
+      docs[i].isFavorite = isFavorite;
+
+      i++;
+    }
+  }
 
   return {
     payload: docs,

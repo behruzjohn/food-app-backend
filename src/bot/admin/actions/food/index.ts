@@ -53,7 +53,7 @@ export const foodActions = actions(FOOD_ACTIONS)({
     async handler(ctx) {
       const foodId = ctx['match'][1];
 
-      const { payload: foundFood } = await getFoodById({ foodId });
+      const { payload: foundFood } = await getFoodById({ foodId }, null);
 
       const keyboardActions = [ADMIN_ACTIONS.BACK, FOOD_ACTIONS.DELETE_FOOD];
 

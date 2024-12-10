@@ -32,8 +32,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
   GET_USER_BY_ID: (_, args: GetUserByIdProps, context: Context) => {
     return userService.getUserById(args, context);
   },
-  GET_FOOD_BY_ID: (_, args: GetFoodByIdProps) => {
-    return foodService.getFoodById(args);
+  GET_FOOD_BY_ID: (_, args: GetFoodByIdProps, context: Context) => {
+    return foodService.getFoodById(args, context);
   },
   GET_ORDER_BY_ID: (_, args: GetOrderByIdProps) => {
     return orderService.getOrderById(args);
@@ -42,8 +42,8 @@ export const query = resolversHandlers(QUERIES)<Resolver<unknown, unknown>>({
     return cartItemService.getCartItemsByUserId(context);
   },
   GET_DASHBOARD: () => 1,
-  GET_ALL_FOODS: (_, args: GetAllFoodsProps) => {
-    return foodService.getAllFoods(args);
+  GET_ALL_FOODS: (_, args: GetAllFoodsProps, context: Context) => {
+    return foodService.getAllFoods(args, context);
   },
   GET_CATEGORY_BY_ID: (_, args: GetCategoryByIdProps) => {
     return categoryService.getCategoryById(args);

@@ -17,6 +17,8 @@ export const PERMISSIONS: Permissions = {
       'GET_USER_BY_ID',
       'GET_ORDERS_BY_USER_ID',
       'DELETE_CART_ITEM',
+      'REMOVE_FOOD_FROM_FAVORITES',
+      'GET_CATEGORY_BY_ID',
     ),
   },
   admin: {

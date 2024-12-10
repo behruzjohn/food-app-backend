@@ -16,7 +16,7 @@ export const attachOrderToCourier = async ({
   orderId,
   courierId,
 }: GetOrderByIdProps & GetCourierByIdProps) => {
-  return attachOrder({ orderId }, { user: { _id: courierId } });
+  return attachOrder({ orderId }, <any>{ user: { _id: courierId } });
 };
 
 export const createCourier = async ({

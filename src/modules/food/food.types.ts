@@ -12,6 +12,7 @@ export const foodTypes = gql`
     discount: Float
     category: Category
     likes: Int
+    isFavorite: Boolean
   }
 
   type FoodOutput {

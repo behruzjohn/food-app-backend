@@ -66,10 +66,13 @@ export const adminActions = actions(ADMIN_ACTIONS)({
         payload: foundFoods,
         hasNextPage,
         hasPrevPage,
-      } = await getAllFoods({
-        limit: DEFAULT_PAGINATION_LIMIT,
-        page,
-      });
+      } = await getAllFoods(
+        {
+          limit: DEFAULT_PAGINATION_LIMIT,
+          page,
+        },
+        null,
+      );
 
       const paginationKeyboard = makePaginationKeyboard(
         { page, hasNextPage, hasPrevPage },

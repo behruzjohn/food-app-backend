@@ -1,12 +1,11 @@
 import { UserInputError } from 'apollo-server-core';
-import { BadRequestError } from 'src/common';
 import {
   AUTH_TOKEN_EXPIRATION,
   PASSWORD_MIN_LENGTH,
   PHONE_CONFIRMATION_TOKEN_EXPIRATION,
 } from 'src/constants/auth';
 import { RoleEnum } from 'src/enums/role.enum';
-import { sendSms } from 'src/sms';
+import { sendSms } from 'src/services/sms';
 import { JWTAuthPayload } from 'src/types/auth';
 import { compareBcryptHash } from 'src/utils/bcrypt';
 import { createToken, decodeToken } from 'src/utils/jwt';
@@ -95,7 +94,7 @@ export const confirmSignUp = async ({
     throw new UserInputError('Invalid token');
   }
 
-  const isCodeCorrect = await compareBcryptHash(code, decodedToken.code);
+  const isCodeCorrect = await compareBcryptHash(decodedToken.code, code);
 
   if (!isCodeCorrect) {
     throw new UserInputError('Code is not correct');

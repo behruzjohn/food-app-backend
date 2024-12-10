@@ -1,6 +1,8 @@
 import { Types } from 'mongoose';
-import { User } from 'src/modules/user/user.model';
+import { UserSchema } from 'src/modules/user/types/userSchema.type';
 
 export type Context = {
-  user: typeof User.schema.obj & { _id: Types.ObjectId };
+  user: UserSchema & { _id: typeof Types.ObjectId } & {
+    save: () => Promise<void>;
+  };
 };

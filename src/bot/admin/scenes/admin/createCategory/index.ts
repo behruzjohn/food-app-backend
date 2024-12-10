@@ -5,7 +5,7 @@ import { CategoryInput } from 'src/modules/category/inputs/category.input';
 import { createCategory } from 'src/modules/category/category.service';
 import { CATEGORY_ACTIONS } from 'src/bot/admin/actions/category/category.actions';
 import { categoryActions } from 'src/bot/admin/actions/category';
-import { logger } from 'src/services/logger.service';
+import { logger } from 'src/services/logger';
 
 const indexComposer = new Composer();
 

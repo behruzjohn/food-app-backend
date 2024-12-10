@@ -4,8 +4,9 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import { PASSWORD_HASH_ROUNDS } from 'src/constants/auth';
 import { RoleEnum } from 'src/enums/role.enum';
 import { hash } from 'src/utils/bcrypt';
+import { UserSchema } from './types/userSchema.type';
 
-const userSchema = new Schema(
+const userSchema = new Schema<UserSchema>(
   {
     photo: { type: String },
     name: { type: String, required: true },

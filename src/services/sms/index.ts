@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { PHONE_CONFIRMATION_CODE_LENGTH } from 'src/constants/auth';
-import { logger } from 'src/services/logger.service';
+import { logger } from 'src/services/logger';
 import { generateRandomNumbers } from 'src/utils/crypto';
 
 export const sendSms = async (phone: string) => {
