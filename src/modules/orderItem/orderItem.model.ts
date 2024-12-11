@@ -1,7 +1,8 @@
 import { model, Schema, Types } from 'mongoose';
 import { MODELS } from '../../constants/models';
+import { OrderItemSchema } from './types/orderItem.type';
 
-const orderItemSchema = new Schema(
+const orderItemSchema = new Schema<OrderItemSchema>(
   {
     food: { type: Types.ObjectId, ref: MODELS.FOOD },
     user: { type: Types.ObjectId, ref: MODELS.USER },

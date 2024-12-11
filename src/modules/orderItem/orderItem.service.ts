@@ -1,27 +1,39 @@
 import { UserInputError } from 'apollo-server-core';
 import { CartItem } from '../cartItem/cartItem.model';
 import { OrderItem } from './orderItem.model';
-import { OrderItemOutput } from './outputs/orderItem.output';
-import { OrderItemProps } from './types/orderItem.type';
+import { GetUserOrderItemsProps } from './props/getUserOrderItems.props';
+import { OrderItemsOutput } from './outputs/orderItems.output';
+import { GetOrderByIdProps } from '../order/props/getOrder.props';
+import { POPULATIONS } from 'src/constants/populations';
 
 export const addCartItemToOrderItem = async ({
   userId,
   orderId,
-}: OrderItemProps): Promise<OrderItemOutput> => {
+}: GetUserOrderItemsProps): Promise<OrderItemsOutput> => {
   const foundCartItems = await CartItem.find({ user: userId });
 
   if (!foundCartItems.length) {
-    throw new UserInputError('There are no items in cart');
+    throw new UserInputError('There are no cart items created yet');
   }
 
-  const createdOrderItems = <(typeof OrderItem.schema.obj)[]>(
-    await OrderItem.insertMany(
-      foundCartItems.map(({ _id, ...cartItem }) => ({
-        ...cartItem,
+  const createdOrderItems = await OrderItem.create(
+    foundCartItems.map(({ _id, ...cartItem }) => {
+      return {
+        ...cartItem['_doc'],
         order: orderId,
-      })),
-    )
+      };
+    }),
   );
 
   return { payload: createdOrderItems };
+};
+
+export const getOrderItemsByOrderId = async ({
+  orderId,
+}: GetOrderByIdProps): Promise<OrderItemsOutput> => {
+  const foundOrderItems = await OrderItem.find({ order: orderId }).populate(
+    POPULATIONS.orderItem,
+  );
+
+  return { payload: foundOrderItems };
 };

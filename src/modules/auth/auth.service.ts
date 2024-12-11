@@ -44,7 +44,6 @@ export const telegramUserLogin = async ({
 
   const jwtPayload: JWTAuthPayload = {
     _id: user._id,
-    role: <RoleEnum>user.role,
   };
 
   const token = createToken(jwtPayload, { expiresIn: AUTH_TOKEN_EXPIRATION });
@@ -109,7 +108,6 @@ export const confirmSignUp = async ({
 
   const tokenPayload: JWTAuthPayload = {
     _id: createdUser._id,
-    role: <RoleEnum>createdUser.role,
   };
 
   const createdToken = createToken(tokenPayload, {
@@ -142,7 +140,6 @@ export const signIn = async ({
 
   const tokenPayload: JWTAuthPayload = {
     _id: foundUser._id,
-    role: <RoleEnum>foundUser.role,
   };
 
   const createdToken = createToken(tokenPayload, {

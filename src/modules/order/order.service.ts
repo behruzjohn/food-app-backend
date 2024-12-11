@@ -18,6 +18,8 @@ import { GetOrderByIdProps } from './props/getOrder.props';
 import { GetOrdersProps } from './props/getOrders.props';
 import { GetOrdersByUserIdProps } from './props/getOrdersByUserId.props';
 import { UpdateOrderStatusProps } from './props/updateOrder.props';
+import { OrderSchema } from './types/order.type';
+import * as orderItemService from 'src/modules/orderItem/orderItem.service';
 
 export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
   const updatedOrder = await Order.findByIdAndUpdate(orderId, {
@@ -29,7 +31,7 @@ export const startCookingOrder = async ({ orderId }: GetOrderByIdProps) => {
     throw new UserInputError('Order is not found');
   }
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, { payload: updatedOrder });
+  await pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, { payload: updatedOrder });
 };
 
 export const createOrder = async (
@@ -37,15 +39,20 @@ export const createOrder = async (
   { user }: Context,
 ): Promise<OrderOutput> => {
   try {
-    const { payload } = await cartItemService.getCartItemsByUserId({ user });
+    const { payload: foundCartItems } =
+      await cartItemService.getCartItemsByUserId({ user });
+
+    if (!foundCartItems.items.length) {
+      throw new UserInputError('There are no cart items created yet');
+    }
 
     const createdOrder = await Order.create({
       createdBy: user._id,
       address: order.address,
-      totalPrice: payload.totalPrice,
+      totalPrice: foundCartItems.totalPrice,
     });
 
-    await addCartItemToOrderItem({
+    const { payload: createdOrderItems } = await addCartItemToOrderItem({
       userId: user._id,
       orderId: createdOrder._id,
     });
@@ -56,11 +63,11 @@ export const createOrder = async (
 
     const message = { payload: populatedOrder };
 
-    pubsub.publish(EVENTS.CREATE_ORDER, {
+    await pubsub.publish(EVENTS.CREATE_ORDER, {
       [SUBSCRIPTIONS.CREATE_ORDER]: message,
     });
 
-    return { payload: createdOrder };
+    return { payload: { ...createdOrder, orderItems: createdOrderItems } };
   } catch (error) {
     throw error;
   }
@@ -69,7 +76,43 @@ export const createOrder = async (
 export const getOrderById = async ({
   orderId,
 }: GetOrderByIdProps): Promise<OrderOutput> => {
-  const foundOrder = await Order.findById(orderId).populate(POPULATIONS.order);
+  const [foundOrder] = await Order.aggregate<OrderSchema>([
+    {
+      $match: { _id: orderId },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'createdBy',
+        foreignField: '_id',
+        as: 'createdBy',
+      },
+    },
+    {
+      $unwind: {
+        path: '$createdBy',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: 'orderitems',
+        localField: '_id',
+        foreignField: 'order',
+        as: 'orderItems',
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        totalPrice: 1,
+        status: 1,
+        address: 1,
+        orderItems: 1,
+        createdBy: 1,
+      },
+    },
+  ]);
 
   if (!foundOrder) {
     throw new ApolloError('Order not found');
@@ -95,15 +138,21 @@ export const updateOrderStatusById = async ({
 
   const updatedOrder = await Order.findByIdAndUpdate(orderId, updateData, {
     new: true,
-  }).populate(POPULATIONS.order);
+  });
 
   if (!updatedOrder) {
     throw new ApolloError('Order not found!');
   }
 
+  const { payload: orderItems } = await orderItemService.getOrderItemsByOrderId(
+    { orderId },
+  );
+
+  updatedOrder.orderItems = orderItems;
+
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
+  await pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
 
@@ -126,11 +175,18 @@ export const deliverOrderById = async ({
     throw new UserInputError(`Order with id "${orderId}" is not found`);
   }
 
+  const { payload: orderItems } = await orderItemService.getOrderItemsByOrderId(
+    { orderId },
+  );
+
+  updatedOrder.orderItems = orderItems;
+
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
+  await pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.DELIVER_ORDER_BY_ID]: message,
   });
+
   return { payload: updatedOrder };
 };
 
@@ -142,9 +198,19 @@ export const receiveOrderById = async ({
     receivedAt: new Date(),
   }).populate(POPULATIONS.order);
 
+  if (!updatedOrder) {
+    throw new UserInputError(`Order with id "${orderId}" is not found`);
+  }
+
+  const { payload: orderItems } = await orderItemService.getOrderItemsByOrderId(
+    { orderId },
+  );
+
+  updatedOrder.orderItems = orderItems;
+
   const message = { payload: updatedOrder };
 
-  pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
+  await pubsub.publish(EVENTS.UPDATE_ORDER_STATUS, {
     [SUBSCRIPTIONS.RECEIVE_ORDER_BY_ID]: message,
   });
 
@@ -155,7 +221,7 @@ export const startCookingFood = async ({
   orderId,
   status,
 }: UpdateOrderStatusProps): Promise<OrderOutput> => {
-  const changeStatus = await Order.findByIdAndUpdate(
+  const updatedOrder = await Order.findByIdAndUpdate(
     orderId,
     { status: status },
     {
@@ -163,11 +229,17 @@ export const startCookingFood = async ({
     },
   );
 
-  if (!changeStatus) {
+  if (!updatedOrder) {
     throw new BadRequestError('Order not found!');
   }
 
-  return { payload: changeStatus };
+  const { payload: orderItems } = await orderItemService.getOrderItemsByOrderId(
+    { orderId },
+  );
+
+  updatedOrder.orderItems = orderItems;
+
+  return { payload: updatedOrder };
 };
 
 export const getOrders = async ({
@@ -181,11 +253,103 @@ export const getOrders = async ({
     filter['$or'] = statuses.map((status) => ({ status }));
   }
 
-  const { docs: foundFoods, ...pagination } = await Order.find(filter)
-    .populate(POPULATIONS.order)
-    .paginate({ limit, page });
+  const aggregationPipeline = [
+    { $match: filter },
+    {
+      $lookup: {
+        from: 'orderitems',
+        localField: '_id',
+        foreignField: 'order',
+        as: 'orderItems',
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        status: 1,
+        totalPrice: 1,
+        createdBy: 1,
+        address: 1,
+        attachedFor: 1,
+        cookedAt: 1,
+        receivedAt: 1,
+        orderItems: { $ifNull: ['$orderItems', []] }, // Убедимся, что orderItems всегда массив
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+    {
+      $unwind: {
+        path: '$orderItems',
+        preserveNullAndEmptyArrays: true, // Сохраняем null и пустые массивы
+      },
+    },
+    {
+      $lookup: {
+        from: 'foods',
+        localField: 'orderItems.food',
+        foreignField: '_id',
+        as: 'orderItems.food',
+      },
+    },
+    {
+      $addFields: {
+        'orderItems.food': { $arrayElemAt: ['$orderItems.food', 0] }, // Преобразуем food в объект
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        status: { $first: '$status' },
+        totalPrice: { $first: '$totalPrice' },
+        createdBy: { $first: '$createdBy' },
+        address: { $first: '$address' },
+        attachedFor: { $first: '$attachedFor' },
+        cookedAt: { $first: '$cookedAt' },
+        receivedAt: { $first: '$receivedAt' },
+        orderItems: { $push: '$orderItems' },
+        createdAt: { $first: '$createdAt' },
+        updatedAt: { $first: '$updatedAt' },
+      },
+    },
+    { $skip: limit * (page - 1) },
+    { $limit: limit },
+    {
+      $project: {
+        _id: 1,
+        status: 1,
+        totalPrice: 1,
+        createdBy: 1,
+        address: 1,
+        attachedFor: 1,
+        cookedAt: 1,
+        receivedAt: 1,
+        orderItems: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ];
 
-  return { payload: foundFoods, ...pagination };
+  const result = await Order.aggregate(aggregationPipeline);
+
+  const totalCount = await Order.countDocuments(filter);
+  const totalPages = Math.ceil(totalCount / limit);
+  const hasPrevPage = page > 1;
+  const hasNextPage = page < totalPages;
+
+  return {
+    payload: result,
+    page,
+    limit,
+    totalDocs: totalCount,
+    totalPages,
+    offset: limit * (page - 1),
+    hasPrevPage,
+    hasNextPage,
+    prevPage: hasPrevPage ? page - 1 : null,
+    nextPage: hasNextPage ? page + 1 : null,
+  };
 };
 
 export const getOrdersByUserId = async (
@@ -195,11 +359,88 @@ export const getOrdersByUserId = async (
   const statusCheck: RootFilterQuery<typeof Order> = {
     createdBy: user._id,
   };
-  if (status !== 'All') {
+
+  if (status && status !== 'All') {
     statusCheck.status = status;
   }
 
-  const foundOrders = await Order.find(statusCheck).populate(POPULATIONS.order);
+  const aggregationPipeline = [
+    { $match: { createdBy: user._id } },
+    {
+      $lookup: {
+        from: 'orderitems',
+        localField: '_id',
+        foreignField: 'order',
+        as: 'orderItems',
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        status: 1,
+        totalPrice: 1,
+        createdBy: 1,
+        address: 1,
+        attachedFor: 1,
+        cookedAt: 1,
+        receivedAt: 1,
+        orderItems: { $ifNull: ['$orderItems', []] }, // Убедимся, что orderItems всегда массив
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+    {
+      $unwind: {
+        path: '$orderItems',
+        preserveNullAndEmptyArrays: true, // Сохраняем null и пустые массивы
+      },
+    },
+    {
+      $lookup: {
+        from: 'foods',
+        localField: 'orderItems.food',
+        foreignField: '_id',
+        as: 'orderItems.food',
+      },
+    },
+    {
+      $addFields: {
+        'orderItems.food': { $arrayElemAt: ['$orderItems.food', 0] }, // Преобразуем food в объект
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        status: { $first: '$status' },
+        totalPrice: { $first: '$totalPrice' },
+        createdBy: { $first: '$createdBy' },
+        address: { $first: '$address' },
+        attachedFor: { $first: '$attachedFor' },
+        cookedAt: { $first: '$cookedAt' },
+        receivedAt: { $first: '$receivedAt' },
+        orderItems: { $push: '$orderItems' },
+        createdAt: { $first: '$createdAt' },
+        updatedAt: { $first: '$updatedAt' },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        status: 1,
+        totalPrice: 1,
+        createdBy: 1,
+        address: 1,
+        attachedFor: 1,
+        cookedAt: 1,
+        receivedAt: 1,
+        orderItems: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ];
+
+  const foundOrders = await Order.aggregate<OrderSchema>(aggregationPipeline);
 
   return { payload: foundOrders };
 };

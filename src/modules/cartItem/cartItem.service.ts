@@ -64,7 +64,7 @@ export const updateCartFoodQuantity = async (
     },
     { quantity },
     { new: true },
-  );
+  ).populate(POPULATIONS.cartItem);
 
   if (!updatedCartItem) {
     throw new BadUserInputError('Cart item is not found');

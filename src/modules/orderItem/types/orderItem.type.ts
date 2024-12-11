@@ -1,6 +1,9 @@
 import { Types } from 'mongoose';
 
-export type OrderItemProps = {
-  userId: Types.ObjectId;
-  orderId: Types.ObjectId;
+export type OrderItemSchema = {
+  food: typeof Types.ObjectId | Types.ObjectId;
+  user: typeof Types.ObjectId | Types.ObjectId;
+  price: number;
+  quantity: number;
+  order: typeof Types.ObjectId | Types.ObjectId;
 };

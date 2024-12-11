@@ -1,5 +1,5 @@
-import { Order } from '../order.model';
+import { OrderSchema } from '../types/order.type';
 
 export type OrdersOutput = {
-  payload: (typeof Order.schema.obj)[];
+  payload: OrderSchema[];
 };

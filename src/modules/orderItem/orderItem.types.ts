@@ -1,14 +1,15 @@
 import { gql } from 'apollo-server-core';
 
-export const orderItem = gql`
+export const orderItemTypes = gql`
   type OrderItem {
     _id: ID
-    food: ID
+    food: Food
     price: Float
     quantity: Int
     order: ID
   }
-  type OrderItemOutput {
+
+  type OrderItemsOutput {
     payload: [OrderItem]
   }
 `;

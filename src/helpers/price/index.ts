@@ -11,11 +11,11 @@ export const calculateTotalPrice = <T extends string>({
     return items.reduce<number>((acc, cur) => {
       let price = (acc += cur[priceField]);
 
-      if (discountField) {
-        price *= cur[discountField] || 100 / 100;
+      if (discountField && cur[discountField]) {
+        price -= (price * cur[discountField]) / 100;
       }
 
-      if (quantityField) {
+      if (quantityField && cur[quantityField]) {
         price *= cur[quantityField];
       }
 

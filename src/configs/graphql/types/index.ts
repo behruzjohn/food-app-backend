@@ -10,6 +10,7 @@ import { queryType } from './query';
 import { scalarTypes } from './scalars';
 import { subscriptionType } from './subscription';
 import { courierTypes } from 'src/modules/courier/courier.types';
+import { orderItemTypes } from 'src/modules/orderItem/orderItem.types';
 
 export const typeDefs = gql`
   ${scalarTypes}
@@ -18,6 +19,7 @@ export const typeDefs = gql`
   ${userTypes}
   ${foodTypes}
   ${orderTypes}
+  ${orderItemTypes}
   ${cartItemTypes}
   ${categoryTypes}
   ${courierTypes}
