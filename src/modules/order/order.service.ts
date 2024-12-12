@@ -273,7 +273,7 @@ export const getOrders = async ({
         attachedFor: 1,
         cookedAt: 1,
         receivedAt: 1,
-        orderItems: { $ifNull: ['$orderItems', []] }, // Убедимся, что orderItems всегда массив
+        orderItems: { $ifNull: ['$orderItems', []] },
         createdAt: 1,
         updatedAt: 1,
       },
@@ -281,7 +281,7 @@ export const getOrders = async ({
     {
       $unwind: {
         path: '$orderItems',
-        preserveNullAndEmptyArrays: true, // Сохраняем null и пустые массивы
+        preserveNullAndEmptyArrays: true,
       },
     },
     {
@@ -294,7 +294,7 @@ export const getOrders = async ({
     },
     {
       $addFields: {
-        'orderItems.food': { $arrayElemAt: ['$orderItems.food', 0] }, // Преобразуем food в объект
+        'orderItems.food': { $arrayElemAt: ['$orderItems.food', 0] },
       },
     },
     {
@@ -384,7 +384,7 @@ export const getOrdersByUserId = async (
         attachedFor: 1,
         cookedAt: 1,
         receivedAt: 1,
-        orderItems: { $ifNull: ['$orderItems', []] }, // Убедимся, что orderItems всегда массив
+        orderItems: { $ifNull: ['$orderItems', []] },
         createdAt: 1,
         updatedAt: 1,
       },
@@ -392,7 +392,7 @@ export const getOrdersByUserId = async (
     {
       $unwind: {
         path: '$orderItems',
-        preserveNullAndEmptyArrays: true, // Сохраняем null и пустые массивы
+        preserveNullAndEmptyArrays: true,
       },
     },
     {
@@ -405,7 +405,7 @@ export const getOrdersByUserId = async (
     },
     {
       $addFields: {
-        'orderItems.food': { $arrayElemAt: ['$orderItems.food', 0] }, // Преобразуем food в объект
+        'orderItems.food': { $arrayElemAt: ['$orderItems.food', 0] },
       },
     },
     {
