@@ -121,9 +121,10 @@ export const confirmSignUp = async ({
 };
 
 export const signIn = async ({
+  role,
   data: { phone, password },
 }: SignInProps): Promise<AuthOutput> => {
-  const foundUser = await User.findOne({ phone });
+  const foundUser = await User.findOne({ phone, role });
 
   if (!foundUser) {
     throw new Error('Phone or password is not correct');

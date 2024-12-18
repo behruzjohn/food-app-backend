@@ -1,5 +1,5 @@
 import { ApolloError, UserInputError } from 'apollo-server-core';
-import { RootFilterQuery } from 'mongoose';
+import { RootFilterQuery, Types } from 'mongoose';
 import { BadRequestError } from 'src/common';
 import { EVENTS } from 'src/constants/events';
 import { POPULATIONS } from 'src/constants/populations';
@@ -78,7 +78,7 @@ export const getOrderById = async ({
 }: GetOrderByIdProps): Promise<OrderOutput> => {
   const [foundOrder] = await Order.aggregate<OrderSchema>([
     {
-      $match: { _id: orderId },
+      $match: { _id: new Types.ObjectId(orderId) },
     },
     {
       $lookup: {
@@ -261,21 +261,6 @@ export const getOrders = async ({
         localField: '_id',
         foreignField: 'order',
         as: 'orderItems',
-      },
-    },
-    {
-      $project: {
-        _id: 1,
-        status: 1,
-        totalPrice: 1,
-        createdBy: 1,
-        address: 1,
-        attachedFor: 1,
-        cookedAt: 1,
-        receivedAt: 1,
-        orderItems: { $ifNull: ['$orderItems', []] },
-        createdAt: 1,
-        updatedAt: 1,
       },
     },
     {
