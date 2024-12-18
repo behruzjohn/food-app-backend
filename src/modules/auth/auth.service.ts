@@ -18,6 +18,7 @@ import { SignInProps } from './props/signIn.props';
 import { SignUpProps } from './props/signUp.props';
 import { TelegramLoginProps } from './props/telegramLogin.props';
 import { ConfirmPhoneTokenPayload } from './types/confirmPhoneTokenPayload';
+import { UserRoleEnum } from 'src/enums/userRole.enum';
 
 export const telegramUserLogin = async ({
   auth,
@@ -121,7 +122,7 @@ export const confirmSignUp = async ({
 };
 
 export const signIn = async ({
-  role,
+  role = UserRoleEnum.user,
   data: { phone, password },
 }: SignInProps): Promise<AuthOutput> => {
   const foundUser = await User.findOne({ phone, role });
