@@ -15,25 +15,7 @@ export function resolversHandlers<T extends Record<string, any>>(keys: T) {
     const renamedResolvers = {};
 
     Object.keys(resolvers).forEach((resolver) => {
-      renamedResolvers[keys[resolver]] =
-        typeof resolvers[resolver] === 'function'
-          ? (...props: unknown[]) => {
-              try {
-                return (<Function>resolvers[resolver])(...props);
-              } catch (error) {
-                console.error(error);
-              }
-            }
-          : {
-              ...resolvers[resolver],
-              subscribe: () => {
-                try {
-                  return (<Subscription>resolvers[resolver]).subscribe();
-                } catch (error) {
-                  console.error(error);
-                }
-              },
-            };
+      renamedResolvers[keys[resolver]] = resolvers[resolver];
     });
 
     return renamedResolvers;
