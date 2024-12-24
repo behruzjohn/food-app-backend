@@ -1,5 +1,4 @@
 import * as jwt from 'jsonwebtoken';
-import { BadUserInputError } from 'src/common';
 
 export function decodeToken<T extends Record<string, unknown>>(token: string) {
   try {

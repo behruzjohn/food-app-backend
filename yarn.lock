@@ -558,17 +558,10 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/busboy@*":
+"@types/busboy@*", "@types/busboy@^1.5.0":
   version "1.5.4"
   resolved "https://registry.npmjs.org/@types/busboy/-/busboy-1.5.4.tgz"
   integrity sha512-kG7WrUuAKK0NoyxfQHsVE6j1m01s6kMma64E+OZenQABMQyTJop1DumUWcLwAQ2JzpefU7PDYoRDKl8uZosFjw==
-  dependencies:
-    "@types/node" "*"
-
-"@types/busboy@^0.3.2":
-  version "0.3.5"
-  resolved "https://registry.npmjs.org/@types/busboy/-/busboy-0.3.5.tgz"
-  integrity sha512-ZFAS63bEBepOMEubHooylhwA4BcN2z/lhuJ/MkZXT4079za5kODWTmGZRDEUIoUbw2g/7NBe/ZxRSTK0yrPkgA==
   dependencies:
     "@types/node" "*"
 
@@ -770,7 +763,7 @@
 
 "@types/object-path@^0.11.1":
   version "0.11.4"
-  resolved "https://registry.npmjs.org/@types/object-path/-/object-path-0.11.4.tgz"
+  resolved "https://registry.yarnpkg.com/@types/object-path/-/object-path-0.11.4.tgz#a14529227500faf7891d003b2c7f5772c4a5dfdc"
   integrity sha512-4tgJ1Z3elF/tOMpA8JLVuR9spt9Ynsf7+JjqsQ2IqtiPJtcLoHoXcT6qU4E10cPFqyXX5HDm9QwIzZhBSkLxsw==
 
 "@types/qs@*":
@@ -1378,13 +1371,6 @@ buffer-from@^1.0.0:
   resolved "https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.2.tgz"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
 
-busboy@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.npmjs.org/busboy/-/busboy-0.3.1.tgz"
-  integrity sha512-y7tTxhGKXcyBxRKAni+awqx8uqaJKrSFSNFSeRG5CsWNdmy2BIK+6VGWEW7TZnIO/533mtMEA4rOevQV815YJw==
-  dependencies:
-    dicer "0.3.0"
-
 busboy@^1.0.0, busboy@^1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/busboy/-/busboy-1.6.0.tgz"
@@ -1676,13 +1662,6 @@ detect-libc@^2.0.0:
   version "2.0.3"
   resolved "https://registry.npmjs.org/detect-libc/-/detect-libc-2.0.3.tgz"
   integrity sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==
-
-dicer@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/dicer/-/dicer-0.3.0.tgz"
-  integrity sha512-MdceRRWqltEG2dZqO769g27N/3PXfcKl04VhYnBlo2YhH7zPi88VebsjTKclaOyiuMaGU72hTfw3VkUitGcVCA==
-  dependencies:
-    streamsearch "0.1.2"
 
 dir-glob@^3.0.1:
   version "3.0.1"
@@ -2122,11 +2101,6 @@ fresh@0.5.2:
   resolved "https://registry.npmjs.org/fresh/-/fresh-0.5.2.tgz"
   integrity sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==
 
-fs-capacitor@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.npmjs.org/fs-capacitor/-/fs-capacitor-6.2.0.tgz"
-  integrity sha512-nKcE1UduoSKX27NSZlg879LdQc94OtbOsEmKMN2MBNudXREvijRKx2GEBsTMTfws+BrbkJoEuynbGSVRSpauvw==
-
 fs-capacitor@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/fs-capacitor/-/fs-capacitor-8.0.0.tgz"
@@ -2274,16 +2248,16 @@ graphql-tag@^2.11.0:
   dependencies:
     tslib "^2.1.0"
 
-graphql-upload@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.npmjs.org/graphql-upload/-/graphql-upload-14.0.0.tgz"
-  integrity sha512-l3utaN0p/VLUFFrUAijwEfmsSxEolVri5uuD91yhbOkxRD6q5l0rsy1F4Naq4TKWFSKsGciCjyrc1ZhCT2Ew7A==
+graphql-upload@^17.0.0:
+  version "17.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-upload/-/graphql-upload-17.0.0.tgz#a6052889e350db0cab4644da9c52ab4713a52f40"
+  integrity sha512-AI42S1UR1mdqg+LQ7KqGbrgcf4l9gpPu/R0drM4vSA5C94NfIjYyCeCdpktEledvZoAL8JURLLeB53++WACo1w==
   dependencies:
-    "@types/busboy" "^0.3.2"
+    "@types/busboy" "^1.5.0"
     "@types/node" "*"
     "@types/object-path" "^0.11.1"
-    busboy "^0.3.1"
-    fs-capacitor "^6.2.0"
+    busboy "^1.6.0"
+    fs-capacitor "^8.0.0"
     http-errors "^2.0.0"
     object-path "^0.11.8"
 
@@ -2968,7 +2942,7 @@ object-inspect@^1.13.1:
 
 object-path@^0.11.8:
   version "0.11.8"
-  resolved "https://registry.npmjs.org/object-path/-/object-path-0.11.8.tgz"
+  resolved "https://registry.yarnpkg.com/object-path/-/object-path-0.11.8.tgz#ed002c02bbdd0070b78a27455e8ae01fc14d4742"
   integrity sha512-YJjNZrlXJFM42wTBn6zgOJVar9KFJvzx6sTWDte8sWZF//cnjl0BxHNpfZx+ZffXX63A9q0b1zsFiBX4g4X5KA==
 
 on-finished@2.4.1:
@@ -3461,11 +3435,6 @@ statuses@2.0.1:
   version "2.0.1"
   resolved "https://registry.npmjs.org/statuses/-/statuses-2.0.1.tgz"
   integrity sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==
-
-streamsearch@0.1.2:
-  version "0.1.2"
-  resolved "https://registry.npmjs.org/streamsearch/-/streamsearch-0.1.2.tgz"
-  integrity sha512-jos8u++JKm0ARcSUTAZXOVC0mSox7Bhn6sBgty73P1f3JGf7yG2clTbBNHUdde/kdvP2FESam+vM6l8jBrNxHA==
 
 streamsearch@^1.1.0:
   version "1.1.0"
