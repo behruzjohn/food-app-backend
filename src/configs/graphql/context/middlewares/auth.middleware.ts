@@ -19,8 +19,6 @@ export const authMiddleware = async (
   next?: NextFunction,
 ): Promise<Context> => {
   try {
-    console.log('Object.keys(req)', Object.keys(req));
-
     const [tokenType, token] = req.headers.authorization?.split(' ') || [];
 
     const decodedToken = token && decodeToken<JWTAuthPayload>(token);
