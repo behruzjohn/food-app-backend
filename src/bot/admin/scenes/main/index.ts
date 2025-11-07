@@ -12,14 +12,14 @@ import { foodActions } from '../../actions/food';
 const indexComposer = new Composer();
 
 indexComposer.on('message', async (ctx) => {
-  // const isSuperAdmin = ctx.from.id === +process.env.SUPER_ADMIN_ID;
+  const isSuperAdmin = ctx.from.id === +process.env.SUPER_ADMIN_ID;
 
   const foundAdmin = await User.findOne({
     role: RoleEnum.admin,
     telegramId: ctx.from.id,
   });
 
-  if (!foundAdmin) {
+  if (!foundAdmin || !isSuperAdmin) {
     await ctx.reply(
       `Kechirasiz ${ctx.from.first_name}, Botni ishlatishga sizga ruxsat berilmagan`,
     );

@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+// import chalk from 'chalk';
 
 export type LogLevel = 'SUCCESS' | 'WARNING' | 'ERROR' | 'INFO';
 
@@ -12,38 +12,43 @@ const LOG_LEVELS_COLORS: Record<LogLevel, string> = {
 const dateColumn = () => {
   const [date] = new Date().toTimeString().split(' ');
 
-  return `[${chalk.gray(date)}]`;
+  // return `[${chalk.gray(date)}]`;
 };
 
 const logError = (type: string, message: string) => {
   console.log(
     dateColumn(),
-    chalk[LOG_LEVELS_COLORS['ERROR']](`[${type}]`),
-    chalk.white(message),
+    // chalk[LOG_LEVELS_COLORS['ERROR']](`[${type}]`),
+    // chalk.white(message),
+    message,
   );
 };
 
 const logSuccess = (type: string, message: string) => {
   console.log(
     dateColumn(),
-    chalk[LOG_LEVELS_COLORS['SUCCESS']](`[${type}]`),
-    chalk.white(message),
+    // chalk[LOG_LEVELS_COLORS['SUCCESS']](`[${type}]`),
+    // chalk.white(message),
+    message,
   );
 };
 
 const logWarning = (type: string, message: string) => {
   console.log(
     dateColumn(),
-    chalk[LOG_LEVELS_COLORS['WARNING']](`[${type}]`),
-    chalk.white(message),
+    //   chalk[LOG_LEVELS_COLORS['WARNING']](`[${type}]`),
+    //   chalk.white(message),
+    // )
+    message,
   );
 };
 
 const logInfo = (type: string, message: string) => {
   console.log(
     dateColumn(),
-    chalk[LOG_LEVELS_COLORS['INFO']](`[${type}]`),
-    chalk.white(message),
+    // chalk[LOG_LEVELS_COLORS['INFO']](`[${type}]`),
+    // chalk.white(message),
+    message,
   );
 };
 
