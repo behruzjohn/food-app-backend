@@ -13,6 +13,8 @@ export async function httpContext(
   const context = { ...authContext };
 
   if (!next) {
+    console.log(1);
+
     return context;
   }
 

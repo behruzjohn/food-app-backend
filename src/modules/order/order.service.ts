@@ -38,48 +38,43 @@ export const createOrder = async (
   { order }: CreateOrderProps,
   { user }: Context,
 ): Promise<OrderOutput> => {
-  try {
-    const { payload: foundCartItems } =
-      await cartItemService.getCartItemsByUserId({ user });
+  console.log(user, order);
+  const { payload: foundCartItems } =
+    await cartItemService.getCartItemsByUserId({ user });
 
-    if (!foundCartItems.items.length) {
-      throw new UserInputError('There are no cart items created yet');
-    }
-
-    const createdOrder = await Order.create({
-      createdBy: user._id,
-      address: order.address,
-      totalPrice: foundCartItems.totalPrice,
-    });
-
-    const { payload: createdOrderItems } = await addCartItemToOrderItem({
-      userId: user._id,
-      orderId: createdOrder._id,
-    });
-
-    await cartItemService.clearUserCart({ user });
-
-    const populatedOrder = await createdOrder.populate(POPULATIONS.order);
-
-    const message = { payload: populatedOrder };
-
-    await pubsub.publish(EVENTS.CREATE_ORDER, {
-      [SUBSCRIPTIONS.CREATE_ORDER]: message,
-    });
-
-    return { payload: { ...createdOrder, orderItems: createdOrderItems } };
-  } catch (error) {
-    throw error;
+  if (!foundCartItems.items.length) {
+    throw new UserInputError('There are no cart items created yet');
   }
+
+  const createdOrder = await Order.create({
+    createdBy: user._id,
+    address: order.address,
+    totalPrice: foundCartItems.totalPrice,
+  });
+
+  const { payload: createdOrderItems } = await addCartItemToOrderItem({
+    userId: user._id,
+    orderId: createdOrder._id,
+  });
+
+  await cartItemService.clearUserCart({ user });
+
+  const populatedOrder = await createdOrder.populate(POPULATIONS.order);
+
+  const message = { payload: populatedOrder };
+
+  await pubsub.publish(EVENTS.CREATE_ORDER, {
+    [SUBSCRIPTIONS.CREATE_ORDER]: message,
+  });
+
+  return { payload: populatedOrder };
 };
 
 export const getOrderById = async ({
   orderId,
 }: GetOrderByIdProps): Promise<OrderOutput> => {
   const [foundOrder] = await Order.aggregate<OrderSchema>([
-    {
-      $match: { _id: new Types.ObjectId(orderId) },
-    },
+    { $match: { _id: new Types.ObjectId(orderId) } },
     {
       $lookup: {
         from: 'users',
@@ -88,18 +83,48 @@ export const getOrderById = async ({
         as: 'createdBy',
       },
     },
-    {
-      $unwind: {
-        path: '$createdBy',
-        preserveNullAndEmptyArrays: true,
-      },
-    },
+    { $unwind: { path: '$createdBy', preserveNullAndEmptyArrays: true } },
     {
       $lookup: {
         from: 'orderitems',
         localField: '_id',
         foreignField: 'order',
         as: 'orderItems',
+      },
+    },
+    { $unwind: { path: '$orderItems', preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: 'foods',
+        localField: 'orderItems.food',
+        foreignField: '_id',
+        as: 'foodData',
+      },
+    },
+    { $unwind: { path: '$foodData', preserveNullAndEmptyArrays: true } },
+    {
+      $addFields: {
+        'orderItems.food': {
+          _id: '$foodData._id',
+          name: '$foodData.name',
+          image: '$foodData.image',
+          price: '$foodData.price',
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        status: { $first: '$status' },
+        totalPrice: { $first: '$totalPrice' },
+        createdBy: { $first: '$createdBy' },
+        address: { $first: '$address' },
+        attachedFor: { $first: '$attachedFor' },
+        cookedAt: { $first: '$cookedAt' },
+        receivedAt: { $first: '$receivedAt' },
+        orderItems: { $push: '$orderItems' },
+        createdAt: { $first: '$createdAt' },
+        updatedAt: { $first: '$updatedAt' },
       },
     },
     {
