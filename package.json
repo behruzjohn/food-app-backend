@@ -13,6 +13,9 @@
     "lint": "npx eslint src",
     "format": "prettier --write \"src/**/*.ts\""
   },
+  "engines": {
+    "node": "18.x"
+  },
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.11.0",
