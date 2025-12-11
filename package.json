@@ -4,7 +4,7 @@
   "main": "dist/bundle.js",
   "module": "common",
   "scripts": {
-    "start": "node dist/bundle.js",
+    "start": "dist/bundle.js",
     "start:prod": "node dist/bundle.js",
     "start:dev": "concurrently \"npm run build:dev && sleep 5\" \"npm run dev\" --raw",
     "dev:debug": "ts-node-dev -r tsconfig-paths/register --inspect=0.0.0.0:9229 src/index.ts --no-clear",
