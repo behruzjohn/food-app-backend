@@ -4,7 +4,6 @@
   "main": "dist/bundle.js",
   "module": "common",
   "scripts": {
-    "postinstall": "npm install --save-dev webpack-cli",
     "start": "node dist/bundle.js",
     "start:prod": "node dist/bundle.js",
     "start:dev": "concurrently \"npm run build:dev && sleep 5\" \"npm run dev\" --raw",
@@ -45,7 +44,9 @@
     "multer": "^1.4.5-lts.1",
     "telegraf": "^4.16.3",
     "typescript": "^5.6.3",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",
