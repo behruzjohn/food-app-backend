@@ -25,7 +25,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   externals: [nodeExternals()],
-  plugins: [
+  plugins: [  
     new webpack.IgnorePlugin({
       resourceRegExp:
         /^.*(kerberos|aws4|snappy|socks|gcp-metadata|@aws-sdk\/credential-providers|@mongodb-js\/zstd|mongodb-client-encryption).*$/,
