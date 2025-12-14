@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 export const sendSms = async (phone: string) => {
   const code = '12345';
 

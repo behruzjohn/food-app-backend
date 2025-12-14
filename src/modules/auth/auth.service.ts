@@ -62,7 +62,6 @@ export const signUp = async ({
   }
 
   const isValidPassword = password.length > PASSWORD_MIN_LENGTH;
-
   if (!isValidPassword) {
     throw new UserInputError('Password is not strong enough');
   }
@@ -70,7 +69,6 @@ export const signUp = async ({
   const code = await sendSms(phone);
 
   const tokenPayload = { name, phone, password, code };
-
   const createdToken = createToken(tokenPayload, {
     expiresIn: PHONE_CONFIRMATION_TOKEN_EXPIRATION,
   });
